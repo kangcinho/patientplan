@@ -11,6 +11,6 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/{parameter?}', function () {
+    return view('app');
+})->where('parameter', '[\/\w\.-]*');
