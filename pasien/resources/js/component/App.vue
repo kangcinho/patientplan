@@ -1,10 +1,21 @@
 <template>
-  <h1>Awal Mula Rencana Pasien Pulang</h1>
+  <div class="columns is-multiline">
+    <div class="container">
+      <div class="column is-full">
+        <TambahPasienComponent></TambahPasienComponent>
+      </div>
+    </div>
+    
+  </div>
 </template>
 
 <script>
+import TambahPasienComponent from './pasien/TambahPasienComponent'
 export default {
-  name: 'AppComponent'
+  name: 'AppComponent',
+  components:{
+    TambahPasienComponent
+  },
 }
 </script>
 

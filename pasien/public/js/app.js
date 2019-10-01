@@ -95,12 +95,276 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _pasien_TambahPasienComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./pasien/TambahPasienComponent */ "./resources/js/component/pasien/TambahPasienComponent.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'AppComponent',
+  components: {
+    TambahPasienComponent: _pasien_TambahPasienComponent__WEBPACK_IMPORTED_MODULE_0__["default"]
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/component/pasien/FormTambahPasienComponent.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/component/pasien/FormTambahPasienComponent.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'AppComponent'
+  name: "FormTambahPasienComponent",
+  props: ['dataPetugas'],
+  data: function data() {
+    return {
+      data: {
+        tanggal: '',
+        noreg: '',
+        nrm: '',
+        namaPasien: '',
+        kamar: '',
+        waktuVerif: '',
+        waktuIKS: '',
+        waktuSelesai: '',
+        waktuPasien: '',
+        waktuLunas: '',
+        petugasFO: '',
+        petugasPerawat: '',
+        keterangan: ''
+      },
+      isWaktu: false
+    };
+  },
+  computed: {
+    filterDataPetugasFO: function filterDataPetugasFO() {
+      var _this = this;
+
+      return this.dataPetugas.filter(function (petugas) {
+        return petugas.toString().toLowerCase().indexOf(_this.data.petugasFO.toLowerCase()) >= 0;
+      });
+    },
+    filterDataPetugasPerawat: function filterDataPetugasPerawat() {
+      var _this2 = this;
+
+      return this.dataPetugas.filter(function (petugas) {
+        return petugas.toString().toLowerCase().indexOf(_this2.data.petugasPerawat.toLowerCase()) >= 0;
+      });
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/component/pasien/TambahPasienComponent.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/component/pasien/TambahPasienComponent.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _FormTambahPasienComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./FormTambahPasienComponent */ "./resources/js/component/pasien/FormTambahPasienComponent.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "TambahPasienComponent",
+  components: {
+    FormTambahPasienComponent: _FormTambahPasienComponent__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  data: function data() {
+    return {
+      isOpenFormTambahRiwayatPasienPulang: false,
+      dataPetugas: ['Angular', 'Angular 2', 'Aurelia', 'Backbone', 'Ember', 'jQuery', 'Meteor', 'Node.js', 'Polymer', 'React', 'RxJS', 'Vue.js']
+    };
+  }
 });
 
 /***/ }),
@@ -12802,7 +13066,422 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("h1", [_vm._v("Awal Mula Rencana Pasien Pulang")])
+  return _c("div", { staticClass: "columns is-multiline" }, [
+    _c("div", { staticClass: "container" }, [
+      _c(
+        "div",
+        { staticClass: "column is-full" },
+        [_c("TambahPasienComponent")],
+        1
+      )
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/component/pasien/FormTambahPasienComponent.vue?vue&type=template&id=244a51b1&":
+/*!**********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/component/pasien/FormTambahPasienComponent.vue?vue&type=template&id=244a51b1& ***!
+  \**********************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "form",
+    [
+      _c(
+        "b-field",
+        [
+          _c("b-datepicker", {
+            attrs: {
+              placeholder: "Tanggal Rencana Pasien Pulang",
+              "icon-pack": "fas",
+              icon: "calendar-check",
+              rounded: ""
+            },
+            model: {
+              value: _vm.data.tanggal,
+              callback: function($$v) {
+                _vm.$set(_vm.data, "tanggal", $$v)
+              },
+              expression: "data.tanggal"
+            }
+          })
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "b-field",
+        [
+          _c("b-input", {
+            attrs: {
+              placeholder: "Nomor Registrasi",
+              icon: "search",
+              "icon-pack": "fas",
+              readonly: "",
+              rounded: ""
+            }
+          })
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "b-field",
+        { attrs: { grouped: "" } },
+        [
+          _c(
+            "b-field",
+            [
+              _c("b-input", {
+                attrs: {
+                  type: "text",
+                  placeholder: "Nomor Rekam Medis",
+                  "validation-message": "Nomor Rekam Medis Harus Diisi",
+                  required: "",
+                  readonly: "",
+                  rounded: ""
+                }
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "b-field",
+            { attrs: { expanded: "" } },
+            [
+              _c("b-input", {
+                attrs: {
+                  type: "text",
+                  placeholder: "Nama Pasien",
+                  "validation-message": "Nama Pasien Harus Diisi",
+                  required: "",
+                  rounded: "",
+                  readonly: ""
+                }
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "b-field",
+            [
+              _c("b-input", {
+                attrs: {
+                  type: "text",
+                  placeholder: "Kamar Pasien",
+                  "validation-message": "Kamar Pasien Harus Diisi",
+                  required: "",
+                  rounded: "",
+                  readonly: ""
+                }
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "b-field",
+            { attrs: { expanded: "" } },
+            [
+              _c("b-input", {
+                attrs: {
+                  type: "text",
+                  placeholder: "Keterangan Pasien",
+                  "validation-message": "Keterangan Pasien Harus Diisi",
+                  required: "",
+                  rounded: "",
+                  readonly: ""
+                }
+              })
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "b-field",
+        [
+          _c(
+            "b-checkbox",
+            {
+              model: {
+                value: _vm.isWaktu,
+                callback: function($$v) {
+                  _vm.isWaktu = $$v
+                },
+                expression: "isWaktu"
+              }
+            },
+            [_vm._v("Saya Ingin Menambahkan Waktu")]
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "b-field",
+        { class: _vm.isWaktu ? "" : "is-hidden", attrs: { grouped: "" } },
+        [
+          _c(
+            "b-field",
+            { attrs: { label: "Waktu Verif" } },
+            [
+              _c("b-clockpicker", {
+                attrs: {
+                  rounded: "",
+                  placeholder: "Waktu Verif",
+                  "icon-pack": "fas",
+                  icon: "clock",
+                  "hour-format": "24"
+                }
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "b-field",
+            { attrs: { label: "Waktu IKS" } },
+            [
+              _c("b-clockpicker", {
+                attrs: {
+                  rounded: "",
+                  placeholder: "Waktu IKS",
+                  "icon-pack": "fas",
+                  icon: "clock",
+                  "hour-format": "24"
+                }
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "b-field",
+            { attrs: { label: "Waktu Selesai" } },
+            [
+              _c("b-clockpicker", {
+                attrs: {
+                  rounded: "",
+                  placeholder: "Waktu Selesai",
+                  "icon-pack": "fas",
+                  icon: "clock",
+                  "hour-format": "24"
+                }
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "b-field",
+            { attrs: { label: "Waktu Pasien" } },
+            [
+              _c("b-clockpicker", {
+                attrs: {
+                  rounded: "",
+                  placeholder: "Waktu Pasien",
+                  "icon-pack": "fas",
+                  icon: "clock",
+                  "hour-format": "24"
+                }
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "b-field",
+            { attrs: { label: "Waktu Lunas" } },
+            [
+              _c("b-clockpicker", {
+                attrs: {
+                  rounded: "",
+                  placeholder: "Waktu Lunas",
+                  "icon-pack": "fas",
+                  icon: "clock",
+                  "hour-format": "24"
+                }
+              })
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "b-field",
+        { attrs: { grouped: "" } },
+        [
+          _c(
+            "b-field",
+            { attrs: { label: "Cari Petugas FO", expanded: "" } },
+            [
+              _c(
+                "b-autocomplete",
+                {
+                  attrs: {
+                    rounded: "",
+                    data: _vm.filterDataPetugasFO,
+                    placeholder: "Cari Nama Petugas FO",
+                    "icon-pack": "fas",
+                    icon: "search"
+                  },
+                  on: {
+                    select: function(option) {
+                      return (_vm.selected = option)
+                    }
+                  },
+                  model: {
+                    value: _vm.data.petugasFO,
+                    callback: function($$v) {
+                      _vm.$set(_vm.data, "petugasFO", $$v)
+                    },
+                    expression: "data.petugasFO"
+                  }
+                },
+                [
+                  _c("template", { slot: "empty" }, [
+                    _vm._v("Tidak ditemukan Nama Petugas FO")
+                  ])
+                ],
+                2
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "b-field",
+            { attrs: { label: "Cari Petugas Perawat", expanded: "" } },
+            [
+              _c(
+                "b-autocomplete",
+                {
+                  attrs: {
+                    rounded: "",
+                    data: _vm.filterDataPetugasPerawat,
+                    placeholder: "Cari Nama Petugas Perawat",
+                    "icon-pack": "fas",
+                    icon: "search"
+                  },
+                  on: {
+                    select: function(option) {
+                      return (_vm.selected = option)
+                    }
+                  },
+                  model: {
+                    value: _vm.data.petugasPerawat,
+                    callback: function($$v) {
+                      _vm.$set(_vm.data, "petugasPerawat", $$v)
+                    },
+                    expression: "data.petugasPerawat"
+                  }
+                },
+                [
+                  _c("template", { slot: "empty" }, [
+                    _vm._v("Tidak ditemukan Nama Petugas Perawat ")
+                  ])
+                ],
+                2
+              )
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("h1", [_vm._v("\n    " + _vm._s(_vm.data) + "\n  ")])
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/component/pasien/TambahPasienComponent.vue?vue&type=template&id=703a5e95&":
+/*!******************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/component/pasien/TambahPasienComponent.vue?vue&type=template&id=703a5e95& ***!
+  \******************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "b-collapse",
+    {
+      staticClass: "panel",
+      attrs: { open: _vm.isOpenFormTambahRiwayatPasienPulang },
+      on: {
+        "update:open": function($event) {
+          _vm.isOpenFormTambahRiwayatPasienPulang = $event
+        }
+      }
+    },
+    [
+      _c(
+        "div",
+        {
+          staticClass: "panel-heading",
+          attrs: { slot: "trigger", role: "button" },
+          slot: "trigger"
+        },
+        [
+          _c(
+            "strong",
+            [
+              _c("b-icon", { attrs: { pack: "fas", icon: "plus" } }),
+              _vm._v("\n      Daftar Riwayat Pasien Pulang\n    ")
+            ],
+            1
+          )
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "panel-tab" },
+        [
+          _c("FormTambahPasienComponent", {
+            attrs: { dataPetugas: _vm.dataPetugas }
+          })
+        ],
+        1
+      )
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -25004,6 +25683,144 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_App_vue_vue_type_template_id_07f25e3e___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_App_vue_vue_type_template_id_07f25e3e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/component/pasien/FormTambahPasienComponent.vue":
+/*!*********************************************************************!*\
+  !*** ./resources/js/component/pasien/FormTambahPasienComponent.vue ***!
+  \*********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _FormTambahPasienComponent_vue_vue_type_template_id_244a51b1___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./FormTambahPasienComponent.vue?vue&type=template&id=244a51b1& */ "./resources/js/component/pasien/FormTambahPasienComponent.vue?vue&type=template&id=244a51b1&");
+/* harmony import */ var _FormTambahPasienComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./FormTambahPasienComponent.vue?vue&type=script&lang=js& */ "./resources/js/component/pasien/FormTambahPasienComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _FormTambahPasienComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _FormTambahPasienComponent_vue_vue_type_template_id_244a51b1___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _FormTambahPasienComponent_vue_vue_type_template_id_244a51b1___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/component/pasien/FormTambahPasienComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/component/pasien/FormTambahPasienComponent.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************!*\
+  !*** ./resources/js/component/pasien/FormTambahPasienComponent.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_FormTambahPasienComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./FormTambahPasienComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/component/pasien/FormTambahPasienComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_FormTambahPasienComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/component/pasien/FormTambahPasienComponent.vue?vue&type=template&id=244a51b1&":
+/*!****************************************************************************************************!*\
+  !*** ./resources/js/component/pasien/FormTambahPasienComponent.vue?vue&type=template&id=244a51b1& ***!
+  \****************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FormTambahPasienComponent_vue_vue_type_template_id_244a51b1___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./FormTambahPasienComponent.vue?vue&type=template&id=244a51b1& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/component/pasien/FormTambahPasienComponent.vue?vue&type=template&id=244a51b1&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FormTambahPasienComponent_vue_vue_type_template_id_244a51b1___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FormTambahPasienComponent_vue_vue_type_template_id_244a51b1___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/component/pasien/TambahPasienComponent.vue":
+/*!*****************************************************************!*\
+  !*** ./resources/js/component/pasien/TambahPasienComponent.vue ***!
+  \*****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _TambahPasienComponent_vue_vue_type_template_id_703a5e95___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TambahPasienComponent.vue?vue&type=template&id=703a5e95& */ "./resources/js/component/pasien/TambahPasienComponent.vue?vue&type=template&id=703a5e95&");
+/* harmony import */ var _TambahPasienComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TambahPasienComponent.vue?vue&type=script&lang=js& */ "./resources/js/component/pasien/TambahPasienComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _TambahPasienComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _TambahPasienComponent_vue_vue_type_template_id_703a5e95___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _TambahPasienComponent_vue_vue_type_template_id_703a5e95___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/component/pasien/TambahPasienComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/component/pasien/TambahPasienComponent.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************!*\
+  !*** ./resources/js/component/pasien/TambahPasienComponent.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TambahPasienComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./TambahPasienComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/component/pasien/TambahPasienComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TambahPasienComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/component/pasien/TambahPasienComponent.vue?vue&type=template&id=703a5e95&":
+/*!************************************************************************************************!*\
+  !*** ./resources/js/component/pasien/TambahPasienComponent.vue?vue&type=template&id=703a5e95& ***!
+  \************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TambahPasienComponent_vue_vue_type_template_id_703a5e95___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./TambahPasienComponent.vue?vue&type=template&id=703a5e95& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/component/pasien/TambahPasienComponent.vue?vue&type=template&id=703a5e95&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TambahPasienComponent_vue_vue_type_template_id_703a5e95___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TambahPasienComponent_vue_vue_type_template_id_703a5e95___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

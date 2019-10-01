@@ -5847,3 +5847,121 @@ readers do not read off random characters that represent icons */
   font-weight: 900;
 }
 
+* {
+  margin: 0;
+  padding: 0;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: -apple-system, ".SFNSText-Regular", "San Francisco", "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", sans-serif;
+}
+
+.wrapper {
+  display: flex;
+  height: 100%;
+  padding: 20px;
+}
+
+/*
+* ==== SIDEBAR ====
+*/
+
+.sidebar {
+  display: flex;
+  min-height: 100%;
+  flex-grow: 1;
+  transition: all 0.3s;
+}
+
+.sidebar.isClosed {
+  flex-grow: 0;
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  opacity: 1;
+}
+
+.sidebar nav.isClosed {
+  display: none;
+}
+
+.sidebar div {
+  align-self: flex-end;
+}
+
+/*
+* ==== CONTENT ====
+*/
+
+.content {
+  background-color: #f6f7f8;
+  min-height: 100%;
+  flex-grow: 9;
+  padding: 40px;
+  transform: translate3d(0, 0, 0);
+  transition: transform 0.3s;
+}
+
+/*
+* ==== TOGGLE BUTTON ====
+*/
+
+a.button {
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+a.button:before {
+  content: "\F0C9";
+  font: 30px fontawesome;
+}
+
+/*
+* ==== MEDIA QUERIES ====
+*/
+
+@media only screen and (max-device-width: 736px) and (orientation: portrait) {
+  .wrapper {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    min-height: 60px;
+    max-height: 60px;
+  }
+
+  .sidebar ul.nav {
+    padding: 20px;
+    flex-direction: row;
+  }
+
+  .sidebar ul.nav li {
+    display: inline-block;
+    padding: 2%;
+  }
+
+  .content {
+    /*TBD*/
+  }
+
+  .content a.button {
+    display: none;
+  }
+}
+
