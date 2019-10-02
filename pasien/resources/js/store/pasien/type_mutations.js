@@ -1,0 +1,1 @@
+export const SET_DATA_PASIEN_ALL = 'SET_DATA_PASIEN_ALL'

@@ -17,4 +17,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('pasien', 'PasienController@show');
+Route::get('getPasien', 'PasienController@getDataPasienFromSanata');

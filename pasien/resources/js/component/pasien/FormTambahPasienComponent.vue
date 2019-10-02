@@ -1,4 +1,5 @@
 <template>
+  <div>
     <form>
       <b-field>
         <b-datepicker
@@ -10,9 +11,16 @@
           >
         </b-datepicker>
       </b-field>
-
-      <b-field>
-        <b-input placeholder="Nomor Registrasi" icon="search" icon-pack="fas" readonly rounded></b-input>
+      
+      <b-field >
+        <b-input placeholder="Nomor Registrasi" 
+          icon="search" 
+          icon-pack="fas" 
+          v-model="data.noreg"
+          @focus="isComponentModal = true"
+          rounded
+          readonly
+          ></b-input>
       </b-field>
 
       <b-field grouped>
@@ -21,6 +29,7 @@
             type="text"
             placeholder="Nomor Rekam Medis"
             validation-message="Nomor Rekam Medis Harus Diisi"
+            v-model="data.nrm"
             required
             readonly
             rounded
@@ -33,6 +42,7 @@
             type="text"
             placeholder="Nama Pasien"
             validation-message="Nama Pasien Harus Diisi"
+            v-model="data.namaPasien"
             required
             rounded
             readonly
@@ -45,6 +55,7 @@
             type="text"
             placeholder="Kamar Pasien"
             validation-message="Kamar Pasien Harus Diisi"
+            v-model="data.kamar"
             required
             rounded
             readonly
@@ -57,6 +68,7 @@
             type="text"
             placeholder="Keterangan Pasien"
             validation-message="Keterangan Pasien Harus Diisi"
+            v-model="data.keterangan"
             required
             rounded
             readonly
@@ -69,11 +81,12 @@
         <b-checkbox v-model="isWaktu">Saya Ingin Menambahkan Waktu</b-checkbox>
       </b-field>
 
-      <b-field grouped :class="isWaktu?'':'is-hidden'">
+      <b-field grouped v-if="isWaktu">
         <b-field label="Waktu Verif">
           <b-clockpicker
             rounded
             placeholder="Waktu Verif"
+            v-model="data.waktuVerif"
             icon-pack="fas"
             icon="clock"
             hour-format="24">
@@ -84,6 +97,7 @@
           <b-clockpicker
             rounded
             placeholder="Waktu IKS"
+            v-model="data.waktuIKS"
             icon-pack="fas"
             icon="clock"
             hour-format="24">
@@ -94,6 +108,7 @@
           <b-clockpicker
             rounded
             placeholder="Waktu Selesai"
+            v-model="data.waktuSelesai"
             icon-pack="fas"
             icon="clock"
             hour-format="24">
@@ -104,6 +119,7 @@
           <b-clockpicker
             rounded
             placeholder="Waktu Pasien"
+            v-model="data.waktuPasien"
             icon-pack="fas"
             icon="clock"
             hour-format="24">
@@ -114,6 +130,7 @@
           <b-clockpicker
             rounded
             placeholder="Waktu Lunas"
+            v-model="data.waktuLunas"
             icon-pack="fas"
             icon="clock"
             hour-format="24">
@@ -121,7 +138,7 @@
         </b-field>
       </b-field>
 
-      <b-field grouped>
+      <b-field grouped v-if="isWaktu">
         <b-field label="Cari Petugas FO" expanded>
             <b-autocomplete
                 rounded
@@ -147,34 +164,41 @@
           </b-autocomplete>
         </b-field>
       </b-field>
-      <h1>
-        {{ data }}
-      </h1>
     </form>
+    <b-modal :active.sync="isComponentModal" >
+      <FormSearchPasienComponent></FormSearchPasienComponent>
+    </b-modal>
+  </div>
 </template>
 
 <script>
+import FormSearchPasienComponent from '../modal/FormSearchPasienComponent'
+import EventBus from '../../eventBus'
 export default {
   name: "FormTambahPasienComponent",
   props: ['dataPetugas'],
+  components:{
+    FormSearchPasienComponent
+  },
   data(){
     return {
       data:{
-        tanggal:'',
+        tanggal: new Date(),
         noreg:'',
         nrm:'',
         namaPasien:'',
         kamar:'',
-        waktuVerif:'',
-        waktuIKS:'',
-        waktuSelesai:'',
-        waktuPasien:'',
-        waktuLunas:'',
+        waktuVerif: null,
+        waktuIKS:null,
+        waktuSelesai:null,
+        waktuPasien:null,
+        waktuLunas:null,
         petugasFO:'',
         petugasPerawat:'',
         keterangan:'',
       },
       isWaktu: false,
+      isComponentModal: false,
     }
   },
   computed:{
@@ -194,6 +218,19 @@ export default {
           .indexOf(this.data.petugasPerawat.toLowerCase()) >= 0
       })
     }
+  },
+  methods:{
+    fillData(data){
+      this.data.noreg = data.noReg
+      this.data.nrm = data.nrm
+      this.data.namaPasien = data.namaPasien
+      this.data.kamar = data.kamar
+      this.data.keterangan = data.keterangan
+      this.isComponentModal = false
+    }
+  },
+  created(){
+    EventBus.$on('fetchData', data => this.fillData(data))
   }
 }
 </script>
