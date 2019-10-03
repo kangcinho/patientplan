@@ -1851,6 +1851,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2227,8 +2242,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2387,12 +2400,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'TableComponent',
   data: function data() {
-    return {};
+    return {
+      isEmpty: true
+    };
   },
   created: function created() {
     this.$store.dispatch('getDataPasienPulang');
@@ -15128,18 +15141,43 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "columns is-multiline" },
     [
-      _c("div", { staticClass: "container" }, [
+      _c(
+        "b-navbar",
+        { attrs: { type: "is-primary" } },
+        [
+          _c(
+            "template",
+            { slot: "start" },
+            [
+              _c(
+                "b-navbar-item",
+                { attrs: { href: "#" } },
+                [_c("b-icon", { attrs: { pack: "fas", icon: "users" } })],
+                1
+              ),
+              _vm._v(" "),
+              _c("b-navbar-item", { attrs: { href: "#" } }, [
+                _vm._v("\n            Login\n        ")
+              ])
+            ],
+            1
+          )
+        ],
+        2
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "columns" }, [
         _c(
           "div",
-          { staticClass: "column is-full" },
+          {
+            staticClass: "column container",
+            staticStyle: { "margin-top": "5px" }
+          },
           [_c("TambahPasienComponent")],
           1
         )
-      ]),
-      _vm._v(" "),
-      _c("TableComponent")
+      ])
     ],
     1
   )
@@ -15445,8 +15483,6 @@ var render = function() {
             ],
             1
           ),
-          _vm._v(" "),
-          _c("br"),
           _vm._v(" "),
           _c(
             "b-field",
@@ -15833,8 +15869,7 @@ var render = function() {
               on: { click: _vm.saveDataPasienPulang }
             },
             [_vm._v("\n      SAVE\n    ")]
-          ),
-          _vm._v(" \n    " + _vm._s(_vm.dataPasienPulang) + "\n  ")
+          )
         ],
         1
       ),
@@ -15911,7 +15946,7 @@ var render = function() {
       _vm._v(" "),
       _c(
         "div",
-        { staticClass: "panel-tab" },
+        { staticClass: "panel-tab", staticStyle: { "margin-top": "10px" } },
         [_c("FormTambahPasienComponent")],
         1
       )
@@ -15940,7 +15975,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [_vm._v("\n  " + _vm._s(_vm.dataPasienPulang) + "\n")])
+  return _c("div")
 }
 var staticRenderFns = []
 render._withStripped = true

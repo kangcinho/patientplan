@@ -12,8 +12,7 @@
           >
         </b-datepicker>
       </b-field>
-      
-      <br/>
+
       <b-field >
         <b-input placeholder="Nomor Registrasi" 
           icon="search" 
@@ -178,7 +177,6 @@
         >
         SAVE
       </b-button> 
-      {{ dataPasienPulang }}
     </form>
     <b-modal :active.sync="isComponentModal" >
       <FormSearchPasienComponent></FormSearchPasienComponent>

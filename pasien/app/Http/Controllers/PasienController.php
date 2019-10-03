@@ -76,7 +76,7 @@ class PasienController extends Controller
 
     public function saveDataPasienPulang(Request $request){
 
-        $tanggal = date('Y-m-d', strtotime($request->tanggal));
+        $tanggal = $this->convertDate($request->tanggal, true);
         $dataPasien = Pasien::where('noreg', $request->noreg)->get();
 
         if(count($dataPasien)){
@@ -101,19 +101,19 @@ class PasienController extends Controller
 
             if($request->isWaktu){
                 if($request->waktuVerif != null){
-                    $dataPasien->waktuVerif = date('H:i:s', strtotime($request->waktuVerif));
+                    $dataPasien->waktuVerif = $this->convertDate($request->waktuVerif, false);
                 }
                 if($request->waktuIKS != null){
-                    $dataPasien->waktuIKS = date('H:i:s', strtotime($request->waktuIKS));
-                }                
+                    $dataPasien->waktuIKS = $this->convertDate($request->waktuIKS, false);
+                }
                 if($request->waktuSelesai != null){
-                    $dataPasien->waktuSelesai = date('H:i:s', strtotime($request->waktuSelesai));
+                    $dataPasien->waktuSelesai = $this->convertDate($request->waktuSelesai, false);
                 }
                 if($request->waktuPasien != null){
-                    $dataPasien->waktuPasien = date('H:i:s', strtotime($request->waktuPasien));
+                    $dataPasien->waktuPasien = $this->convertDate($request->waktuPasien, false);
                 }
                 if($request->waktuLunas != null){
-                    $dataPasien->waktuLunas = date('H:i:s', strtotime($request->waktuLunas));
+                    $dataPasien->waktuLunas = $this->convertDate($request->waktuLunas, false);
                 }  
                 $dataPasien->petugasFO = $request->petugasFO;
                 $dataPasien->petugasPerawat = $request->petugasPerawat;    
@@ -122,5 +122,12 @@ class PasienController extends Controller
             return response()->json($dataPasien, 200);
         }
         return response()->json($dataPasien, 200);
-    }   
+    }
+    
+    public function convertDate($date, $isDate){
+        if($isDate){
+            return date('Y-m-d', strtotime($date));
+        }
+        return date('H:i:s', strtotime($date));
+    }
 }

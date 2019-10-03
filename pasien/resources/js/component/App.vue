@@ -1,12 +1,27 @@
 <template>
-  <div class="columns is-multiline">
-    <div class="container">
-      <div class="column is-full">
+  <div>
+    <b-navbar type="is-primary">
+      <template slot="start">
+          <b-navbar-item href="#">
+            <b-icon 
+              pack="fas"
+              icon="users"
+            ></b-icon>
+          </b-navbar-item>
+          <b-navbar-item href="#">
+              Login
+          </b-navbar-item>
+      </template>
+    </b-navbar>
+      <!-- <TambahPasienComponent></TambahPasienComponent>
+      <TableComponent></TableComponent> -->
+    <div class="columns">
+      <div class="column container" style="margin-top: 5px">
         <TambahPasienComponent></TambahPasienComponent>
       </div>
     </div>
-    <TableComponent></TableComponent>
   </div>
+
 </template>
 
 <script>

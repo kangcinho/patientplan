@@ -11,7 +11,7 @@
           Daftar Riwayat Pasien Pulang
         </strong>
       </div>
-      <div class="panel-tab">
+      <div class="panel-tab" style="margin-top:10px">
         <FormTambahPasienComponent></FormTambahPasienComponent>
       </div>
     </b-collapse>

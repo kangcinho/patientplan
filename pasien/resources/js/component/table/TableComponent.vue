@@ -1,7 +1,5 @@
 <template>
-  <div>
-    {{ dataPasienPulang }}
-  </div>
+  <div></div>
 </template>
 
 <script>
@@ -9,8 +7,8 @@ export default {
   name: 'TableComponent',
   data(){
     return {
-
-    }
+      isEmpty:true
+    } 
   },
   created(){
     this.$store.dispatch('getDataPasienPulang')
