@@ -3,34 +3,28 @@
     <div class="container">
       <div class="column is-full">
         <TambahPasienComponent></TambahPasienComponent>
-        {{ dataPasienAll }}
       </div>
     </div>
-    
+    <TableComponent></TableComponent>
   </div>
 </template>
 
 <script>
 import TambahPasienComponent from './pasien/TambahPasienComponent'
+import TableComponent from './table/TableComponent'
 export default {
   name: 'AppComponent',
   data(){
     return {
-      // dataPasienAll: ''
+
     }
   },
   components:{
-    TambahPasienComponent
+    TambahPasienComponent,
+    TableComponent
   },
   created(){
-    this.$store.dispatch('setDataPasienAll').then((respon) => {
-      // this.dataPasienAll =  this.$store.getters.getPasienAll
-    })
-  },
-  computed:{
-    dataPasienAll(){
-      return this.$store.getters.getPasienAll
-    }
+    console.log("APP Created")
   }
 }
 </script>

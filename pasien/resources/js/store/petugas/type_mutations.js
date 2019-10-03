@@ -1,0 +1,1 @@
+export const SET_DATA_PETUGAS = 'SET_DATA_PETUGAS'

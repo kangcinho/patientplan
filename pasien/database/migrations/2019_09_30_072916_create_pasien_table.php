@@ -28,7 +28,7 @@ class CreatePasienTable extends Migration
             $table->string("petugasFO")->nullable();
             $table->string("petugasPerawat")->nullable();
             $table->text('keterangan');
-            $table->bigInteger('idUser')->unsigned();
+            $table->bigInteger('idUser')->unsigned()->nullable();
             $table->timestamps();
         });
     }

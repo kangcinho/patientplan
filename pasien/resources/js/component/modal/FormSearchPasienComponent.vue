@@ -2,6 +2,7 @@
   <div class="modal-card" style="width: auto">
     <header class="modal-card-head">
       <p class="modal-card-title">Daftar Nama Pasien</p>
+      
     </header>
     <section class="modal-card-body">
       <b-field >
@@ -94,35 +95,21 @@ export default {
     return {
       isComponentModal: false,
       searching: '',
-      datas: [
-        { 'noReg': 1, 'namaPasien': 'Nama Pasien', 'nrm': '12.12.12', 'kamar': 'Kamar',  'keterangan': 'Keterangan' },
-        { 'noReg': 2, 'namaPasien': 'John', 'nrm': '12.12.12', 'kamar': 'Jacobs',  'keterangan': 'Male' },
-        { 'noReg': 3, 'namaPasien': 'Tina', 'nrm': '12.12.12', 'kamar': 'Gilbert',  'keterangan': 'Female' },
-        { 'noReg': 4, 'namaPasien': 'Clarence', 'nrm': '12.12.12', 'kamar': 'Flores',  'keterangan': 'Male' },
-        { 'noReg': 5, 'namaPasien': 'Anne', 'nrm': '12.12.12', 'kamar': 'Lee',  'keterangan': 'Female' },
-        { 'noReg': 1, 'namaPasien': 'Jesse', 'nrm': '12.12.12', 'kamar': 'Simmons',  'keterangan': 'Male' },
-        { 'noReg': 2, 'namaPasien': 'John', 'nrm': '12.12.12', 'kamar': 'Jacobs',  'keterangan': 'Male' },
-        { 'noReg': 3, 'namaPasien': 'Tina', 'nrm': '12.12.12', 'kamar': 'Gilbert',  'keterangan': 'Female' },
-        { 'noReg': 4, 'namaPasien': 'Clarence', 'nrm': '12.12.12', 'kamar': 'Flores',  'keterangan': 'Male' },
-        { 'noReg': 5, 'namaPasien': 'Anne', 'nrm': '12.12.12', 'kamar': 'Lee',  'keterangan': 'Female' },
-        { 'noReg': 1, 'namaPasien': 'Jesse', 'nrm': '12.12.12', 'kamar': 'Simmons',  'keterangan': 'Male' },
-        { 'noReg': 2, 'namaPasien': 'Agus Setiawan', 'nrm': '12.12.12', 'kamar': 'Jacobs',  'keterangan': 'Male' },
-        { 'noReg': 3, 'namaPasien': 'Tina', 'nrm': '12.12.12', 'kamar': 'Gilbert',  'keterangan': 'Female' },
-        { 'noReg': 4, 'namaPasien': 'Clarence', 'nrm': '12.12.12', 'kamar': 'Flores',  'keterangan': 'Male' },
-        { 'noReg': 5, 'namaPasien': 'Anne', 'nrm': '12.12.12', 'kamar': 'Lee',  'keterangan': 'Female' }
-      ],
       isEmpty: false
     }
   },
   computed:{
     dataSearch(){
       if(this.searching == ''){
-        return this.datas
+        return this.dataPasienAll
       }else{
-        return this.datas.filter( (data) => {
+        return this.dataPasienAll.filter( (data) => {
           return data.namaPasien.toLowerCase().includes(this.searching.toLowerCase())
         })
       }
+    },
+    dataPasienAll(){
+      return this.$store.getters.getPasienAll
     }
   },
   methods:{
@@ -133,6 +120,9 @@ export default {
   },
   mounted(){
     this.$refs.search.focus()
+  },
+  created(){
+    console.log("FormSearchPasienComponent Created")
   }
 }
 </script>

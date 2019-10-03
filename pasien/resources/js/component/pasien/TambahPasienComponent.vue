@@ -1,20 +1,20 @@
 <template>
-  <b-collapse
-    class="panel"
-    :open.sync="isOpenFormTambahRiwayatPasienPulang">
-    <div
-      slot="trigger"
-      class="panel-heading"
-      role="button">
-      <strong>
-        <b-icon pack="fas" icon="plus"></b-icon>
-        Daftar Riwayat Pasien Pulang
-      </strong>
-    </div>
-    <div class="panel-tab">
-      <FormTambahPasienComponent :dataPetugas="dataPetugas"></FormTambahPasienComponent>
-    </div>
-  </b-collapse>
+    <b-collapse
+      class="panel"
+      :open.sync="isOpenFormTambahRiwayatPasienPulang">
+      <div
+        slot="trigger"
+        class="panel-heading"
+        role="button">
+        <strong>
+          <b-icon pack="fas" icon="plus"></b-icon>
+          Daftar Riwayat Pasien Pulang
+        </strong>
+      </div>
+      <div class="panel-tab">
+        <FormTambahPasienComponent></FormTambahPasienComponent>
+      </div>
+    </b-collapse>
 </template>
 
 <script>
@@ -27,23 +27,17 @@ export default {
   data(){
     return {
       isOpenFormTambahRiwayatPasienPulang: false,
-      dataPetugas: [
-        'Angular',
-        'Angular 2',
-        'Aurelia',
-        'Backbone',
-        'Ember',
-        'jQuery',
-        'Meteor',
-        'Node.js',
-        'Polymer',
-        'React',
-        'RxJS',
-        'Vue.js'
-      ]
     }
   },
-  
+  created(){
+    console.log("TambahPasienComponent Created")
+    this.$store.dispatch('getDataPasienFromSanata').then((respon) => {
+      console.log("Fetch Data All Registrasi Done!")
+    })
+    this.$store.dispatch('getDataPetugasFromSanata').then((respon) => {
+      console.log("Fetch Data All Petugas Done!")
+    })
+  },
 }
 </script>
 

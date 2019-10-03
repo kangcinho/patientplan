@@ -3,7 +3,9 @@ import App from './component/App'
 import Buefy from 'buefy'
 import store from './store/store'
 
+Vue.use(require('vue-moment'));
 Vue.use(Buefy)
+
 
 new Vue({
   el: '#app',

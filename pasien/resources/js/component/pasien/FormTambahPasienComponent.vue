@@ -6,17 +6,19 @@
           placeholder="Tanggal Rencana Pasien Pulang"
           icon-pack="fas"
           icon="calendar-check"
-          v-model="data.tanggal"
+          :date-formatter="(date) => $moment(date).format('DD MMM YYYY')"
+          v-model="dataPasienPulang.tanggal"
           rounded
           >
         </b-datepicker>
       </b-field>
       
+      <br/>
       <b-field >
         <b-input placeholder="Nomor Registrasi" 
           icon="search" 
           icon-pack="fas" 
-          v-model="data.noreg"
+          v-model="dataPasienPulang.noreg"
           @focus="isComponentModal = true"
           rounded
           readonly
@@ -29,7 +31,7 @@
             type="text"
             placeholder="Nomor Rekam Medis"
             validation-message="Nomor Rekam Medis Harus Diisi"
-            v-model="data.nrm"
+            v-model="dataPasienPulang.nrm"
             required
             readonly
             rounded
@@ -42,7 +44,7 @@
             type="text"
             placeholder="Nama Pasien"
             validation-message="Nama Pasien Harus Diisi"
-            v-model="data.namaPasien"
+            v-model="dataPasienPulang.namaPasien"
             required
             rounded
             readonly
@@ -55,7 +57,7 @@
             type="text"
             placeholder="Kamar Pasien"
             validation-message="Kamar Pasien Harus Diisi"
-            v-model="data.kamar"
+            v-model="dataPasienPulang.kamar"
             required
             rounded
             readonly
@@ -68,7 +70,7 @@
             type="text"
             placeholder="Keterangan Pasien"
             validation-message="Keterangan Pasien Harus Diisi"
-            v-model="data.keterangan"
+            v-model="dataPasienPulang.keterangan"
             required
             rounded
             readonly
@@ -78,15 +80,15 @@
       </b-field>   
 
       <b-field>
-        <b-checkbox v-model="isWaktu">Saya Ingin Menambahkan Waktu</b-checkbox>
+        <b-checkbox v-model="dataPasienPulang.isWaktu">Saya Ingin Menambahkan Waktu</b-checkbox>
       </b-field>
 
-      <b-field grouped v-if="isWaktu">
+      <b-field grouped v-if="dataPasienPulang.isWaktu">
         <b-field label="Waktu Verif">
           <b-clockpicker
             rounded
             placeholder="Waktu Verif"
-            v-model="data.waktuVerif"
+            v-model="dataPasienPulang.waktuVerif"
             icon-pack="fas"
             icon="clock"
             hour-format="24">
@@ -97,7 +99,7 @@
           <b-clockpicker
             rounded
             placeholder="Waktu IKS"
-            v-model="data.waktuIKS"
+            v-model="dataPasienPulang.waktuIKS"
             icon-pack="fas"
             icon="clock"
             hour-format="24">
@@ -108,7 +110,7 @@
           <b-clockpicker
             rounded
             placeholder="Waktu Selesai"
-            v-model="data.waktuSelesai"
+            v-model="dataPasienPulang.waktuSelesai"
             icon-pack="fas"
             icon="clock"
             hour-format="24">
@@ -119,7 +121,7 @@
           <b-clockpicker
             rounded
             placeholder="Waktu Pasien"
-            v-model="data.waktuPasien"
+            v-model="dataPasienPulang.waktuPasien"
             icon-pack="fas"
             icon="clock"
             hour-format="24">
@@ -130,7 +132,7 @@
           <b-clockpicker
             rounded
             placeholder="Waktu Lunas"
-            v-model="data.waktuLunas"
+            v-model="dataPasienPulang.waktuLunas"
             icon-pack="fas"
             icon="clock"
             hour-format="24">
@@ -138,15 +140,16 @@
         </b-field>
       </b-field>
 
-      <b-field grouped v-if="isWaktu">
+      <b-field grouped v-if="dataPasienPulang.isWaktu">
         <b-field label="Cari Petugas FO" expanded>
             <b-autocomplete
                 rounded
-                v-model="data.petugasFO"
+                v-model="dataPasienPulang.petugasFO"
                 :data="filterDataPetugasFO"
                 placeholder="Cari Nama Petugas FO"
                 icon-pack="fas"
                 icon="search"
+                field="namaCustomer"
                 @select="option => selected = option">
                 <template slot="empty">Tidak ditemukan Nama Petugas FO</template>
             </b-autocomplete>
@@ -154,20 +157,33 @@
         <b-field label="Cari Petugas Perawat" expanded>
           <b-autocomplete
             rounded
-            v-model="data.petugasPerawat"
+            v-model="dataPasienPulang.petugasPerawat"
             :data="filterDataPetugasPerawat"
             placeholder="Cari Nama Petugas Perawat"
             icon-pack="fas"
             icon="search"
+            field="namaCustomer"
             @select="option => selected = option">
             <template slot="empty">Tidak ditemukan Nama Petugas Perawat </template>
           </b-autocomplete>
         </b-field>
       </b-field>
+
+      <b-button 
+        type="is-primary"
+        size="is-medium"
+        icon-left="save"
+        icon-pack="fas"
+        @click="saveDataPasienPulang"
+        >
+        SAVE
+      </b-button> 
+      {{ dataPasienPulang }}
     </form>
     <b-modal :active.sync="isComponentModal" >
       <FormSearchPasienComponent></FormSearchPasienComponent>
     </b-modal>
+
   </div>
 </template>
 
@@ -176,14 +192,13 @@ import FormSearchPasienComponent from '../modal/FormSearchPasienComponent'
 import EventBus from '../../eventBus'
 export default {
   name: "FormTambahPasienComponent",
-  props: ['dataPetugas'],
   components:{
     FormSearchPasienComponent
   },
   data(){
     return {
-      data:{
-        tanggal: new Date(),
+      dataPasienPulang:{
+        tanggal: null,
         noreg:'',
         nrm:'',
         namaPasien:'',
@@ -196,40 +211,66 @@ export default {
         petugasFO:'',
         petugasPerawat:'',
         keterangan:'',
+        isWaktu: false,
       },
-      isWaktu: false,
       isComponentModal: false,
     }
   },
   computed:{
+    dataPetugas(){
+      return this.$store.getters.getPetugasAll
+    },
     filterDataPetugasFO(){
       return this.dataPetugas.filter( (petugas) => {
-        return petugas
+        return petugas.namaCustomer
           .toString()
           .toLowerCase()
-          .indexOf(this.data.petugasFO.toLowerCase()) >= 0
+          .indexOf(this.dataPasienPulang.petugasFO.toLowerCase()) >= 0
       })
     },
     filterDataPetugasPerawat(){
       return this.dataPetugas.filter( (petugas) => {
-        return petugas
+        return petugas.namaCustomer
           .toString()
           .toLowerCase()
-          .indexOf(this.data.petugasPerawat.toLowerCase()) >= 0
+          .indexOf(this.dataPasienPulang.petugasPerawat.toLowerCase()) >= 0
       })
     }
   },
   methods:{
     fillData(data){
-      this.data.noreg = data.noReg
-      this.data.nrm = data.nrm
-      this.data.namaPasien = data.namaPasien
-      this.data.kamar = data.kamar
-      this.data.keterangan = data.keterangan
+      this.dataPasienPulang.noreg = data.noReg
+      this.dataPasienPulang.nrm = data.nrm
+      this.dataPasienPulang.namaPasien = data.namaPasien
+      this.dataPasienPulang.kamar = data.kamar
+      this.dataPasienPulang.keterangan = data.keterangan
       this.isComponentModal = false
+    },
+    hapusFieldAll(){
+      this.dataPasienPulang.tanggal= new Date()
+      this.dataPasienPulang.noreg = this.dataPasienPulang.nrm = this.dataPasienPulang.namaPasien = this.dataPasienPulang.kamar = this.dataPasienPulang.petugasFO = this.dataPasienPulang.petugasPerawat = this.dataPasienPulang.keterangan = ''
+      this.dataPasienPulang.waktuVerif = this.dataPasienPulang.waktuIKS = this.dataPasienPulang.waktuSelesai = this.dataPasienPulang.waktuPasien = this.dataPasienPulang.waktuLunas = null
+      this.dataPasienPulang.isWaktu = this.isComponentModal = false
+    },
+    saveDataPasienPulang(){
+      this.$store.dispatch('saveDataPasienPulang', this.dataPasienPulang)
+      .then( (respon) => {
+        this.hapusFieldAll()
+        this.$buefy.notification.open({
+          message: respon,
+          type: 'is-success'
+        })
+      })
+      .catch( (respon) => {
+        this.$buefy.notification.open({
+          message: respon,
+          type: 'is-danger',
+        })
+      }) 
     }
   },
   created(){
+    console.log("FormTambahPasienComponent Created")
     EventBus.$on('fetchData', data => this.fillData(data))
   }
 }

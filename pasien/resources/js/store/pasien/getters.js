@@ -1,5 +1,6 @@
 const getters = {
-  getPasienAll: (state) => state.dataPasienAll
+  getPasienAll: (state) => state.dataPasienRegistrasi,
+  getPasienPulan: (state) => state.dataPasienPulang,
 }
 
 export default getters
