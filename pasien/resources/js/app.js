@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import App from './component/App'
+import App from './component/master/App'
 import Buefy from 'buefy'
 import store from './store/store'
 

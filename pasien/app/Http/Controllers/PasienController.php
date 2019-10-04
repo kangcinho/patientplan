@@ -10,7 +10,7 @@ class PasienController extends Controller
         
     }
 
-    public function getDataPasienFromSanata(){
+    public function getDataPasienRegistrasiFromSanata(){
         $tanggalSekarang = \Carbon\Carbon::now()->toDateString();
         $tanggalKemarin = \Carbon\Carbon::now()->subDays(1)->toDateString();
         
@@ -71,6 +71,7 @@ class PasienController extends Controller
     }
     public function getDataPasienPulang(){
         $dataPasien = Pasien::all();
+
         return response()->json($dataPasien, 200);
     }
 
@@ -123,7 +124,32 @@ class PasienController extends Controller
         }
         return response()->json($dataPasien, 200);
     }
-    
+    public function updateDataPasienPulang(Request $request){
+        $pasienPulang = Pasien::where('idPasien', $request->idPasien)->first();
+        if($pasienPulang){
+            if($request->waktuVerif != null){
+                $pasienPulang->waktuVerif = $this->convertDate($request->waktuVerif, false);
+            }
+            if($request->waktuIKS != null){
+                $pasienPulang->waktuIKS = $this->convertDate($request->waktuIKS, false);
+            }
+            if($request->waktuSelesai != null){
+                $pasienPulang->waktuSelesai = $this->convertDate($request->waktuSelesai, false);
+            }
+            if($request->waktuPasien != null){
+                $pasienPulang->waktuPasien = $this->convertDate($request->waktuPasien, false);
+            }
+            if($request->waktuLunas != null){
+                $pasienPulang->waktuLunas = $this->convertDate($request->waktuLunas, false);
+            }
+            $pasienPulang->petugasFO = $request->petugasFO;
+            $pasienPulang->petugasPerawat = $request->petugasPerawat;
+            $pasienPulang->save();
+            return response()->json($pasienPulang, 200);
+        }
+        return response()->json([], 500);
+    }
+
     public function convertDate($date, $isDate){
         if($isDate){
             return date('Y-m-d', strtotime($date));

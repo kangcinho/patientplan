@@ -1,6 +1,6 @@
 const state = {
   dataPasienRegistrasi: [],
-  dataPasienPulang: null,
+  dataPasienPulang: [],
 }
 
 export default state

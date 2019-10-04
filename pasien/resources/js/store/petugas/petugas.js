@@ -1,7 +1,7 @@
-import state from './state'
-import actions from './actions'
-import getters from './getters'
-import mutations from './mutations'
+import state from './petugasState'
+import actions from './petugasActions'
+import getters from './petugasGetters'
+import mutations from './petugasMutations'
 
 const store = {
   state,

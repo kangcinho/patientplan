@@ -1,5 +1,5 @@
 import axios from 'axios'
-import * as type from './type_mutations'
+import * as type from './petugasTypeMutations'
 
 const actions = {
   getDataPetugasFromSanata({commit}){

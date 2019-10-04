@@ -1,7 +1,7 @@
-import state from './state'
-import actions from './actions'
-import getters from './getters'
-import mutations from './mutations'
+import state from './pasienState'
+import actions from './pasienActions'
+import getters from './pasienGetters'
+import mutations from './pasienMutations'
 
 const store = {
   state,

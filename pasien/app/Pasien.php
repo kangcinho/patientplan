@@ -10,7 +10,9 @@ class Pasien extends Model
     protected $fillable = ['idPasien','noreg', 'tanggal', 'nrm', 'namaPasien', 'kamar', 'waktuVerif', 'waktuIKS', 'waktuSelesai', 'waktuPasien', 'waktuLunas', 'petugasFO', 'petugasPerawat', 'keterangan', 'idUser' ];
     public $incrementing = false;
     protected $primaryKey = 'idPasien';
-
+    protected $casts = [
+        'isEdit' => 'boolean',
+    ];
     public function getIDPasien(){
         $tanggal = Date('ymd');
         $time = microtime(true) * 1000;

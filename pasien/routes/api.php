@@ -17,7 +17,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('getDataPasienFromSanata', 'PasienController@getDataPasienFromSanata');
+Route::get('getDataPasienRegistrasiFromSanata', 'PasienController@getDataPasienRegistrasiFromSanata');
 Route::get('getDataPetugasFromSanata', 'PasienController@getDataPetugasFromSanata');
 Route::post('saveDataPasienPulang', 'PasienController@saveDataPasienPulang');
 Route::get('getDataPasienPulang', 'PasienController@getDataPasienPulang');
+Route::post('updateDataPasienPulang', 'PasienController@updateDataPasienPulang');

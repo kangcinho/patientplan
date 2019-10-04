@@ -1,7 +1,7 @@
-import * as type from './type_mutations'
+import * as type from './petugasTypeMutations'
 const mutations = {
   [type.SET_DATA_PETUGAS](state, payload){
-    state.dataPetugasAll = payload
+    state.dataPetugas = payload
   }
 }
 

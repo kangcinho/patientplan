@@ -1,5 +1,5 @@
 const state = {
-  dataPetugasAll: []
+  dataPetugas: []
 }
 
 export default state

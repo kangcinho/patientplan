@@ -28,6 +28,7 @@ class CreatePasienTable extends Migration
             $table->string("petugasFO")->nullable();
             $table->string("petugasPerawat")->nullable();
             $table->text('keterangan');
+            $table->boolean('isEdit')->default(false);
             $table->bigInteger('idUser')->unsigned()->nullable();
             $table->timestamps();
         });

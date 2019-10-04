@@ -3,146 +3,15 @@
 @import "~@fortawesome/fontawesome-free/scss/fontawesome.scss";
 @import "~@fortawesome/fontawesome-free/scss/solid.scss";
 
-$verylight: #f6f7f8;
-$smallspace: 20px;
-$mediumspace: 30px;
-$largespace: 40px;
-
-$defaultspace: $smallspace;
-
-* {
-  margin: 0;
-  padding: 0;
+.width25{
+	max-width: 25px;
+	word-wrap: break-word;
 }
-
-*, *:before, *:after {
-  box-sizing: border-box;
+.width50{
+	max-width: 45px;
+	word-wrap: break-word;
 }
-
-html, body {
-	height: 100%;
-}
-
-body {
-	font-family: -apple-system, ".SFNSText-Regular", "San Francisco", "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", sans-serif;
-}
-
-.wrapper {
-	display: flex;
-	height: 100%;
-	padding: $defaultspace;
-}
-
-/*
-* ==== SIDEBAR ====
-*/
-
-.sidebar {
-	display: flex;
-	min-height: 100%;
-	flex-grow: 1;
-	transition: all .3s;
-
-	&.isClosed {
-  		// TBD
-  		// display: none;
-  		flex-grow: 0;
-	}
-
-	& nav {
-		display: flex;
-		flex-direction: column;
-		width: 100%;
-		opacity: 1;
-  		&.isClosed {
-  			display: none;
-  		}
-	}
-
-	// & ul.nav li {
-	// 	list-style: none;
-	// 	padding: $smallspace 0;
-	// }
-
-	// & ul.nav li a {
-	// 	text-decoration: none;
-	// }
-
-	// & ul.nav li:last-child {
-	// 	// TBD
-	// }
-
-	// & ul.nav li:last-child a {
-	// 	// TBD
-	// }
-
-	& div {
-		align-self: flex-end;
-	}
-}
-
-/*
-* ==== CONTENT ====
-*/
-
-.content {
-	background-color: $verylight;
-	min-height: 100%;
-	flex-grow: 9;
-	padding: $largespace;
-	transform: translate3d(0,0,0);
-	transition: transform .3s;
-	
-	&.isClosed {
-  		// transform: translate3d(220px,0,0);
-	}
-}
-
-/*
-* ==== TOGGLE BUTTON ====
-*/
-
-a.button {
-	cursor: pointer;
-	position: absolute;
-	top: 10px;
-	left: 10px;
-
-	&:before {
-		content: '\f0c9';
-		font: 30px fontawesome;
-	}
-}
-
-/*
-* ==== MEDIA QUERIES ====
-*/
-
-@media only screen 
-// and (min-device-width : 414px) 
-and (max-device-width : 736px) 
-and (orientation : portrait) { 
-	.wrapper {
-		flex-direction: column;
-	}
-	.sidebar {
-		// min-height: initial;
-		min-height: 60px;
-		max-height: 60px;
-
-		& ul.nav {
-			padding: 20px;
-			flex-direction: row;
-		}
-		& ul.nav li {
-		    display: inline-block;
-		    padding: 2%;
-		}
-	}
-	.content {
-		/*TBD*/
-		& a.button {
-			display: none;
-		}
-	}
+.width75{
+	max-width: 60px;
+	word-wrap: break-word;
 }

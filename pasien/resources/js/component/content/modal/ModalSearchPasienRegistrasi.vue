@@ -2,7 +2,6 @@
   <div class="modal-card" style="width: auto">
     <header class="modal-card-head">
       <p class="modal-card-title">Daftar Nama Pasien</p>
-      
     </header>
     <section class="modal-card-body">
       <b-field >
@@ -83,17 +82,12 @@
 </template>
 
 <script>
-import SearchNoRegComponent from './SearchNoRegComponent'
-import EventBus from '../../eventBus'
+import EventBus from '../../../eventBus'
 
 export default {
-  name: "FromInputComponent",
-  components:{
-    SearchNoRegComponent
-  },
+  name: "ModalSearchPasienRegistrasi",
   data(){
     return {
-      isComponentModal: false,
       searching: '',
       isEmpty: false
     }
@@ -101,15 +95,15 @@ export default {
   computed:{
     dataSearch(){
       if(this.searching == ''){
-        return this.dataPasienAll
+        return this.dataPasienRegistrasi
       }else{
-        return this.dataPasienAll.filter( (data) => {
+        return this.dataPasienRegistrasi.filter( (data) => {
           return data.namaPasien.toLowerCase().includes(this.searching.toLowerCase())
         })
       }
     },
-    dataPasienAll(){
-      return this.$store.getters.getPasienAll
+    dataPasienRegistrasi(){
+      return this.$store.getters.getPasienRegistrasi
     }
   },
   methods:{
@@ -120,9 +114,6 @@ export default {
   },
   mounted(){
     this.$refs.search.focus()
-  },
-  created(){
-    console.log("FormSearchPasienComponent Created")
   }
 }
 </script>

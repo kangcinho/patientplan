@@ -1,5 +1,7 @@
 <template>
-  <div></div>
+  <div>
+    Om Bambang
+  </div>
 </template>
 
 <script>
