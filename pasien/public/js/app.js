@@ -2476,18 +2476,18 @@ __webpack_require__.r(__webpack_exports__);
     changeToEditMode: function changeToEditMode(dataPasien, mode) {
       var _this3 = this;
 
+      //Can Edit Only One Field Live
       if (mode) {
         this.fillData(dataPasien);
         this.classWidthRow = 'width25';
       } else {
         this.hapusFieldAll();
         this.classWidthRow = 'width75';
-      } //Can Edit Only One Field Live
-
-
-      if (this.disableEdit && !mode) {
         this.disableEdit = false;
-      }
+      } // if(this.disableEdit && !mode){
+      //   this.disableEdit = false
+      // }
+
 
       if (!this.disableEdit) {
         this.getPasienPulang.map(function (pasien) {
@@ -2535,19 +2535,32 @@ __webpack_require__.r(__webpack_exports__);
     },
     fillData: function fillData(data) {
       if (data.waktuVerif != null) {
-        console.log(data.waktuVerif);
         var time = new Date(Date.parse(data.waktuVerif));
-        console.log(time);
         this.dataPasienPulang.waktuVerif = time;
       }
 
-      if (data.waktuSelesai != null) {// this.dataPasienPulang.waktuSelesai = data.waktuSelesai
+      if (data.waktuSelesai != null) {
+        var _time = new Date(Date.parse(data.waktuSelesai));
+
+        this.dataPasienPulang.waktuSelesai = _time;
       }
 
-      if (data.waktuPasien != null) {// this.dataPasienPulang.waktuPasien = data.waktuPasien
+      if (data.waktuIKS != null) {
+        var _time2 = new Date(Date.parse(data.waktuIKS));
+
+        this.dataPasienPulang.waktuIKS = _time2;
       }
 
-      if (data.waktuLunas != null) {// this.dataPasienPulang.waktuLunas = data.waktuLunas
+      if (data.waktuPasien != null) {
+        var _time3 = new Date(Date.parse(data.waktuPasien));
+
+        this.dataPasienPulang.waktuPasien = _time3;
+      }
+
+      if (data.waktuLunas != null) {
+        var _time4 = new Date(Date.parse(data.waktuLunas));
+
+        this.dataPasienPulang.waktuLunas = _time4;
       }
 
       if (data.petugasFO != null) {
@@ -2557,6 +2570,15 @@ __webpack_require__.r(__webpack_exports__);
       if (data.petugasPerawat != null) {
         this.dataPasienPulang.petugasPerawat = data.petugasPerawat;
       }
+    }
+  },
+  filters: {
+    showOnlyTime: function showOnlyTime(datetime) {
+      if (datetime != null) {
+        return datetime.split(' ')[1];
+      }
+
+      return datetime;
     }
   }
 });
@@ -16181,7 +16203,11 @@ var render = function() {
                 _vm._v(" "),
                 _c("td", { staticClass: "has-text-centered width25" }, [
                   !pasien.isEdit
-                    ? _c("span", [_vm._v(_vm._s(pasien.waktuVerif))])
+                    ? _c("span", [
+                        _vm._v(
+                          _vm._s(_vm._f("showOnlyTime")(pasien.waktuVerif))
+                        )
+                      ])
                     : _c(
                         "span",
                         [
@@ -16212,7 +16238,9 @@ var render = function() {
                 _vm._v(" "),
                 _c("td", { staticClass: "has-text-centered width25" }, [
                   !pasien.isEdit
-                    ? _c("span", [_vm._v(_vm._s(pasien.waktuIKS))])
+                    ? _c("span", [
+                        _vm._v(_vm._s(_vm._f("showOnlyTime")(pasien.waktuIKS)))
+                      ])
                     : _c(
                         "span",
                         [
@@ -16239,7 +16267,11 @@ var render = function() {
                 _vm._v(" "),
                 _c("td", { staticClass: "has-text-centered width25" }, [
                   !pasien.isEdit
-                    ? _c("span", [_vm._v(_vm._s(pasien.waktuSelesai))])
+                    ? _c("span", [
+                        _vm._v(
+                          _vm._s(_vm._f("showOnlyTime")(pasien.waktuSelesai))
+                        )
+                      ])
                     : _c(
                         "span",
                         [
@@ -16270,7 +16302,11 @@ var render = function() {
                 _vm._v(" "),
                 _c("td", { staticClass: "has-text-centered width25" }, [
                   !pasien.isEdit
-                    ? _c("span", [_vm._v(_vm._s(pasien.waktuPasien))])
+                    ? _c("span", [
+                        _vm._v(
+                          _vm._s(_vm._f("showOnlyTime")(pasien.waktuPasien))
+                        )
+                      ])
                     : _c(
                         "span",
                         [
@@ -16301,7 +16337,11 @@ var render = function() {
                 _vm._v(" "),
                 _c("td", { staticClass: "has-text-centered width25" }, [
                   !pasien.isEdit
-                    ? _c("span", [_vm._v(_vm._s(pasien.waktuLunas))])
+                    ? _c("span", [
+                        _vm._v(
+                          _vm._s(_vm._f("showOnlyTime")(pasien.waktuLunas))
+                        )
+                      ])
                     : _c(
                         "span",
                         [

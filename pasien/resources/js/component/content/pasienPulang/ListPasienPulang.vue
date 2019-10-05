@@ -26,7 +26,7 @@
             <td class="has-text-centered width25">{{ pasien.kamar }}</td>
             <td class="has-text-centered" :class="classWidthRow">{{ pasien.namaPasien }}</td>
             <td class="has-text-centered width25">
-              <span v-if="!pasien.isEdit">{{ pasien.waktuVerif }}</span>
+              <span v-if="!pasien.isEdit">{{ pasien.waktuVerif | showOnlyTime }}</span>
               <span v-else>
                 <b-clockpicker
                   rounded
@@ -39,7 +39,7 @@
               </span>
             </td>
             <td class="has-text-centered width25">
-              <span v-if="!pasien.isEdit">{{ pasien.waktuIKS }}</span>
+              <span v-if="!pasien.isEdit">{{ pasien.waktuIKS | showOnlyTime }}</span>
               <span v-else>
                 <b-clockpicker
                   rounded
@@ -53,7 +53,7 @@
               
             </td>
             <td class="has-text-centered width25">
-              <span v-if="!pasien.isEdit">{{ pasien.waktuSelesai }}</span>
+              <span v-if="!pasien.isEdit">{{ pasien.waktuSelesai | showOnlyTime }}</span>
               <span v-else>
                 <b-clockpicker
                   rounded
@@ -66,7 +66,7 @@
               </span>
             </td>
             <td class="has-text-centered width25">
-              <span v-if="!pasien.isEdit">{{ pasien.waktuPasien }}</span>
+              <span v-if="!pasien.isEdit">{{ pasien.waktuPasien | showOnlyTime }}</span>
               <span v-else>
                 <b-clockpicker
                   rounded
@@ -79,7 +79,7 @@
               </span>             
             </td>
             <td class="has-text-centered width25">
-              <span v-if="!pasien.isEdit">{{ pasien.waktuLunas }}</span>
+              <span v-if="!pasien.isEdit">{{ pasien.waktuLunas | showOnlyTime }}</span>
               <span v-else>
                 <b-clockpicker
                   rounded
@@ -217,17 +217,19 @@ export default {
   },
   methods:{
     changeToEditMode(dataPasien, mode){
+       //Can Edit Only One Field Live
       if(mode){
         this.fillData(dataPasien)
         this.classWidthRow = 'width25'
       }else{
         this.hapusFieldAll()
         this.classWidthRow = 'width75'
-      }
-      //Can Edit Only One Field Live
-      if(this.disableEdit && !mode){
         this.disableEdit = false
       }
+     
+      // if(this.disableEdit && !mode){
+      //   this.disableEdit = false
+      // }
       if(!this.disableEdit){
         this.getPasienPulang.map( (pasien) => {
           if(pasien.idPasien === dataPasien.idPasien){
@@ -276,19 +278,24 @@ export default {
     },
     fillData(data){
       if(data.waktuVerif != null){
-        console.log(data.waktuVerif)
         const time = new Date(Date.parse(data.waktuVerif))
-        console.log(time)
         this.dataPasienPulang.waktuVerif = time
       }
       if(data.waktuSelesai != null){
-        // this.dataPasienPulang.waktuSelesai = data.waktuSelesai
+        const time = new Date(Date.parse(data.waktuSelesai))
+        this.dataPasienPulang.waktuSelesai = time
+      }
+      if(data.waktuIKS != null){
+        const time = new Date(Date.parse(data.waktuIKS))
+        this.dataPasienPulang.waktuIKS = time
       }
       if(data.waktuPasien != null){
-        // this.dataPasienPulang.waktuPasien = data.waktuPasien
+        const time = new Date(Date.parse(data.waktuPasien))
+        this.dataPasienPulang.waktuPasien = time
       }
       if(data.waktuLunas != null){
-        // this.dataPasienPulang.waktuLunas = data.waktuLunas
+        const time = new Date(Date.parse(data.waktuLunas))
+        this.dataPasienPulang.waktuLunas = time
       }
       if(data.petugasFO != null){
         this.dataPasienPulang.petugasFO = data.petugasFO
@@ -296,6 +303,14 @@ export default {
       if(data.petugasPerawat != null){
         this.dataPasienPulang.petugasPerawat = data.petugasPerawat
       }
+    }
+  },
+  filters:{
+    showOnlyTime: (datetime) => {
+      if(datetime != null){
+        return datetime.split(' ')[1]
+      }
+      return datetime
     }
   }
 }
