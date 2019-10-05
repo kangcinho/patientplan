@@ -279,7 +279,7 @@ export default {
         console.log(data.waktuVerif)
         const time = new Date(Date.parse(data.waktuVerif))
         console.log(time)
-        // this.dataPasienPulang.waktuVerif = data.waktuVerif
+        this.dataPasienPulang.waktuVerif = time
       }
       if(data.waktuSelesai != null){
         // this.dataPasienPulang.waktuSelesai = data.waktuSelesai

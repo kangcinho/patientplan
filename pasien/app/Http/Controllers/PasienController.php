@@ -77,7 +77,7 @@ class PasienController extends Controller
 
     public function saveDataPasienPulang(Request $request){
 
-        $tanggal = $this->convertDate($request->tanggal, true);
+        $tanggal = $this->convertDate($request->tanggal);
         $dataPasien = Pasien::where('noreg', $request->noreg)->get();
 
         if(count($dataPasien)){
@@ -102,19 +102,19 @@ class PasienController extends Controller
 
             if($request->isWaktu){
                 if($request->waktuVerif != null){
-                    $dataPasien->waktuVerif = $this->convertDate($request->waktuVerif, false);
+                    $dataPasien->waktuVerif = $this->convertDate($request->waktuVerif);
                 }
                 if($request->waktuIKS != null){
-                    $dataPasien->waktuIKS = $this->convertDate($request->waktuIKS, false);
+                    $dataPasien->waktuIKS = $this->convertDate($request->waktuIKS);
                 }
                 if($request->waktuSelesai != null){
-                    $dataPasien->waktuSelesai = $this->convertDate($request->waktuSelesai, false);
+                    $dataPasien->waktuSelesai = $this->convertDate($request->waktuSelesai);
                 }
                 if($request->waktuPasien != null){
-                    $dataPasien->waktuPasien = $this->convertDate($request->waktuPasien, false);
+                    $dataPasien->waktuPasien = $this->convertDate($request->waktuPasien);
                 }
                 if($request->waktuLunas != null){
-                    $dataPasien->waktuLunas = $this->convertDate($request->waktuLunas, false);
+                    $dataPasien->waktuLunas = $this->convertDate($request->waktuLunas);
                 }  
                 $dataPasien->petugasFO = $request->petugasFO;
                 $dataPasien->petugasPerawat = $request->petugasPerawat;    
@@ -128,19 +128,19 @@ class PasienController extends Controller
         $pasienPulang = Pasien::where('idPasien', $request->idPasien)->first();
         if($pasienPulang){
             if($request->waktuVerif != null){
-                $pasienPulang->waktuVerif = $this->convertDate($request->waktuVerif, false);
+                $pasienPulang->waktuVerif = $this->convertDate($request->waktuVerif);
             }
             if($request->waktuIKS != null){
-                $pasienPulang->waktuIKS = $this->convertDate($request->waktuIKS, false);
+                $pasienPulang->waktuIKS = $this->convertDate($request->waktuIKS);
             }
             if($request->waktuSelesai != null){
-                $pasienPulang->waktuSelesai = $this->convertDate($request->waktuSelesai, false);
+                $pasienPulang->waktuSelesai = $this->convertDate($request->waktuSelesai);
             }
             if($request->waktuPasien != null){
-                $pasienPulang->waktuPasien = $this->convertDate($request->waktuPasien, false);
+                $pasienPulang->waktuPasien = $this->convertDate($request->waktuPasien);
             }
             if($request->waktuLunas != null){
-                $pasienPulang->waktuLunas = $this->convertDate($request->waktuLunas, false);
+                $pasienPulang->waktuLunas = $this->convertDate($request->waktuLunas);
             }
             $pasienPulang->petugasFO = $request->petugasFO;
             $pasienPulang->petugasPerawat = $request->petugasPerawat;
@@ -150,10 +150,7 @@ class PasienController extends Controller
         return response()->json([], 500);
     }
 
-    public function convertDate($date, $isDate){
-        if($isDate){
-            return date('Y-m-d', strtotime($date));
-        }
-        return date('H:i:s', strtotime($date));
+    public function convertDate($date){
+        return date('Y-m-d H:i:s', strtotime($date));
     }
 }

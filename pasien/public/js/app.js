@@ -2537,7 +2537,8 @@ __webpack_require__.r(__webpack_exports__);
       if (data.waktuVerif != null) {
         console.log(data.waktuVerif);
         var time = new Date(Date.parse(data.waktuVerif));
-        console.log(time); // this.dataPasienPulang.waktuVerif = data.waktuVerif
+        console.log(time);
+        this.dataPasienPulang.waktuVerif = time;
       }
 
       if (data.waktuSelesai != null) {// this.dataPasienPulang.waktuSelesai = data.waktuSelesai
@@ -35356,8 +35357,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\DEVELOVER\pasienPulang\pasien\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! D:\DEVELOVER\pasienPulang\pasien\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\Develover\ongoing\pasienPulang\pasien\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\Develover\ongoing\pasienPulang\pasien\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
