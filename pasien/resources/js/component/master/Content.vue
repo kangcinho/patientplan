@@ -30,6 +30,7 @@
 <script>
 import AddPasienPulang from '../content/pasienPulang/AddPasienPulang'
 import ListPasienPulang from '../content/pasienPulang/ListPasienPulang'
+import EventBus from '../../eventBus'
 export default {
   name:"ContentComponent",
   data(){
@@ -45,6 +46,7 @@ export default {
     this.$store.dispatch('getDataPasienRegistrasiFromSanata')
     this.$store.dispatch('getDataPetugasFromSanata')
     this.$store.dispatch('getDataPasienPulang')
+    EventBus.$on('expandForm', () => { this.isOpenFormTambahRiwayatPasienPulang = false })
   }
 }
 </script>

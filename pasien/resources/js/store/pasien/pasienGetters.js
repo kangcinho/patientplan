@@ -1,6 +1,16 @@
 const getters = {
   getPasienRegistrasi: (state) => state.dataPasienRegistrasi,
-  getPasienPulang: (state) => state.dataPasienPulang,
+  getPasienPulang: (state) => {
+    return state.dataPasienPulang.sort( (a,b) => {
+      if(a.tanggal < b.tanggal){
+        return 1
+      }else if(a.tanggal > b.tanggal){
+        return -1
+      }
+      return 0
+    })
+  },
+
 }
 
 export default getters

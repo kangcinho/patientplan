@@ -1,7 +1,7 @@
 <template>
   <div>
     <form>
-      <b-field>
+      <b-field :type="{'is-danger': errorValidasi.tanggal }" :message="errorValidasi.tanggalMessage">
         <b-datepicker
           placeholder="Tanggal Rencana Pasien Pulang"
           icon-pack="fas"
@@ -10,10 +10,12 @@
           v-model="dataPasienPulang.tanggal"
           rounded
           >
+          
         </b-datepicker>
+        
       </b-field>
 
-      <b-field >
+      <b-field  :type="{'is-danger': errorValidasi.noreg }" :message="errorValidasi.noregMessage">
         <b-input placeholder="Nomor Registrasi" 
           icon="search" 
           icon-pack="fas" 
@@ -197,7 +199,7 @@ export default {
     return {
       dataPasienPulang:{
         tanggal: null,
-        noreg:'',
+        noreg:null,
         nrm:'',
         namaPasien:'',
         kamar:'',
@@ -210,6 +212,12 @@ export default {
         petugasPerawat:'',
         keterangan:'',
         isWaktu: false,
+      },
+      errorValidasi:{
+        tanggal: null,
+        tanggalMessage: null,
+        noreg: null,
+        noregMessage: null,
       },
       isComponentModal: false,
     }
@@ -251,20 +259,45 @@ export default {
       this.dataPasienPulang.isWaktu = this.isComponentModal = false
     },
     saveDataPasienPulang(){
-      this.$store.dispatch('saveDataPasienPulang', this.dataPasienPulang)
-      .then( (respon) => {
-        this.hapusFieldAll()
-        this.$buefy.notification.open({
-          message: respon,
-          type: 'is-success'
+      if(this.validateDataPasienPulang(this.dataPasienPulang)){
+        this.$store.dispatch('saveDataPasienPulang', this.dataPasienPulang)
+        .then( (respon) => {
+          this.hapusFieldAll()
+          EventBus.$emit('expandForm')
+          this.$buefy.notification.open({
+            message: respon,
+            type: 'is-success'
+          })
         })
-      })
-      .catch( (respon) => {
-        this.$buefy.notification.open({
-          message: respon,
-          type: 'is-danger',
+        .catch( (respon) => {
+          this.$buefy.notification.open({
+            message: respon,
+            type: 'is-danger',
+          })
         })
-      }) 
+      } 
+    },
+    validateDataPasienPulang(dataPasien){
+      if(dataPasien.tanggal == null || dataPasien.tanggal == ''){
+        this.errorValidasi.tanggal = true
+        this.errorValidasi.tanggalMessage = "Tanggal Rencana Pasien Pulang Harus Diisi!"
+      }else{
+        this.errorValidasi.tanggal = false
+        this.errorValidasi.tanggalMessage = null
+      }
+      if(dataPasien.noreg == null || dataPasien.noreg == ''){
+        this.errorValidasi.noreg = true
+        this.errorValidasi.noregMessage = "Nomor Registrasi Harus Dipilih dan Diisi!"
+      }else{
+        this.errorValidasi.noreg = false
+        this.errorValidasi.noregMessage = null
+      }
+      if(!this.errorValidasi.tanggal && !this.errorValidasi.noreg){
+        console.log('true')
+        return true
+      }
+      console.log('false')
+      return false
     }
   },
   created(){

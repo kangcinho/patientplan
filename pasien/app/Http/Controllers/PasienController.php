@@ -70,7 +70,7 @@ class PasienController extends Controller
         return response()->json($dataPetugasSanata);
     }
     public function getDataPasienPulang(){
-        $dataPasien = Pasien::all();
+        $dataPasien = Pasien::orderBy('tanggal', 'desc')->get();
 
         return response()->json($dataPasien, 200);
     }
