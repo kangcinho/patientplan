@@ -1,15 +1,27 @@
 <template>
-  <div class="columns">
+  <div class="columns is-multiline">
+    <div class="column is-full">
+      <b-input
+        rounded
+        icon-pack="fas"
+        icon-left="search"
+        placeholder="Cari Nama Pasien Pulang"
+        v-model="searchNamaPasien"
+        @keyup.native.enter="searchNamaPasienToDB"
+      >
+      </b-input>
+    </div>
     <div class="column">
-      <table class="table is-bordered is-striped is-narrow" style="width:100%; font-size:12px">
+      <table class="table is-bordered is-striped is-narrow" style="width:100%; font-size:11.5px">
         <thead>
           <tr>
-            <th rowspan="2" class="has-text-centered width25">Kamar</th>
+            <th rowspan="2" class="has-text-centered width25">Tgl Pulang</th>
+            <th rowspan="2" class="has-text-centered width11">Kmr</th>
             <th rowspan="2" class="has-text-centered" :class="classWidthRow">Nama Pasien</th>
-            <th colspan="5" class="has-text-centered width75">Waktu Konfirmasi</th>
-            <th colspan="2" class="has-text-centered width75">Petugas Jaga</th>
+            <th colspan="5" class="has-text-centered">Waktu Konfirmasi</th>
+            <th colspan="2" class="has-text-centered">Petugas Jaga</th>
             <th rowspan="2" class="has-text-centered" :class="classWidthRow">Keterangan</th>
-            <th rowspan="2" class="has-text-centered width50">Action</th>
+            <th rowspan="2" class="has-text-centered width30">Action</th>
           </tr>
         <tr>
           <th class="has-text-centered width25">Verif</th>
@@ -23,7 +35,8 @@
         </thead>
         <tbody>
           <tr v-for="pasien in getPasienPulang" :key="pasien.idPasien">
-            <td class="has-text-centered width25">{{ pasien.kamar }}</td>
+            <td class="has-text-centered width25">{{ pasien.tanggal | moment("DD MMM YYYY") }}</td>
+            <td class="has-text-centered width11">{{ pasien.kamar }}</td>
             <td class="has-text-centered" :class="classWidthRow">{{ pasien.namaPasien }}</td>
             <td class="has-text-centered width25">
               <span v-if="!pasien.isEdit">{{ pasien.waktuVerif | showOnlyTime }}</span>
@@ -91,7 +104,7 @@
                 </b-clockpicker>
               </span>                
             </td>
-            <td class="has-text-centered width75">
+            <td class="has-text-centered width60">
               <span v-if="!pasien.isEdit">{{ pasien.petugasFO }}</span>
               <span v-else>
                 <b-autocomplete
@@ -108,7 +121,7 @@
                 </b-autocomplete>
               </span>
             </td>
-            <td class="has-text-centered width75">
+            <td class="has-text-centered width60">
               <span v-if="!pasien.isEdit">{{ pasien.petugasPerawat }}</span>
               <span v-else>
                 <b-autocomplete
@@ -126,7 +139,7 @@
               </span>
             </td>
             <td class="has-text-centered" :class="classWidthRow">{{ pasien.keterangan }}</td>
-            <td class="has-text-centered width50">
+            <td class="has-text-centered width30">
               <b-button 
                 type="is-info"
                 size="is-small"
@@ -160,6 +173,21 @@
           </tr>
         </tbody>
       </table>
+      <b-pagination
+        icon-pack="fas"
+        :total="pagging.total"
+        :current.sync="pagging.current"
+        :range-before="pagging.rangeBefore"
+        :range-after="pagging.rangeAfter"
+        :per-page="pagging.perPage"
+        rounded
+        icon-prev="chevron-left"
+        icon-next="chevron-right"
+        aria-next-label="Next page"
+        aria-previous-label="Previous page"
+        aria-page-label="Page"
+        aria-current-label="Current page">
+      </b-pagination>
     </div>
   </div>
 </template>
@@ -187,7 +215,15 @@ export default {
         keterangan:'',
       },
       disableEdit: false,
-      classWidthRow: 'width75'
+      classWidthRow: 'width60',
+      pagging:{
+        total: 0,
+        current: 1,
+        perPage: 20,
+        rangeBefore: 2,
+        rangeAfter: 2
+      },
+      searchNamaPasien: '',
     }
   },
   computed:{
@@ -214,6 +250,17 @@ export default {
       })
     }
   },
+  watch:{
+    'pagging.current'(newVal, oldVal){
+      let firstPage,lastPage      
+      firstPage = (this.pagging.current - 1) * this.pagging.perPage
+      lastPage = (this.pagging.current) * this.pagging.perPage
+      this.$store.dispatch('getDataPasienPulang', {firstPage,lastPage, searchNamaPasien: this.searchNamaPasien})
+      .then( (respon) => {
+        this.pagging.total =  this.$store.getters.getTotalPasienPulang
+      })
+    },
+  },
   methods:{
     changeToEditMode(dataPasien, mode){
        //Can Edit Only One Field Live
@@ -222,13 +269,9 @@ export default {
         this.classWidthRow = 'width25'
       }else{
         this.hapusFieldAll()
-        this.classWidthRow = 'width75'
+        this.classWidthRow = 'width60'
         this.disableEdit = false
       }
-     
-      // if(this.disableEdit && !mode){
-      //   this.disableEdit = false
-      // }
       if(!this.disableEdit){
         this.getPasienPulang.map( (pasien) => {
           if(pasien.idPasien === dataPasien.idPasien){
@@ -302,6 +345,18 @@ export default {
       if(data.petugasPerawat != null){
         this.dataPasienPulang.petugasPerawat = data.petugasPerawat
       }
+    },
+    searchNamaPasienToDB(){
+      let firstPage,lastPage
+      if(this.searchNamaPasien != "" && this.searchNamaPasien != null){
+        this.pagging.current = 1
+      }
+      firstPage = (this.pagging.current - 1) * this.pagging.perPage
+      lastPage = (this.pagging.current) * this.pagging.perPage
+      this.$store.dispatch('getDataPasienPulang', {firstPage,lastPage, searchNamaPasien: this.searchNamaPasien})
+      .then( (respon) => {
+        this.pagging.total =  this.$store.getters.getTotalPasienPulang
+      })
     }
   },
   filters:{
@@ -310,7 +365,16 @@ export default {
         return datetime.split(' ')[1]
       }
       return datetime
-    }
+    },
+  },
+  mounted(){
+    let firstPage,lastPage
+    firstPage = (this.pagging.current - 1) * this.pagging.perPage
+    lastPage = (this.pagging.current) * this.pagging.perPage
+    this.$store.dispatch('getDataPasienPulang', {firstPage,lastPage, searchNamaPasien: this.searchNamaPasien})
+    .then( (respon) => {
+      this.pagging.total =  this.$store.getters.getTotalPasienPulang
+    })
   }
 }
 </script>

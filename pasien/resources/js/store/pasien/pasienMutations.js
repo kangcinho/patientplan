@@ -21,6 +21,9 @@ const mutations = {
         dataPasien.petugasPerawat = payload.petugasPerawat
       }
     })
+  },
+  [type.SET_DATA_TOTAL_PASIEN_PULANG](state, payload){
+    state.totalPasienPulang = payload
   }
 }
 

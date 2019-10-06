@@ -45,7 +45,6 @@ export default {
   created(){
     this.$store.dispatch('getDataPasienRegistrasiFromSanata')
     this.$store.dispatch('getDataPetugasFromSanata')
-    this.$store.dispatch('getDataPasienPulang')
     EventBus.$on('expandForm', () => { this.isOpenFormTambahRiwayatPasienPulang = false })
   }
 }

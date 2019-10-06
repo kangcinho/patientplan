@@ -5847,17 +5847,22 @@ readers do not read off random characters that represent icons */
   font-weight: 900;
 }
 
+.width11 {
+  max-width: 11px;
+  word-wrap: break-word;
+}
+
 .width25 {
   max-width: 25px;
   word-wrap: break-word;
 }
 
-.width50 {
-  max-width: 45px;
+.width30 {
+  max-width: 30px;
   word-wrap: break-word;
 }
 
-.width75 {
+.width60 {
   max-width: 60px;
   word-wrap: break-word;
 }

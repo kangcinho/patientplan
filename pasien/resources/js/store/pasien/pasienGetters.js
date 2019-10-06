@@ -10,7 +10,7 @@ const getters = {
       return 0
     })
   },
-
+  getTotalPasienPulang: (state) => state.totalPasienPulang
 }
 
 export default getters

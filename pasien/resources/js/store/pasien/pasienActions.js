@@ -24,10 +24,14 @@ const actions = {
     })
   },
   
-  getDataPasienPulang( {commit} ){
-    axios.get('/api/getDataPasienPulang')
-    .then( (respon) => {
-      commit(type.SET_DATA_PASIEN_PULANG, respon.data)
+  getDataPasienPulang( {commit}, data ){
+    return new Promise( (berhasil, gagal) => {
+      axios.post(`/api/getDataPasienPulang`, data)
+      .then( (respon) => {
+        commit(type.SET_DATA_PASIEN_PULANG, respon.data.dataPasien)
+        commit(type.SET_DATA_TOTAL_PASIEN_PULANG, respon.data.totalDataPasien)
+        berhasil('getDataPasienPulang berhasil')
+      })
     })
   },
   updateDataPasienPulang({commit}, data){

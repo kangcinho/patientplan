@@ -69,10 +69,17 @@ class PasienController extends Controller
                 ->get();
         return response()->json($dataPetugasSanata);
     }
-    public function getDataPasienPulang(){
-        $dataPasien = Pasien::orderBy('tanggal', 'desc')->get();
-
-        return response()->json($dataPasien, 200);
+    public function getDataPasienPulang(Request $request){
+        $dataPasien = Pasien::orderBy('tanggal', 'desc')
+        ->skip($request->firstPage)
+        ->take($request->lastPage)
+        ->where('namaPasien','like',"%$request->searchNamaPasien%")
+        ->get();
+        $totalDataPasien = Pasien::where('namaPasien','like',"%$request->searchNamaPasien%")->count();
+        return response()->json([
+            'dataPasien' => $dataPasien,
+            'totalDataPasien' => $totalDataPasien
+        ], 200);
     }
 
     public function saveDataPasienPulang(Request $request){
