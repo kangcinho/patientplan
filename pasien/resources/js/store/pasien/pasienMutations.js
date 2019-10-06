@@ -24,6 +24,13 @@ const mutations = {
   },
   [type.SET_DATA_TOTAL_PASIEN_PULANG](state, payload){
     state.totalPasienPulang = payload
+  },
+  [type.DELETE_DATA_PASIEN_PULANG](state, payload){
+    state.dataPasienPulang.map( (dataPasien, index) => {
+      if(dataPasien.idPasien == payload.idPasien){
+        state.dataPasienPulang.splice(index, 1)
+      }
+    })
   }
 }
 

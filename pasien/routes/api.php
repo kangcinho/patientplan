@@ -22,3 +22,4 @@ Route::get('getDataPetugasFromSanata', 'PasienController@getDataPetugasFromSanat
 Route::post('saveDataPasienPulang', 'PasienController@saveDataPasienPulang');
 Route::post('getDataPasienPulang', 'PasienController@getDataPasienPulang');
 Route::post('updateDataPasienPulang', 'PasienController@updateDataPasienPulang');
+Route::get('deleteDataPasienPulang/{idPasien}', 'PasienController@deleteDataPasienPulang');

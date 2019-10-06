@@ -4,7 +4,7 @@
       <b-input
         rounded
         icon-pack="fas"
-        icon-left="search"
+        icon="search" 
         placeholder="Cari Nama Pasien Pulang"
         v-model="searchNamaPasien"
         @keyup.native.enter="searchNamaPasienToDB"
@@ -33,7 +33,7 @@
           <th class="has-text-centered">Perawat</th>
         </tr>
         </thead>
-        <tbody>
+        <tbody v-if="getPasienPulang.length > 0">
           <tr v-for="pasien in getPasienPulang" :key="pasien.idPasien">
             <td class="has-text-centered width25">{{ pasien.tanggal | moment("DD MMM YYYY") }}</td>
             <td class="has-text-centered width11">{{ pasien.kamar }}</td>
@@ -168,7 +168,26 @@
                 type="is-danger" 
                 size="is-small"
                 icon-pack="fas"
-                icon-right="trash-alt" />
+                icon-right="trash-alt" 
+                @click="deleteDataPasienPulang(pasien)"/>
+            </td>
+          </tr>
+        </tbody>
+        <tbody v-else>
+          <tr>
+            <td colspan="12">
+              <section class="section">
+                <div class="content has-text-grey has-text-centered">
+                  <p>
+                    <b-icon
+                      pack="fas"
+                      icon="sad-cry"
+                      size="is-large">
+                    </b-icon>
+                  </p>
+                  <p>Tidak Ada Data Pasien</p>
+                </div>
+              </section>
             </td>
           </tr>
         </tbody>
@@ -189,13 +208,20 @@
         aria-current-label="Current page">
       </b-pagination>
     </div>
+
+    <!-- <b-modal :active.sync="isModalKonfirmasiHapusData" >
+      <ModalKonfirmasiHapusData></ModalKonfirmasiHapusData>
+    </b-modal> -->
   </div>
 </template>
 
 <script>
-
+import ModalKonfirmasiHapusData from '../modal/ModalKonfirmasiHapusData'
 export default {
   name: "ListPasienPulang",
+  components:{
+    ModalKonfirmasiHapusData
+  },
   data(){
     return {
       dataPasienPulang:{
@@ -219,11 +245,12 @@ export default {
       pagging:{
         total: 0,
         current: 1,
-        perPage: 20,
+        perPage: 8,
         rangeBefore: 2,
         rangeAfter: 2
       },
       searchNamaPasien: '',
+      isModalKonfirmasiHapusData: false,
     }
   },
   computed:{
@@ -254,7 +281,8 @@ export default {
     'pagging.current'(newVal, oldVal){
       let firstPage,lastPage      
       firstPage = (this.pagging.current - 1) * this.pagging.perPage
-      lastPage = (this.pagging.current) * this.pagging.perPage
+      lastPage = this.pagging.perPage
+      console.log(firstPage,lastPage)
       this.$store.dispatch('getDataPasienPulang', {firstPage,lastPage, searchNamaPasien: this.searchNamaPasien})
       .then( (respon) => {
         this.pagging.total =  this.$store.getters.getTotalPasienPulang
@@ -348,15 +376,36 @@ export default {
     },
     searchNamaPasienToDB(){
       let firstPage,lastPage
-      if(this.searchNamaPasien != "" && this.searchNamaPasien != null){
-        this.pagging.current = 1
-      }
-      firstPage = (this.pagging.current - 1) * this.pagging.perPage
-      lastPage = (this.pagging.current) * this.pagging.perPage
+      firstPage = 0
+      lastPage = this.pagging.perPage
       this.$store.dispatch('getDataPasienPulang', {firstPage,lastPage, searchNamaPasien: this.searchNamaPasien})
       .then( (respon) => {
         this.pagging.total =  this.$store.getters.getTotalPasienPulang
+        this.pagging.current = 1
       })
+    },
+    deleteDataPasienPulang(dataPasien){
+      this.$buefy.modal.open({
+        parent: this,
+        component: ModalKonfirmasiHapusData,
+        hasModalCard: true,
+        props:{
+          dataPasien
+        }
+      })
+      // this.$store.dispatch('deleteDataPasienPulang', dataPasien)
+      // .then( (respon) => {
+      //   this.$buefy.notification.open({
+      //     message: respon,
+      //     type: 'is-success'
+      //   })
+      // })
+      // .catch( (respon) => {
+      //   this.$buefy.notification.open({
+      //     message: respon,
+      //     type: 'is-danger'
+      //   })
+      // })
     }
   },
   filters:{
@@ -370,7 +419,7 @@ export default {
   mounted(){
     let firstPage,lastPage
     firstPage = (this.pagging.current - 1) * this.pagging.perPage
-    lastPage = (this.pagging.current) * this.pagging.perPage
+    lastPage = this.pagging.perPage
     this.$store.dispatch('getDataPasienPulang', {firstPage,lastPage, searchNamaPasien: this.searchNamaPasien})
     .then( (respon) => {
       this.pagging.total =  this.$store.getters.getTotalPasienPulang

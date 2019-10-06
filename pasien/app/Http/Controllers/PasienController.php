@@ -82,6 +82,11 @@ class PasienController extends Controller
         ], 200);
     }
 
+    public function deleteDataPasienPulang($idPasien){
+        $dataPasien = Pasien::where('idPasien', $idPasien)->first();
+        $dataPasien->delete();
+        return response()->json([], 200);
+    }
     public function saveDataPasienPulang(Request $request){
 
         $tanggal = $this->convertDate($request->tanggal);

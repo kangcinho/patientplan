@@ -1829,6 +1829,62 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/component/content/modal/ModalKonfirmasiHapusData.vue?vue&type=script&lang=js&":
+/*!************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/component/content/modal/ModalKonfirmasiHapusData.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "ModalKonfirmasiHapusData",
+  props: ['dataPasien'],
+  methods: {
+    deleteDataPasienPulang: function deleteDataPasienPulang() {
+      var _this = this;
+
+      this.$store.dispatch('deleteDataPasienPulang', this.dataPasien).then(function (respon) {
+        _this.$parent.close();
+
+        _this.$buefy.notification.open({
+          message: respon,
+          type: 'is-success'
+        });
+      })["catch"](function (respon) {
+        _this.$buefy.notification.open({
+          message: respon,
+          type: 'is-danger'
+        });
+      });
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/component/content/modal/ModalSearchPasienRegistrasi.vue?vue&type=script&lang=js&":
 /*!***************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/component/content/modal/ModalSearchPasienRegistrasi.vue?vue&type=script&lang=js& ***!
@@ -2296,6 +2352,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _modal_ModalKonfirmasiHapusData__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../modal/ModalKonfirmasiHapusData */ "./resources/js/component/content/modal/ModalKonfirmasiHapusData.vue");
 //
 //
 //
@@ -2490,8 +2547,35 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ListPasienPulang",
+  components: {
+    ModalKonfirmasiHapusData: _modal_ModalKonfirmasiHapusData__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
   data: function data() {
     return {
       dataPasienPulang: {
@@ -2515,11 +2599,12 @@ __webpack_require__.r(__webpack_exports__);
       pagging: {
         total: 0,
         current: 1,
-        perPage: 20,
+        perPage: 8,
         rangeBefore: 2,
         rangeAfter: 2
       },
-      searchNamaPasien: ''
+      searchNamaPasien: '',
+      isModalKonfirmasiHapusData: false
     };
   },
   computed: {
@@ -2550,7 +2635,8 @@ __webpack_require__.r(__webpack_exports__);
 
       var firstPage, lastPage;
       firstPage = (this.pagging.current - 1) * this.pagging.perPage;
-      lastPage = this.pagging.current * this.pagging.perPage;
+      lastPage = this.pagging.perPage;
+      console.log(firstPage, lastPage);
       this.$store.dispatch('getDataPasienPulang', {
         firstPage: firstPage,
         lastPage: lastPage,
@@ -2660,20 +2746,38 @@ __webpack_require__.r(__webpack_exports__);
       var _this6 = this;
 
       var firstPage, lastPage;
-
-      if (this.searchNamaPasien != "" && this.searchNamaPasien != null) {
-        this.pagging.current = 1;
-      }
-
-      firstPage = (this.pagging.current - 1) * this.pagging.perPage;
-      lastPage = this.pagging.current * this.pagging.perPage;
+      firstPage = 0;
+      lastPage = this.pagging.perPage;
       this.$store.dispatch('getDataPasienPulang', {
         firstPage: firstPage,
         lastPage: lastPage,
         searchNamaPasien: this.searchNamaPasien
       }).then(function (respon) {
         _this6.pagging.total = _this6.$store.getters.getTotalPasienPulang;
+        _this6.pagging.current = 1;
       });
+    },
+    deleteDataPasienPulang: function deleteDataPasienPulang(dataPasien) {
+      this.$buefy.modal.open({
+        parent: this,
+        component: _modal_ModalKonfirmasiHapusData__WEBPACK_IMPORTED_MODULE_0__["default"],
+        hasModalCard: true,
+        props: {
+          dataPasien: dataPasien
+        }
+      }); // this.$store.dispatch('deleteDataPasienPulang', dataPasien)
+      // .then( (respon) => {
+      //   this.$buefy.notification.open({
+      //     message: respon,
+      //     type: 'is-success'
+      //   })
+      // })
+      // .catch( (respon) => {
+      //   this.$buefy.notification.open({
+      //     message: respon,
+      //     type: 'is-danger'
+      //   })
+      // })
     }
   },
   filters: {
@@ -2690,7 +2794,7 @@ __webpack_require__.r(__webpack_exports__);
 
     var firstPage, lastPage;
     firstPage = (this.pagging.current - 1) * this.pagging.perPage;
-    lastPage = this.pagging.current * this.pagging.perPage;
+    lastPage = this.pagging.perPage;
     this.$store.dispatch('getDataPasienPulang', {
       firstPage: firstPage,
       lastPage: lastPage,
@@ -15537,6 +15641,89 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/component/content/modal/ModalKonfirmasiHapusData.vue?vue&type=template&id=120231cb&":
+/*!****************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/component/content/modal/ModalKonfirmasiHapusData.vue?vue&type=template&id=120231cb& ***!
+  \****************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "modal-card", staticStyle: { width: "auto" } },
+    [
+      _vm._m(0),
+      _vm._v(" "),
+      _c("section", { staticClass: "modal-card-body" }, [
+        _vm._v(
+          "\n    Apa Anda Yakin Menghapus Data Pasien " +
+            _vm._s(_vm.dataPasien.namaPasien) +
+            " ?\n  "
+        )
+      ]),
+      _vm._v(" "),
+      _c(
+        "footer",
+        { staticClass: "modal-card-foot" },
+        [
+          _c(
+            "button",
+            {
+              staticClass: "button",
+              attrs: { type: "button" },
+              on: {
+                click: function($event) {
+                  return _vm.$parent.close()
+                }
+              }
+            },
+            [_vm._v("Batal")]
+          ),
+          _vm._v(" "),
+          _c(
+            "b-button",
+            {
+              attrs: {
+                type: "is-danger",
+                "icon-left": "trash",
+                "icon-pack": "fas"
+              },
+              on: { click: _vm.deleteDataPasienPulang }
+            },
+            [_vm._v("\n          Hapus\n        ")]
+          )
+        ],
+        1
+      )
+    ]
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("header", { staticClass: "modal-card-head" }, [
+      _c("p", { staticClass: "modal-card-title" }, [
+        _vm._v("Konfirmasi Hapus Data")
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/component/content/modal/ModalSearchPasienRegistrasi.vue?vue&type=template&id=492d9c30&":
 /*!*******************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/component/content/modal/ModalSearchPasienRegistrasi.vue?vue&type=template&id=492d9c30& ***!
@@ -16258,7 +16445,7 @@ var render = function() {
           attrs: {
             rounded: "",
             "icon-pack": "fas",
-            "icon-left": "search",
+            icon: "search",
             placeholder: "Cari Nama Pasien Pulang"
           },
           nativeOn: {
@@ -16360,379 +16547,429 @@ var render = function() {
               _vm._m(0)
             ]),
             _vm._v(" "),
-            _c(
-              "tbody",
-              _vm._l(_vm.getPasienPulang, function(pasien) {
-                return _c("tr", { key: pasien.idPasien }, [
-                  _c("td", { staticClass: "has-text-centered width25" }, [
-                    _vm._v(
-                      _vm._s(_vm._f("moment")(pasien.tanggal, "DD MMM YYYY"))
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("td", { staticClass: "has-text-centered width11" }, [
-                    _vm._v(_vm._s(pasien.kamar))
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "td",
-                    {
-                      staticClass: "has-text-centered",
-                      class: _vm.classWidthRow
-                    },
-                    [_vm._v(_vm._s(pasien.namaPasien))]
-                  ),
-                  _vm._v(" "),
-                  _c("td", { staticClass: "has-text-centered width25" }, [
-                    !pasien.isEdit
-                      ? _c("span", [
-                          _vm._v(
-                            _vm._s(_vm._f("showOnlyTime")(pasien.waktuVerif))
+            _vm.getPasienPulang.length > 0
+              ? _c(
+                  "tbody",
+                  _vm._l(_vm.getPasienPulang, function(pasien) {
+                    return _c("tr", { key: pasien.idPasien }, [
+                      _c("td", { staticClass: "has-text-centered width25" }, [
+                        _vm._v(
+                          _vm._s(
+                            _vm._f("moment")(pasien.tanggal, "DD MMM YYYY")
                           )
-                        ])
-                      : _c(
-                          "span",
-                          [
-                            _c("b-clockpicker", {
-                              attrs: {
-                                rounded: "",
-                                size: "is-small",
-                                "icon-pack": "fas",
-                                icon: "clock",
-                                "hour-format": "24"
-                              },
-                              model: {
-                                value: _vm.dataPasienPulang.waktuVerif,
-                                callback: function($$v) {
-                                  _vm.$set(
-                                    _vm.dataPasienPulang,
-                                    "waktuVerif",
-                                    $$v
-                                  )
-                                },
-                                expression: "dataPasienPulang.waktuVerif"
-                              }
-                            })
-                          ],
-                          1
                         )
-                  ]),
-                  _vm._v(" "),
-                  _c("td", { staticClass: "has-text-centered width25" }, [
-                    !pasien.isEdit
-                      ? _c("span", [
-                          _vm._v(
-                            _vm._s(_vm._f("showOnlyTime")(pasien.waktuIKS))
-                          )
-                        ])
-                      : _c(
-                          "span",
-                          [
-                            _c("b-clockpicker", {
-                              attrs: {
-                                rounded: "",
-                                size: "is-small",
-                                "icon-pack": "fas",
-                                icon: "clock",
-                                "hour-format": "24"
-                              },
-                              model: {
-                                value: _vm.dataPasienPulang.waktuIKS,
-                                callback: function($$v) {
-                                  _vm.$set(
-                                    _vm.dataPasienPulang,
-                                    "waktuIKS",
-                                    $$v
-                                  )
-                                },
-                                expression: "dataPasienPulang.waktuIKS"
-                              }
-                            })
-                          ],
-                          1
-                        )
-                  ]),
-                  _vm._v(" "),
-                  _c("td", { staticClass: "has-text-centered width25" }, [
-                    !pasien.isEdit
-                      ? _c("span", [
-                          _vm._v(
-                            _vm._s(_vm._f("showOnlyTime")(pasien.waktuSelesai))
-                          )
-                        ])
-                      : _c(
-                          "span",
-                          [
-                            _c("b-clockpicker", {
-                              attrs: {
-                                rounded: "",
-                                size: "is-small",
-                                "icon-pack": "fas",
-                                icon: "clock",
-                                "hour-format": "24"
-                              },
-                              model: {
-                                value: _vm.dataPasienPulang.waktuSelesai,
-                                callback: function($$v) {
-                                  _vm.$set(
-                                    _vm.dataPasienPulang,
-                                    "waktuSelesai",
-                                    $$v
-                                  )
-                                },
-                                expression: "dataPasienPulang.waktuSelesai"
-                              }
-                            })
-                          ],
-                          1
-                        )
-                  ]),
-                  _vm._v(" "),
-                  _c("td", { staticClass: "has-text-centered width25" }, [
-                    !pasien.isEdit
-                      ? _c("span", [
-                          _vm._v(
-                            _vm._s(_vm._f("showOnlyTime")(pasien.waktuPasien))
-                          )
-                        ])
-                      : _c(
-                          "span",
-                          [
-                            _c("b-clockpicker", {
-                              attrs: {
-                                rounded: "",
-                                size: "is-small",
-                                "icon-pack": "fas",
-                                icon: "clock",
-                                "hour-format": "24"
-                              },
-                              model: {
-                                value: _vm.dataPasienPulang.waktuPasien,
-                                callback: function($$v) {
-                                  _vm.$set(
-                                    _vm.dataPasienPulang,
-                                    "waktuPasien",
-                                    $$v
-                                  )
-                                },
-                                expression: "dataPasienPulang.waktuPasien"
-                              }
-                            })
-                          ],
-                          1
-                        )
-                  ]),
-                  _vm._v(" "),
-                  _c("td", { staticClass: "has-text-centered width25" }, [
-                    !pasien.isEdit
-                      ? _c("span", [
-                          _vm._v(
-                            _vm._s(_vm._f("showOnlyTime")(pasien.waktuLunas))
-                          )
-                        ])
-                      : _c(
-                          "span",
-                          [
-                            _c("b-clockpicker", {
-                              attrs: {
-                                rounded: "",
-                                size: "is-small",
-                                "icon-pack": "fas",
-                                icon: "clock",
-                                "hour-format": "24"
-                              },
-                              model: {
-                                value: _vm.dataPasienPulang.waktuLunas,
-                                callback: function($$v) {
-                                  _vm.$set(
-                                    _vm.dataPasienPulang,
-                                    "waktuLunas",
-                                    $$v
-                                  )
-                                },
-                                expression: "dataPasienPulang.waktuLunas"
-                              }
-                            })
-                          ],
-                          1
-                        )
-                  ]),
-                  _vm._v(" "),
-                  _c("td", { staticClass: "has-text-centered width60" }, [
-                    !pasien.isEdit
-                      ? _c("span", [_vm._v(_vm._s(pasien.petugasFO))])
-                      : _c(
-                          "span",
-                          [
-                            _c(
-                              "b-autocomplete",
-                              {
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "has-text-centered width11" }, [
+                        _vm._v(_vm._s(pasien.kamar))
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "td",
+                        {
+                          staticClass: "has-text-centered",
+                          class: _vm.classWidthRow
+                        },
+                        [_vm._v(_vm._s(pasien.namaPasien))]
+                      ),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "has-text-centered width25" }, [
+                        !pasien.isEdit
+                          ? _c("span", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("showOnlyTime")(pasien.waktuVerif)
+                                )
+                              )
+                            ])
+                          : _c(
+                              "span",
+                              [
+                                _c("b-clockpicker", {
+                                  attrs: {
+                                    rounded: "",
+                                    size: "is-small",
+                                    "icon-pack": "fas",
+                                    icon: "clock",
+                                    "hour-format": "24"
+                                  },
+                                  model: {
+                                    value: _vm.dataPasienPulang.waktuVerif,
+                                    callback: function($$v) {
+                                      _vm.$set(
+                                        _vm.dataPasienPulang,
+                                        "waktuVerif",
+                                        $$v
+                                      )
+                                    },
+                                    expression: "dataPasienPulang.waktuVerif"
+                                  }
+                                })
+                              ],
+                              1
+                            )
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "has-text-centered width25" }, [
+                        !pasien.isEdit
+                          ? _c("span", [
+                              _vm._v(
+                                _vm._s(_vm._f("showOnlyTime")(pasien.waktuIKS))
+                              )
+                            ])
+                          : _c(
+                              "span",
+                              [
+                                _c("b-clockpicker", {
+                                  attrs: {
+                                    rounded: "",
+                                    size: "is-small",
+                                    "icon-pack": "fas",
+                                    icon: "clock",
+                                    "hour-format": "24"
+                                  },
+                                  model: {
+                                    value: _vm.dataPasienPulang.waktuIKS,
+                                    callback: function($$v) {
+                                      _vm.$set(
+                                        _vm.dataPasienPulang,
+                                        "waktuIKS",
+                                        $$v
+                                      )
+                                    },
+                                    expression: "dataPasienPulang.waktuIKS"
+                                  }
+                                })
+                              ],
+                              1
+                            )
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "has-text-centered width25" }, [
+                        !pasien.isEdit
+                          ? _c("span", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("showOnlyTime")(pasien.waktuSelesai)
+                                )
+                              )
+                            ])
+                          : _c(
+                              "span",
+                              [
+                                _c("b-clockpicker", {
+                                  attrs: {
+                                    rounded: "",
+                                    size: "is-small",
+                                    "icon-pack": "fas",
+                                    icon: "clock",
+                                    "hour-format": "24"
+                                  },
+                                  model: {
+                                    value: _vm.dataPasienPulang.waktuSelesai,
+                                    callback: function($$v) {
+                                      _vm.$set(
+                                        _vm.dataPasienPulang,
+                                        "waktuSelesai",
+                                        $$v
+                                      )
+                                    },
+                                    expression: "dataPasienPulang.waktuSelesai"
+                                  }
+                                })
+                              ],
+                              1
+                            )
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "has-text-centered width25" }, [
+                        !pasien.isEdit
+                          ? _c("span", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("showOnlyTime")(pasien.waktuPasien)
+                                )
+                              )
+                            ])
+                          : _c(
+                              "span",
+                              [
+                                _c("b-clockpicker", {
+                                  attrs: {
+                                    rounded: "",
+                                    size: "is-small",
+                                    "icon-pack": "fas",
+                                    icon: "clock",
+                                    "hour-format": "24"
+                                  },
+                                  model: {
+                                    value: _vm.dataPasienPulang.waktuPasien,
+                                    callback: function($$v) {
+                                      _vm.$set(
+                                        _vm.dataPasienPulang,
+                                        "waktuPasien",
+                                        $$v
+                                      )
+                                    },
+                                    expression: "dataPasienPulang.waktuPasien"
+                                  }
+                                })
+                              ],
+                              1
+                            )
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "has-text-centered width25" }, [
+                        !pasien.isEdit
+                          ? _c("span", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("showOnlyTime")(pasien.waktuLunas)
+                                )
+                              )
+                            ])
+                          : _c(
+                              "span",
+                              [
+                                _c("b-clockpicker", {
+                                  attrs: {
+                                    rounded: "",
+                                    size: "is-small",
+                                    "icon-pack": "fas",
+                                    icon: "clock",
+                                    "hour-format": "24"
+                                  },
+                                  model: {
+                                    value: _vm.dataPasienPulang.waktuLunas,
+                                    callback: function($$v) {
+                                      _vm.$set(
+                                        _vm.dataPasienPulang,
+                                        "waktuLunas",
+                                        $$v
+                                      )
+                                    },
+                                    expression: "dataPasienPulang.waktuLunas"
+                                  }
+                                })
+                              ],
+                              1
+                            )
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "has-text-centered width60" }, [
+                        !pasien.isEdit
+                          ? _c("span", [_vm._v(_vm._s(pasien.petugasFO))])
+                          : _c(
+                              "span",
+                              [
+                                _c(
+                                  "b-autocomplete",
+                                  {
+                                    attrs: {
+                                      rounded: "",
+                                      size: "is-small",
+                                      data: _vm.filterDataPetugasFO,
+                                      placeholder: "Cari Nama Petugas FO",
+                                      "icon-pack": "fas",
+                                      icon: "search",
+                                      field: "namaCustomer"
+                                    },
+                                    on: {
+                                      select: function(option) {
+                                        return (_vm.selected = option)
+                                      }
+                                    },
+                                    model: {
+                                      value: _vm.dataPasienPulang.petugasFO,
+                                      callback: function($$v) {
+                                        _vm.$set(
+                                          _vm.dataPasienPulang,
+                                          "petugasFO",
+                                          $$v
+                                        )
+                                      },
+                                      expression: "dataPasienPulang.petugasFO"
+                                    }
+                                  },
+                                  [
+                                    _c("template", { slot: "empty" }, [
+                                      _vm._v("Tidak ditemukan Nama Petugas FO")
+                                    ])
+                                  ],
+                                  2
+                                )
+                              ],
+                              1
+                            )
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "has-text-centered width60" }, [
+                        !pasien.isEdit
+                          ? _c("span", [_vm._v(_vm._s(pasien.petugasPerawat))])
+                          : _c(
+                              "span",
+                              [
+                                _c(
+                                  "b-autocomplete",
+                                  {
+                                    attrs: {
+                                      rounded: "",
+                                      size: "is-small",
+                                      data: _vm.filterDataPetugasPerawat,
+                                      placeholder: "Cari Nama Petugas Perawat",
+                                      "icon-pack": "fas",
+                                      icon: "search",
+                                      field: "namaCustomer"
+                                    },
+                                    on: {
+                                      select: function(option) {
+                                        return (_vm.selected = option)
+                                      }
+                                    },
+                                    model: {
+                                      value:
+                                        _vm.dataPasienPulang.petugasPerawat,
+                                      callback: function($$v) {
+                                        _vm.$set(
+                                          _vm.dataPasienPulang,
+                                          "petugasPerawat",
+                                          $$v
+                                        )
+                                      },
+                                      expression:
+                                        "dataPasienPulang.petugasPerawat"
+                                    }
+                                  },
+                                  [
+                                    _c("template", { slot: "empty" }, [
+                                      _vm._v(
+                                        "Tidak ditemukan Nama Petugas Perawat "
+                                      )
+                                    ])
+                                  ],
+                                  2
+                                )
+                              ],
+                              1
+                            )
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "td",
+                        {
+                          staticClass: "has-text-centered",
+                          class: _vm.classWidthRow
+                        },
+                        [_vm._v(_vm._s(pasien.keterangan))]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "td",
+                        { staticClass: "has-text-centered width30" },
+                        [
+                          !pasien.isEdit
+                            ? _c("b-button", {
                                 attrs: {
-                                  rounded: "",
+                                  type: "is-info",
                                   size: "is-small",
-                                  data: _vm.filterDataPetugasFO,
-                                  placeholder: "Cari Nama Petugas FO",
                                   "icon-pack": "fas",
-                                  icon: "search",
-                                  field: "namaCustomer"
+                                  "icon-right": "edit",
+                                  title: "Edit Data Pasien"
                                 },
                                 on: {
-                                  select: function(option) {
-                                    return (_vm.selected = option)
+                                  click: function($event) {
+                                    return _vm.changeToEditMode(pasien, true)
                                   }
-                                },
-                                model: {
-                                  value: _vm.dataPasienPulang.petugasFO,
-                                  callback: function($$v) {
-                                    _vm.$set(
-                                      _vm.dataPasienPulang,
-                                      "petugasFO",
-                                      $$v
-                                    )
-                                  },
-                                  expression: "dataPasienPulang.petugasFO"
                                 }
-                              },
-                              [
-                                _c("template", { slot: "empty" }, [
-                                  _vm._v("Tidak ditemukan Nama Petugas FO")
-                                ])
-                              ],
-                              2
-                            )
-                          ],
-                          1
-                        )
-                  ]),
-                  _vm._v(" "),
-                  _c("td", { staticClass: "has-text-centered width60" }, [
-                    !pasien.isEdit
-                      ? _c("span", [_vm._v(_vm._s(pasien.petugasPerawat))])
-                      : _c(
-                          "span",
-                          [
-                            _c(
-                              "b-autocomplete",
-                              {
+                              })
+                            : _vm._e(),
+                          _vm._v(" "),
+                          pasien.isEdit
+                            ? _c("b-button", {
                                 attrs: {
-                                  rounded: "",
+                                  type: "is-info",
                                   size: "is-small",
-                                  data: _vm.filterDataPetugasPerawat,
-                                  placeholder: "Cari Nama Petugas Perawat",
                                   "icon-pack": "fas",
-                                  icon: "search",
-                                  field: "namaCustomer"
+                                  "icon-right": "save",
+                                  title: "Save Data Pasien"
                                 },
                                 on: {
-                                  select: function(option) {
-                                    return (_vm.selected = option)
+                                  click: function($event) {
+                                    return _vm.updateDataPasien(pasien)
                                   }
-                                },
-                                model: {
-                                  value: _vm.dataPasienPulang.petugasPerawat,
-                                  callback: function($$v) {
-                                    _vm.$set(
-                                      _vm.dataPasienPulang,
-                                      "petugasPerawat",
-                                      $$v
-                                    )
-                                  },
-                                  expression: "dataPasienPulang.petugasPerawat"
                                 }
-                              },
+                              })
+                            : _vm._e(),
+                          _vm._v(" "),
+                          pasien.isEdit
+                            ? _c("b-button", {
+                                attrs: {
+                                  type: "is-warning",
+                                  size: "is-small",
+                                  "icon-pack": "fas",
+                                  "icon-right": "ban",
+                                  title: "Batal Edit Data Pasien"
+                                },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.changeToEditMode(pasien, false)
+                                  }
+                                }
+                              })
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _c("b-button", {
+                            attrs: {
+                              type: "is-danger",
+                              size: "is-small",
+                              "icon-pack": "fas",
+                              "icon-right": "trash-alt"
+                            },
+                            on: {
+                              click: function($event) {
+                                return _vm.deleteDataPasienPulang(pasien)
+                              }
+                            }
+                          })
+                        ],
+                        1
+                      )
+                    ])
+                  }),
+                  0
+                )
+              : _c("tbody", [
+                  _c("tr", [
+                    _c("td", { attrs: { colspan: "12" } }, [
+                      _c("section", { staticClass: "section" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass:
+                              "content has-text-grey has-text-centered"
+                          },
+                          [
+                            _c(
+                              "p",
                               [
-                                _c("template", { slot: "empty" }, [
-                                  _vm._v(
-                                    "Tidak ditemukan Nama Petugas Perawat "
-                                  )
-                                ])
+                                _c("b-icon", {
+                                  attrs: {
+                                    pack: "fas",
+                                    icon: "sad-cry",
+                                    size: "is-large"
+                                  }
+                                })
                               ],
-                              2
-                            )
-                          ],
-                          1
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c("p", [_vm._v("Tidak Ada Data Pasien")])
+                          ]
                         )
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "td",
-                    {
-                      staticClass: "has-text-centered",
-                      class: _vm.classWidthRow
-                    },
-                    [_vm._v(_vm._s(pasien.keterangan))]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "td",
-                    { staticClass: "has-text-centered width30" },
-                    [
-                      !pasien.isEdit
-                        ? _c("b-button", {
-                            attrs: {
-                              type: "is-info",
-                              size: "is-small",
-                              "icon-pack": "fas",
-                              "icon-right": "edit",
-                              title: "Edit Data Pasien"
-                            },
-                            on: {
-                              click: function($event) {
-                                return _vm.changeToEditMode(pasien, true)
-                              }
-                            }
-                          })
-                        : _vm._e(),
-                      _vm._v(" "),
-                      pasien.isEdit
-                        ? _c("b-button", {
-                            attrs: {
-                              type: "is-info",
-                              size: "is-small",
-                              "icon-pack": "fas",
-                              "icon-right": "save",
-                              title: "Save Data Pasien"
-                            },
-                            on: {
-                              click: function($event) {
-                                return _vm.updateDataPasien(pasien)
-                              }
-                            }
-                          })
-                        : _vm._e(),
-                      _vm._v(" "),
-                      pasien.isEdit
-                        ? _c("b-button", {
-                            attrs: {
-                              type: "is-warning",
-                              size: "is-small",
-                              "icon-pack": "fas",
-                              "icon-right": "ban",
-                              title: "Batal Edit Data Pasien"
-                            },
-                            on: {
-                              click: function($event) {
-                                return _vm.changeToEditMode(pasien, false)
-                              }
-                            }
-                          })
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _c("b-button", {
-                        attrs: {
-                          type: "is-danger",
-                          size: "is-small",
-                          "icon-pack": "fas",
-                          "icon-right": "trash-alt"
-                        }
-                      })
-                    ],
-                    1
-                  )
+                      ])
+                    ])
+                  ])
                 ])
-              }),
-              0
-            )
           ]
         ),
         _vm._v(" "),
@@ -34826,6 +35063,75 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
 
 /***/ }),
 
+/***/ "./resources/js/component/content/modal/ModalKonfirmasiHapusData.vue":
+/*!***************************************************************************!*\
+  !*** ./resources/js/component/content/modal/ModalKonfirmasiHapusData.vue ***!
+  \***************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ModalKonfirmasiHapusData_vue_vue_type_template_id_120231cb___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ModalKonfirmasiHapusData.vue?vue&type=template&id=120231cb& */ "./resources/js/component/content/modal/ModalKonfirmasiHapusData.vue?vue&type=template&id=120231cb&");
+/* harmony import */ var _ModalKonfirmasiHapusData_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ModalKonfirmasiHapusData.vue?vue&type=script&lang=js& */ "./resources/js/component/content/modal/ModalKonfirmasiHapusData.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ModalKonfirmasiHapusData_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ModalKonfirmasiHapusData_vue_vue_type_template_id_120231cb___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ModalKonfirmasiHapusData_vue_vue_type_template_id_120231cb___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/component/content/modal/ModalKonfirmasiHapusData.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/component/content/modal/ModalKonfirmasiHapusData.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************!*\
+  !*** ./resources/js/component/content/modal/ModalKonfirmasiHapusData.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ModalKonfirmasiHapusData_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./ModalKonfirmasiHapusData.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/component/content/modal/ModalKonfirmasiHapusData.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ModalKonfirmasiHapusData_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/component/content/modal/ModalKonfirmasiHapusData.vue?vue&type=template&id=120231cb&":
+/*!**********************************************************************************************************!*\
+  !*** ./resources/js/component/content/modal/ModalKonfirmasiHapusData.vue?vue&type=template&id=120231cb& ***!
+  \**********************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ModalKonfirmasiHapusData_vue_vue_type_template_id_120231cb___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./ModalKonfirmasiHapusData.vue?vue&type=template&id=120231cb& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/component/content/modal/ModalKonfirmasiHapusData.vue?vue&type=template&id=120231cb&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ModalKonfirmasiHapusData_vue_vue_type_template_id_120231cb___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ModalKonfirmasiHapusData_vue_vue_type_template_id_120231cb___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/component/content/modal/ModalSearchPasienRegistrasi.vue":
 /*!******************************************************************************!*\
   !*** ./resources/js/component/content/modal/ModalSearchPasienRegistrasi.vue ***!
@@ -35343,6 +35649,19 @@ var actions = {
         gagal("Data Gagal Di Update");
       });
     });
+  },
+  deleteDataPasienPulang: function deleteDataPasienPulang(_ref5, data) {
+    var commit = _ref5.commit;
+    return new Promise(function (berhasil, gagal) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/api/deleteDataPasienPulang/".concat(data.idPasien)).then(function (respon) {
+        if (respon.status == 200) {
+          commit(_pasienTypeMutations__WEBPACK_IMPORTED_MODULE_1__["DELETE_DATA_PASIEN_PULANG"], data);
+          berhasil("Berhasil! Data ".concat(data.namaPasien, " Berhasil Dihapus!"));
+        }
+      })["catch"](function (respon) {
+        gagal("Data ".concat(data.namaPasien, " Gagal Dihapus!"));
+      });
+    });
   }
 };
 /* harmony default export */ __webpack_exports__["default"] = (actions);
@@ -35416,6 +35735,12 @@ var mutations = (_mutations = {}, _defineProperty(_mutations, _pasienTypeMutatio
   });
 }), _defineProperty(_mutations, _pasienTypeMutations__WEBPACK_IMPORTED_MODULE_0__["SET_DATA_TOTAL_PASIEN_PULANG"], function (state, payload) {
   state.totalPasienPulang = payload;
+}), _defineProperty(_mutations, _pasienTypeMutations__WEBPACK_IMPORTED_MODULE_0__["DELETE_DATA_PASIEN_PULANG"], function (state, payload) {
+  state.dataPasienPulang.map(function (dataPasien, index) {
+    if (dataPasien.idPasien == payload.idPasien) {
+      state.dataPasienPulang.splice(index, 1);
+    }
+  });
 }), _mutations);
 /* harmony default export */ __webpack_exports__["default"] = (mutations);
 
@@ -35443,7 +35768,7 @@ var state = {
 /*!**********************************************************!*\
   !*** ./resources/js/store/pasien/pasienTypeMutations.js ***!
   \**********************************************************/
-/*! exports provided: SET_DATA_PASIEN_REGISTRASI, SET_DATA_PASIEN_PULANG, ADD_DATA_PASIEN_PULANG, UPDATE_DATA_PASIEN_PULANG, SET_DATA_TOTAL_PASIEN_PULANG */
+/*! exports provided: SET_DATA_PASIEN_REGISTRASI, SET_DATA_PASIEN_PULANG, ADD_DATA_PASIEN_PULANG, UPDATE_DATA_PASIEN_PULANG, SET_DATA_TOTAL_PASIEN_PULANG, DELETE_DATA_PASIEN_PULANG */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -35453,11 +35778,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADD_DATA_PASIEN_PULANG", function() { return ADD_DATA_PASIEN_PULANG; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UPDATE_DATA_PASIEN_PULANG", function() { return UPDATE_DATA_PASIEN_PULANG; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_DATA_TOTAL_PASIEN_PULANG", function() { return SET_DATA_TOTAL_PASIEN_PULANG; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DELETE_DATA_PASIEN_PULANG", function() { return DELETE_DATA_PASIEN_PULANG; });
 var SET_DATA_PASIEN_REGISTRASI = 'SET_DATA_PASIEN_REGISTRASI';
 var SET_DATA_PASIEN_PULANG = 'SET_DATA_PASIEN_PULANG';
 var ADD_DATA_PASIEN_PULANG = 'ADD_DATA_PASIEN_PULANG';
 var UPDATE_DATA_PASIEN_PULANG = 'UPDATE_DATA_PASIEN_PULANG';
 var SET_DATA_TOTAL_PASIEN_PULANG = 'SET_DATA_TOTAL_PASIEN_PULANG';
+var DELETE_DATA_PASIEN_PULANG = 'DELETE_DATA_PASIEN_PULANG';
 
 /***/ }),
 

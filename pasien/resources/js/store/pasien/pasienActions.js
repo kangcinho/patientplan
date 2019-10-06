@@ -47,6 +47,20 @@ const actions = {
         gagal(`Data Gagal Di Update`)
       })
     })
+  },
+  deleteDataPasienPulang( {commit}, data){
+    return new Promise( (berhasil, gagal) => {
+      axios.get(`/api/deleteDataPasienPulang/${data.idPasien}`)
+      .then( (respon) => {
+        if(respon.status == 200){
+          commit(type.DELETE_DATA_PASIEN_PULANG, data)
+          berhasil(`Berhasil! Data ${data.namaPasien} Berhasil Dihapus!`)
+        }
+      })
+      .catch( (respon) => {
+        gagal(`Data ${data.namaPasien} Gagal Dihapus!`)
+      })
+    })
   }
 }
 
