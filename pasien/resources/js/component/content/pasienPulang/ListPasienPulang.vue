@@ -282,7 +282,7 @@ export default {
       let firstPage,lastPage      
       firstPage = (this.pagging.current - 1) * this.pagging.perPage
       lastPage = this.pagging.perPage
-      console.log(firstPage,lastPage)
+      // console.log(firstPage,lastPage)
       this.$store.dispatch('getDataPasienPulang', {firstPage,lastPage, searchNamaPasien: this.searchNamaPasien})
       .then( (respon) => {
         this.pagging.total =  this.$store.getters.getTotalPasienPulang

@@ -2323,18 +2323,16 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       if (!this.errorValidasi.tanggal && !this.errorValidasi.noreg) {
-        console.log('true');
         return true;
       }
 
-      console.log('false');
       return false;
     }
   },
   created: function created() {
     var _this4 = this;
 
-    console.log("FormTambahPasienComponent Created");
+    // console.log("FormTambahPasienComponent Created")
     _eventBus__WEBPACK_IMPORTED_MODULE_1__["default"].$on('fetchData', function (data) {
       return _this4.fillData(data);
     });
@@ -2635,8 +2633,8 @@ __webpack_require__.r(__webpack_exports__);
 
       var firstPage, lastPage;
       firstPage = (this.pagging.current - 1) * this.pagging.perPage;
-      lastPage = this.pagging.perPage;
-      console.log(firstPage, lastPage);
+      lastPage = this.pagging.perPage; // console.log(firstPage,lastPage)
+
       this.$store.dispatch('getDataPasienPulang', {
         firstPage: firstPage,
         lastPage: lastPage,
@@ -35959,8 +35957,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\Develover\ongoing\pasienPulang\pasien\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! D:\Develover\ongoing\pasienPulang\pasien\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\DEVELOVER\pasienPulang\pasien\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\DEVELOVER\pasienPulang\pasien\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

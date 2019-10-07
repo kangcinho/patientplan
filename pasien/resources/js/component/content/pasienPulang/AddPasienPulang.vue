@@ -293,15 +293,13 @@ export default {
         this.errorValidasi.noregMessage = null
       }
       if(!this.errorValidasi.tanggal && !this.errorValidasi.noreg){
-        console.log('true')
         return true
       }
-      console.log('false')
       return false
     }
   },
   created(){
-    console.log("FormTambahPasienComponent Created")
+    // console.log("FormTambahPasienComponent Created")
     EventBus.$on('fetchData', data => this.fillData(data))
   }
 }

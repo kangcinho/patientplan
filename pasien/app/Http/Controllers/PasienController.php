@@ -111,7 +111,8 @@ class PasienController extends Controller
             $dataPasien->waktuLunas = null;
             $dataPasien->petugasFO = null;
             $dataPasien->petugasPerawat = null;
-
+            $dataPasien->isEdit = false;
+            
             if($request->isWaktu){
                 if($request->waktuVerif != null){
                     $dataPasien->waktuVerif = $this->convertDate($request->waktuVerif);
