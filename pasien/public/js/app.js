@@ -2652,7 +2652,6 @@ __webpack_require__.r(__webpack_exports__);
 
       //Can Edit Only One Field Live
       if (mode) {
-        this.fillData(dataPasien);
         this.classWidthRow = 'width25';
       } else {
         this.hapusFieldAll();
@@ -2667,6 +2666,8 @@ __webpack_require__.r(__webpack_exports__);
 
             if (mode) {
               _this4.disableEdit = true;
+
+              _this4.fillData(dataPasien);
             }
           }
         });

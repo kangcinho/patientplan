@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Pasien;
-use App\Log;
+use App\Http\Helper\RecordLog;
 class PasienController extends Controller
 {
     public function getDataPasienRegistrasiFromSanata(){
@@ -82,7 +82,7 @@ class PasienController extends Controller
 
     public function deleteDataPasienPulang($idPasien){
         $dataPasien = Pasien::where('idPasien', $idPasien)->first();
-        $this->logRecord('DELETE', $dataPasien->idPasien, $dataPasien, null);
+        RecordLog::logRecord('DELETE', $dataPasien->idPasien, $dataPasien, null);
         $dataPasien->delete();
        
         return response()->json([], 200);
@@ -133,7 +133,7 @@ class PasienController extends Controller
                 $dataPasien->petugasPerawat = $request->petugasPerawat;    
             }
             $dataPasien->save();
-            $this->logRecord('INSERT', $dataPasien->idPasien, null, $dataPasien);
+            RecordLog::logRecord('INSERT', $dataPasien->idPasien, null, $dataPasien);
             return response()->json($dataPasien, 200);
         }
         return response()->json($dataPasien, 200);
@@ -161,7 +161,7 @@ class PasienController extends Controller
             $pasienPulang->petugasFO = $request->petugasFO;
             $pasienPulang->petugasPerawat = $request->petugasPerawat;
             $pasienPulang->save();
-            $this->logRecord('UPDATE', $pasienPulang->idPasien, $pasienDataOld, $pasienPulang);
+            RecordLog::logRecord('UPDATE', $pasienPulang->idPasien, $pasienDataOld, $pasienPulang);
             return response()->json($pasienPulang, 200);
         }
         return response()->json([], 500);
@@ -169,16 +169,5 @@ class PasienController extends Controller
 
     public function convertDate($date){
         return date('Y-m-d H:i:s', strtotime($date));
-    }
-
-    public function logRecord($action, $idBukti, $valueBefore, $valueAfter){
-        $log = new Log();
-        $log->idLog = $log->getIDLog();
-        $log->idBukti =$idBukti;
-        $log->idUser = null;
-        $log->action = $action;
-        $log->valueBefore = $valueBefore;
-        $log->valueAfter = $valueAfter;
-        $log->save();
     }
 }

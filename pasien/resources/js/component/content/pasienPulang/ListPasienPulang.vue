@@ -293,7 +293,6 @@ export default {
     changeToEditMode(dataPasien, mode){
        //Can Edit Only One Field Live
       if(mode){
-        this.fillData(dataPasien)
         this.classWidthRow = 'width25'
       }else{
         this.hapusFieldAll()
@@ -306,6 +305,7 @@ export default {
             pasien.isEdit = mode
             if(mode){
               this.disableEdit = true
+              this.fillData(dataPasien)
             }
           }
         })

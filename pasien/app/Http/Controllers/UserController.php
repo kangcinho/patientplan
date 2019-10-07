@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Http\Helper\RecordLog;
 class UserController extends Controller
 {
     public function getDataUser(){
@@ -24,6 +25,7 @@ class UserController extends Controller
         $user->canDelete = $request->canDelete;
         $user->isEdit = false;
         $user->save();
+        RecordLog::logRecord('INSERT', $user->idUser, null, $user);
         return response()->json($user, 200);
     }
 
@@ -41,11 +43,13 @@ class UserController extends Controller
             $user->isEdit = false;
         // }
         $user->save();
+        RecordLog::logRecord('UPDATE', $user->idPasien, $userOld, $user);
         return response()->json($user, 200);
     }
 
     public function deleteDataUser($idUser){
         $user = User::where('idUser', $idUser)->first();
+        RecordLog::logRecord('DELETE', $user->idPasien, $user, null);
         $user->delete();
         return response()->json([], 200);
     }
