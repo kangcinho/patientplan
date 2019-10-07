@@ -1,0 +1,324 @@
+<template>
+  <div class="modal-card" style="width: auto">
+    <header class="modal-card-head">
+      <p class="modal-card-title">List User</p>
+    </header>
+    <section class="modal-card-body">
+      <div class="columns is-multiline">
+        <div class="column is-full">
+          <b-field >
+            <b-input placeholder="Search..."
+              autofocus 
+              type="search"
+              ref="search"
+              icon-pack="fas"
+              icon="search" 
+              expanded
+              rounded
+              v-model="searching">
+            </b-input>
+          </b-field>
+        </div>
+        
+        <div class="column is-full">
+          <b-button
+          icon-pack="fas"
+          icon-left="users"
+          size="is-small"
+          type="is-primary"
+          @click="isTambahData? isTambahData = false: isTambahData = true "
+          >
+            <span v-if="!isTambahData">Tambah User</span>
+            <span v-else>Batal Tambah User</span>
+          </b-button>
+          <table class="table is-bordered is-striped is-narrow" style="width:100%"> 
+            <thead>
+              <tr>
+                <th class="has-text-centered">Username</th>
+                <th class="has-text-centered">Email</th>
+                <th class="has-text-centered">Nama User</th>
+                <th class="has-text-centered">Admin</th>
+                <th class="has-text-centered">Insert</th>
+                <th class="has-text-centered">Update</th>
+                <th class="has-text-centered">Delete</th>
+                <th class="has-text-centered">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-if="isTambahData">
+                <td>
+                  <b-input 
+                    size="is-small"
+                    placeholder="Username"
+                    rounded
+                    v-model="dataUserNew.username"
+                    >
+                  </b-input>
+                </td>
+                <td>
+                  <b-input 
+                    size="is-small"
+                    placeholder="kangcinho@gmail.com"
+                    rounded
+                    type="email"
+                    v-model="dataUserNew.email"
+                    >
+                  </b-input>
+                </td>
+                <td>
+                  <b-input 
+                    size="is-small"
+                    placeholder="Nama User"
+                    rounded
+                    v-model="dataUserNew.namaUser"
+                    >
+                  </b-input>
+                </td>
+                <td class="has-text-centered">
+                  <b-switch type="is-info" v-model="dataUserNew.canAdmin"></b-switch>
+                </td>
+                <td class="has-text-centered">
+                  <b-switch type="is-info" v-model="dataUserNew.canInsert"></b-switch>
+                </td>
+                <td class="has-text-centered">
+                  <b-switch type="is-info" v-model="dataUserNew.canUpdate"></b-switch>
+                </td>
+                <td class="has-text-centered">
+                  <b-switch type="is-info" v-model="dataUserNew.canDelete"></b-switch>
+                </td>
+                <td class="has-text-centered">
+                  <b-button
+                    size="is-small"
+                    type="is-info"
+                    icon-pack="fas"
+                    icon-left="save"
+                    @click="saveDataUser"
+                  >
+                  </b-button>
+                </td>
+              </tr>
+              <tr v-for="user in dataUsers" :key="user.idUser">
+                <td>
+                  <b-input 
+                    size="is-small"
+                    placeholder="Username"
+                    rounded
+                    v-model="dataUserEdit.username"
+                    v-if="user.isEdit"
+                    >
+                  </b-input>
+                  <span v-else> {{ user.username }} </span>
+                </td>
+                <td>
+                  <b-input 
+                    size="is-small"
+                    placeholder="kangcinho@gmail.com"
+                    rounded
+                    type="email"
+                    v-model="dataUserEdit.email"
+                    v-if="user.isEdit"
+                    >
+                  </b-input>
+                  <span v-else> {{ user.email }} </span>
+                </td>
+                <td>
+                  <b-input 
+                    size="is-small"
+                    placeholder="Nama User"
+                    rounded
+                    v-model="dataUserEdit.namaUser"
+                    v-if="user.isEdit"
+                    >
+                  </b-input>
+                  <span v-else> {{ user.namaUser }} </span>
+                </td>
+                <td class="has-text-centered">
+                  <b-switch type="is-info" v-model="dataUserEdit.canAdmin" v-if="user.isEdit"></b-switch>
+                  <b-switch type="is-info" v-model="user.canAdmin" v-else disabled></b-switch>
+                </td>
+                <td class="has-text-centered">
+                  <b-switch type="is-info" v-model="dataUserEdit.canInsert" v-if="user.isEdit"></b-switch>
+                  <b-switch type="is-info" v-model="user.canInsert" v-else disabled></b-switch>
+                </td>
+                <td class="has-text-centered">
+                  <b-switch type="is-info" v-model="dataUserEdit.canUpdate" v-if="user.isEdit"></b-switch>
+                  <b-switch type="is-info" v-model="user.canUpdate" v-else disabled></b-switch>
+                </td>
+                <td class="has-text-centered">
+                  <b-switch type="is-info" v-model="dataUserEdit.canDelete" v-if="user.isEdit"></b-switch>
+                  <b-switch type="is-info" v-model="user.canDelete" v-else disabled></b-switch>
+                </td>
+                <td class="has-text-centered">
+                  <b-button 
+                    type="is-info"
+                    size="is-small"
+                    icon-pack="fas"
+                    icon-right="edit" 
+                    v-if="!user.isEdit"
+                    title="Edit Data Pasien"
+                    @click="changeToEditMode(user, true)"/>
+                  <b-button 
+                    type="is-info"
+                    size="is-small"
+                    icon-pack="fas"
+                    icon-right="save" 
+                    v-if="user.isEdit"
+                    title="Save Data Pasien"
+                    @click="updateDataUser(user)"/>
+                  <b-button 
+                    type="is-warning"
+                    size="is-small"
+                    icon-pack="fas"
+                    icon-right="ban"
+                    v-if="user.isEdit"
+                    title="Batal Edit Data Pasien"
+                    @click="changeToEditMode(user, false)"/>
+                  <b-button
+                    type="is-danger" 
+                    size="is-small"
+                    icon-pack="fas"
+                    icon-right="trash-alt" 
+                    @click="deleteDataUser(user)"/>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+</template>
+
+<script>
+import ModalKonfirmasiHapusData from '../modal/ModalKonfirmasiHapusData'
+import EventBus from '../../../eventBus'
+export default {
+  name: 'ListUser',
+  components:{
+    ModalKonfirmasiHapusData
+  },
+  data(){
+    return {
+      searching: '',
+      isTambahData: false,
+      dataUserNew:{
+        username: null,
+        email: null,
+        namaUser: null,
+        canAdmin: false,
+        canInsert: false,
+        canUpdate: false,
+        canDelete: false
+      },
+      dataUserEdit:{
+        idUser: null,
+        username: null,
+        email: null,
+        namaUser: null,
+        canAdmin: false,
+        canInsert: false,
+        canUpdate: false,
+        canDelete: false
+      },
+      disableEdit: false
+    }
+  },
+  mounted(){
+    this.$store.dispatch('getDataUser')
+  },
+  computed:{
+    dataUsers(){
+      return this.$store.getters.getDataUser
+    }
+  },
+  methods:{
+    saveDataUser(){
+      this.$store.dispatch('saveDataUser', this.dataUserNew)
+      .then( (respon) => {
+        this.isTambahData = false
+        this.hapusFieldAll()
+        this.$buefy.notification.open({
+          message: respon,
+          type: 'is-success'
+        })
+      })
+      .catch( (respon) => {
+        this.$buefy.notification.open({
+          message: respon,
+          type: 'is-danger',
+        })
+      })
+    },
+    updateDataUser(userData){
+      this.dataUserEdit.idUser = userData.idUser
+      userData.isEdit = false
+      this.$store.dispatch('updateDataUser', this.dataUserEdit)
+      .then( (respon) => {
+        this.isTambahData = false
+        this.disableEdit = false
+        // this.hapusFieldAll()
+        this.$buefy.notification.open({
+          message: respon,
+          type: 'is-success'
+        })
+      })
+      .catch( (respon) => {
+        this.$buefy.notification.open({
+          message: respon,
+          type: 'is-danger',
+        })
+      })
+    },
+    deleteDataUser(userData){
+      const nama = userData.namaUser
+      const id = userData.isUser
+      this.$buefy.modal.open({
+        parent: this,
+        component: ModalKonfirmasiHapusData,
+        hasModalCard: true,
+        props:{
+          'nama': userData.namaUser,
+          'data': userData,
+          'method': 'deleteDataUser'
+        }
+      })
+    },
+    changeToEditMode(userData, mode){
+       //Can Edit Only One Field Live
+      if(!mode){
+        this.hapusFieldAll()
+        this.disableEdit = false
+      }
+      if(!this.disableEdit){
+        this.dataUsers.map( (pasien) => {
+          if(pasien.idUser === userData.idUser){
+            pasien.isEdit = mode
+            if(mode){
+              this.disableEdit = true
+              this.fillData(userData)
+            }
+          }
+        })
+      }
+    },
+    hapusFieldAll(){
+      this.dataUserNew.username = this.dataUserNew.email = this.dataUserNew.namaUser = this.dataUserEdit.username = this.dataUserEdit.email = this.dataUserEdit.namaUser = this.dataUserEdit.idUser = null 
+      this.dataUserNew.canAdmin = this.dataUserNew.canInsert = this.dataUserNew.canUpdate = this.dataUserNew.canDelete = this.dataUserEdit.canAdmin = this.dataUserEdit.canInsert = this.dataUserEdit.canUpdate = this.dataUserEdit.canDelete = false   
+    },
+    fillData(userData){
+      this.dataUserEdit.idUser = userData.idUser
+      this.dataUserEdit.username = userData.username
+      this.dataUserEdit.email = userData.email
+      this.dataUserEdit.namaUser = userData.namaUser
+      this.dataUserEdit.canAdmin = userData.canAdmin
+      this.dataUserEdit.canInsert = userData.canInsert
+      this.dataUserEdit.canUpdate = userData.canUpdate
+      this.dataUserEdit.canDelete = userData.canDelete
+    }
+  }
+}
+</script>
+
+<style>
+
+</style>

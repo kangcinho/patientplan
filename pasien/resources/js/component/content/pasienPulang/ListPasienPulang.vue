@@ -385,12 +385,15 @@ export default {
       })
     },
     deleteDataPasienPulang(dataPasien){
+      const nama = dataPasien.namaPasien
       this.$buefy.modal.open({
         parent: this,
         component: ModalKonfirmasiHapusData,
         hasModalCard: true,
         props:{
-          dataPasien
+          'nama': dataPasien.namaPasien,
+          'data': dataPasien,
+          'method': 'deleteDataPasienPulang'
         }
       })
       // this.$store.dispatch('deleteDataPasienPulang', dataPasien)

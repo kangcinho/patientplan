@@ -280,14 +280,14 @@ export default {
     validateDataPasienPulang(dataPasien){
       if(dataPasien.tanggal == null || dataPasien.tanggal == ''){
         this.errorValidasi.tanggal = true
-        this.errorValidasi.tanggalMessage = "Tanggal Rencana Pasien Pulang Harus Diisi!"
+        this.errorValidasi.tanggalMessage = "Oh my baby, kamu melupakan ini"
       }else{
         this.errorValidasi.tanggal = false
         this.errorValidasi.tanggalMessage = null
       }
       if(dataPasien.noreg == null || dataPasien.noreg == ''){
         this.errorValidasi.noreg = true
-        this.errorValidasi.noregMessage = "Nomor Registrasi Harus Dipilih dan Diisi!"
+        this.errorValidasi.noregMessage = "Sayang, ini harus diisi yaa..."
       }else{
         this.errorValidasi.noreg = false
         this.errorValidasi.noregMessage = null

@@ -78,7 +78,7 @@
         </template>
       </b-table>
     </section>
-</div>
+  </div>
 </template>
 
 <script>

@@ -1,0 +1,4 @@
+export const SET_DATA_USER = 'SET_DATA_USER'
+export const ADD_DATA_USER = 'ADD_DATA_USER'
+export const UPDATE_DATA_USER = 'UPDATE_DATA_USER'
+export const DELETE_DATA_USER = 'DELETE_DATA_USER'

@@ -16,10 +16,16 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
-
+//Section Pasien Pulang
 Route::get('getDataPasienRegistrasiFromSanata', 'PasienController@getDataPasienRegistrasiFromSanata');
 Route::get('getDataPetugasFromSanata', 'PasienController@getDataPetugasFromSanata');
 Route::post('saveDataPasienPulang', 'PasienController@saveDataPasienPulang');
 Route::post('getDataPasienPulang', 'PasienController@getDataPasienPulang');
 Route::post('updateDataPasienPulang', 'PasienController@updateDataPasienPulang');
 Route::get('deleteDataPasienPulang/{idPasien}', 'PasienController@deleteDataPasienPulang');
+
+//Section User
+Route::get('getDataUser', 'UserController@getDataUser');
+Route::post('saveDataUser', 'UserController@saveDataUser');
+Route::post('updateDataUser', 'UserController@updateDataUser');
+Route::get('deleteDataUser/{idUser}', 'UserController@deleteDataUser');

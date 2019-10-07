@@ -1838,6 +1838,7 @@ module.exports = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _eventBus__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../eventBus */ "./resources/js/eventBus.js");
 //
 //
 //
@@ -1859,14 +1860,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ModalKonfirmasiHapusData",
-  props: ['dataPasien'],
+  props: ['nama', 'data', 'method'],
   methods: {
-    deleteDataPasienPulang: function deleteDataPasienPulang() {
+    deleteData: function deleteData() {
       var _this = this;
 
-      this.$store.dispatch('deleteDataPasienPulang', this.dataPasien).then(function (respon) {
+      this.$store.dispatch(this.method, this.data).then(function (respon) {
         _this.$parent.close();
 
         _this.$buefy.notification.open({
@@ -2308,7 +2310,7 @@ __webpack_require__.r(__webpack_exports__);
     validateDataPasienPulang: function validateDataPasienPulang(dataPasien) {
       if (dataPasien.tanggal == null || dataPasien.tanggal == '') {
         this.errorValidasi.tanggal = true;
-        this.errorValidasi.tanggalMessage = "Tanggal Rencana Pasien Pulang Harus Diisi!";
+        this.errorValidasi.tanggalMessage = "Oh my baby, kamu melupakan ini";
       } else {
         this.errorValidasi.tanggal = false;
         this.errorValidasi.tanggalMessage = null;
@@ -2316,7 +2318,7 @@ __webpack_require__.r(__webpack_exports__);
 
       if (dataPasien.noreg == null || dataPasien.noreg == '') {
         this.errorValidasi.noreg = true;
-        this.errorValidasi.noregMessage = "Nomor Registrasi Harus Dipilih dan Diisi!";
+        this.errorValidasi.noregMessage = "Sayang, ini harus diisi yaa...";
       } else {
         this.errorValidasi.noreg = false;
         this.errorValidasi.noregMessage = null;
@@ -2756,12 +2758,15 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     deleteDataPasienPulang: function deleteDataPasienPulang(dataPasien) {
+      var nama = dataPasien.namaPasien;
       this.$buefy.modal.open({
         parent: this,
         component: _modal_ModalKonfirmasiHapusData__WEBPACK_IMPORTED_MODULE_0__["default"],
         hasModalCard: true,
         props: {
-          dataPasien: dataPasien
+          'nama': dataPasien.namaPasien,
+          'data': dataPasien,
+          'method': 'deleteDataPasienPulang'
         }
       }); // this.$store.dispatch('deleteDataPasienPulang', dataPasien)
       // .then( (respon) => {
@@ -2805,17 +2810,200 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/component/master/App.vue?vue&type=script&lang=js&":
-/*!********************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/component/master/App.vue?vue&type=script&lang=js& ***!
-  \********************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/component/content/user/ListUser.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/component/content/user/ListUser.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _Header__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Header */ "./resources/js/component/master/Header.vue");
-/* harmony import */ var _Content__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Content */ "./resources/js/component/master/Content.vue");
+/* harmony import */ var _modal_ModalKonfirmasiHapusData__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../modal/ModalKonfirmasiHapusData */ "./resources/js/component/content/modal/ModalKonfirmasiHapusData.vue");
+/* harmony import */ var _eventBus__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../eventBus */ "./resources/js/eventBus.js");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2827,10 +3015,170 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'ListUser',
+  components: {
+    ModalKonfirmasiHapusData: _modal_ModalKonfirmasiHapusData__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  data: function data() {
+    return {
+      searching: '',
+      isTambahData: false,
+      dataUserNew: {
+        username: null,
+        email: null,
+        namaUser: null,
+        canAdmin: false,
+        canInsert: false,
+        canUpdate: false,
+        canDelete: false
+      },
+      dataUserEdit: {
+        idUser: null,
+        username: null,
+        email: null,
+        namaUser: null,
+        canAdmin: false,
+        canInsert: false,
+        canUpdate: false,
+        canDelete: false
+      },
+      disableEdit: false
+    };
+  },
+  mounted: function mounted() {
+    this.$store.dispatch('getDataUser');
+  },
+  computed: {
+    dataUsers: function dataUsers() {
+      return this.$store.getters.getDataUser;
+    }
+  },
+  methods: {
+    saveDataUser: function saveDataUser() {
+      var _this = this;
+
+      this.$store.dispatch('saveDataUser', this.dataUserNew).then(function (respon) {
+        _this.isTambahData = false;
+
+        _this.hapusFieldAll();
+
+        _this.$buefy.notification.open({
+          message: respon,
+          type: 'is-success'
+        });
+      })["catch"](function (respon) {
+        _this.$buefy.notification.open({
+          message: respon,
+          type: 'is-danger'
+        });
+      });
+    },
+    updateDataUser: function updateDataUser(userData) {
+      var _this2 = this;
+
+      this.dataUserEdit.idUser = userData.idUser;
+      userData.isEdit = false;
+      this.$store.dispatch('updateDataUser', this.dataUserEdit).then(function (respon) {
+        _this2.isTambahData = false;
+        _this2.disableEdit = false; // this.hapusFieldAll()
+
+        _this2.$buefy.notification.open({
+          message: respon,
+          type: 'is-success'
+        });
+      })["catch"](function (respon) {
+        _this2.$buefy.notification.open({
+          message: respon,
+          type: 'is-danger'
+        });
+      });
+    },
+    deleteDataUser: function deleteDataUser(userData) {
+      var nama = userData.namaUser;
+      var id = userData.isUser;
+      this.$buefy.modal.open({
+        parent: this,
+        component: _modal_ModalKonfirmasiHapusData__WEBPACK_IMPORTED_MODULE_0__["default"],
+        hasModalCard: true,
+        props: {
+          'nama': userData.namaUser,
+          'data': userData,
+          'method': 'deleteDataUser'
+        }
+      });
+    },
+    changeToEditMode: function changeToEditMode(userData, mode) {
+      var _this3 = this;
+
+      //Can Edit Only One Field Live
+      if (!mode) {
+        this.hapusFieldAll();
+        this.disableEdit = false;
+      }
+
+      if (!this.disableEdit) {
+        this.dataUsers.map(function (pasien) {
+          if (pasien.idUser === userData.idUser) {
+            pasien.isEdit = mode;
+
+            if (mode) {
+              _this3.disableEdit = true;
+
+              _this3.fillData(userData);
+            }
+          }
+        });
+      }
+    },
+    hapusFieldAll: function hapusFieldAll() {
+      this.dataUserNew.username = this.dataUserNew.email = this.dataUserNew.namaUser = this.dataUserEdit.username = this.dataUserEdit.email = this.dataUserEdit.namaUser = this.dataUserEdit.idUser = null;
+      this.dataUserNew.canAdmin = this.dataUserNew.canInsert = this.dataUserNew.canUpdate = this.dataUserNew.canDelete = this.dataUserEdit.canAdmin = this.dataUserEdit.canInsert = this.dataUserEdit.canUpdate = this.dataUserEdit.canDelete = false;
+    },
+    fillData: function fillData(userData) {
+      this.dataUserEdit.idUser = userData.idUser;
+      this.dataUserEdit.username = userData.username;
+      this.dataUserEdit.email = userData.email;
+      this.dataUserEdit.namaUser = userData.namaUser;
+      this.dataUserEdit.canAdmin = userData.canAdmin;
+      this.dataUserEdit.canInsert = userData.canInsert;
+      this.dataUserEdit.canUpdate = userData.canUpdate;
+      this.dataUserEdit.canDelete = userData.canDelete;
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/component/master/App.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/component/master/App.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Header__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Header */ "./resources/js/component/master/Header.vue");
+/* harmony import */ var _Content__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Content */ "./resources/js/component/master/Content.vue");
+/* harmony import */ var _content_user_ListUser__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../content/user/ListUser */ "./resources/js/component/content/user/ListUser.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
   name: 'AppComponent',
   components: {
     Header: _Header__WEBPACK_IMPORTED_MODULE_0__["default"],
-    Content: _Content__WEBPACK_IMPORTED_MODULE_1__["default"]
+    Content: _Content__WEBPACK_IMPORTED_MODULE_1__["default"],
+    ListUser: _content_user_ListUser__WEBPACK_IMPORTED_MODULE_2__["default"]
   }
 });
 
@@ -15662,9 +16010,7 @@ var render = function() {
       _vm._v(" "),
       _c("section", { staticClass: "modal-card-body" }, [
         _vm._v(
-          "\n    Apa Anda Yakin Menghapus Data Pasien " +
-            _vm._s(_vm.dataPasien.namaPasien) +
-            " ?\n  "
+          "\n    Apa Anda Yakin Menghapus Data " + _vm._s(_vm.nama) + " ?\n  "
         )
       ]),
       _vm._v(" "),
@@ -15694,7 +16040,7 @@ var render = function() {
                 "icon-left": "trash",
                 "icon-pack": "fas"
               },
-              on: { click: _vm.deleteDataPasienPulang }
+              on: { click: _vm.deleteData }
             },
             [_vm._v("\n          Hapus\n        ")]
           )
@@ -15805,9 +16151,9 @@ var render = function() {
                         },
                         [
                           _vm._v(
-                            "\n            " +
+                            "\n          " +
                               _vm._s(props.row.noReg) +
-                              "\n          "
+                              "\n        "
                           )
                         ]
                       ),
@@ -15817,9 +16163,9 @@ var render = function() {
                         { attrs: { field: "nrm", label: "NRM" } },
                         [
                           _vm._v(
-                            "\n            " +
+                            "\n          " +
                               _vm._s(props.row.nrm) +
-                              "\n          "
+                              "\n        "
                           )
                         ]
                       ),
@@ -15831,9 +16177,9 @@ var render = function() {
                         },
                         [
                           _vm._v(
-                            "\n            " +
+                            "\n          " +
                               _vm._s(props.row.namaPasien) +
-                              "\n          "
+                              "\n        "
                           )
                         ]
                       ),
@@ -15849,9 +16195,9 @@ var render = function() {
                         },
                         [
                           _vm._v(
-                            "\n              " +
+                            "\n            " +
                               _vm._s(props.row.kamar) +
-                              "\n          "
+                              "\n        "
                           )
                         ]
                       ),
@@ -15861,9 +16207,9 @@ var render = function() {
                         { attrs: { field: "keterangan", label: "Keterangan" } },
                         [
                           _vm._v(
-                            "\n            " +
+                            "\n          " +
                               _vm._s(props.row.keterangan) +
-                              "\n          "
+                              "\n        "
                           )
                         ]
                       ),
@@ -17021,6 +17367,615 @@ var staticRenderFns = [
       _c("th", { staticClass: "has-text-centered" }, [_vm._v("FO")]),
       _vm._v(" "),
       _c("th", { staticClass: "has-text-centered" }, [_vm._v("Perawat")])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/component/content/user/ListUser.vue?vue&type=template&id=76760237&":
+/*!***********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/component/content/user/ListUser.vue?vue&type=template&id=76760237& ***!
+  \***********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "modal-card", staticStyle: { width: "auto" } },
+    [
+      _vm._m(0),
+      _vm._v(" "),
+      _c("section", { staticClass: "modal-card-body" }, [
+        _c("div", { staticClass: "columns is-multiline" }, [
+          _c(
+            "div",
+            { staticClass: "column is-full" },
+            [
+              _c(
+                "b-field",
+                [
+                  _c("b-input", {
+                    ref: "search",
+                    attrs: {
+                      placeholder: "Search...",
+                      autofocus: "",
+                      type: "search",
+                      "icon-pack": "fas",
+                      icon: "search",
+                      expanded: "",
+                      rounded: ""
+                    },
+                    model: {
+                      value: _vm.searching,
+                      callback: function($$v) {
+                        _vm.searching = $$v
+                      },
+                      expression: "searching"
+                    }
+                  })
+                ],
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "column is-full" },
+            [
+              _c(
+                "b-button",
+                {
+                  attrs: {
+                    "icon-pack": "fas",
+                    "icon-left": "users",
+                    size: "is-small",
+                    type: "is-primary"
+                  },
+                  on: {
+                    click: function($event) {
+                      _vm.isTambahData
+                        ? (_vm.isTambahData = false)
+                        : (_vm.isTambahData = true)
+                    }
+                  }
+                },
+                [
+                  !_vm.isTambahData
+                    ? _c("span", [_vm._v("Tambah User")])
+                    : _c("span", [_vm._v("Batal Tambah User")])
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "table",
+                {
+                  staticClass: "table is-bordered is-striped is-narrow",
+                  staticStyle: { width: "100%" }
+                },
+                [
+                  _vm._m(1),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    [
+                      _vm.isTambahData
+                        ? _c("tr", [
+                            _c(
+                              "td",
+                              [
+                                _c("b-input", {
+                                  attrs: {
+                                    size: "is-small",
+                                    placeholder: "Username",
+                                    rounded: ""
+                                  },
+                                  model: {
+                                    value: _vm.dataUserNew.username,
+                                    callback: function($$v) {
+                                      _vm.$set(_vm.dataUserNew, "username", $$v)
+                                    },
+                                    expression: "dataUserNew.username"
+                                  }
+                                })
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              [
+                                _c("b-input", {
+                                  attrs: {
+                                    size: "is-small",
+                                    placeholder: "kangcinho@gmail.com",
+                                    rounded: "",
+                                    type: "email"
+                                  },
+                                  model: {
+                                    value: _vm.dataUserNew.email,
+                                    callback: function($$v) {
+                                      _vm.$set(_vm.dataUserNew, "email", $$v)
+                                    },
+                                    expression: "dataUserNew.email"
+                                  }
+                                })
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              [
+                                _c("b-input", {
+                                  attrs: {
+                                    size: "is-small",
+                                    placeholder: "Nama User",
+                                    rounded: ""
+                                  },
+                                  model: {
+                                    value: _vm.dataUserNew.namaUser,
+                                    callback: function($$v) {
+                                      _vm.$set(_vm.dataUserNew, "namaUser", $$v)
+                                    },
+                                    expression: "dataUserNew.namaUser"
+                                  }
+                                })
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              { staticClass: "has-text-centered" },
+                              [
+                                _c("b-switch", {
+                                  attrs: { type: "is-info" },
+                                  model: {
+                                    value: _vm.dataUserNew.canAdmin,
+                                    callback: function($$v) {
+                                      _vm.$set(_vm.dataUserNew, "canAdmin", $$v)
+                                    },
+                                    expression: "dataUserNew.canAdmin"
+                                  }
+                                })
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              { staticClass: "has-text-centered" },
+                              [
+                                _c("b-switch", {
+                                  attrs: { type: "is-info" },
+                                  model: {
+                                    value: _vm.dataUserNew.canInsert,
+                                    callback: function($$v) {
+                                      _vm.$set(
+                                        _vm.dataUserNew,
+                                        "canInsert",
+                                        $$v
+                                      )
+                                    },
+                                    expression: "dataUserNew.canInsert"
+                                  }
+                                })
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              { staticClass: "has-text-centered" },
+                              [
+                                _c("b-switch", {
+                                  attrs: { type: "is-info" },
+                                  model: {
+                                    value: _vm.dataUserNew.canUpdate,
+                                    callback: function($$v) {
+                                      _vm.$set(
+                                        _vm.dataUserNew,
+                                        "canUpdate",
+                                        $$v
+                                      )
+                                    },
+                                    expression: "dataUserNew.canUpdate"
+                                  }
+                                })
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              { staticClass: "has-text-centered" },
+                              [
+                                _c("b-switch", {
+                                  attrs: { type: "is-info" },
+                                  model: {
+                                    value: _vm.dataUserNew.canDelete,
+                                    callback: function($$v) {
+                                      _vm.$set(
+                                        _vm.dataUserNew,
+                                        "canDelete",
+                                        $$v
+                                      )
+                                    },
+                                    expression: "dataUserNew.canDelete"
+                                  }
+                                })
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              { staticClass: "has-text-centered" },
+                              [
+                                _c("b-button", {
+                                  attrs: {
+                                    size: "is-small",
+                                    type: "is-info",
+                                    "icon-pack": "fas",
+                                    "icon-left": "save"
+                                  },
+                                  on: { click: _vm.saveDataUser }
+                                })
+                              ],
+                              1
+                            )
+                          ])
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _vm._l(_vm.dataUsers, function(user) {
+                        return _c("tr", { key: user.idUser }, [
+                          _c(
+                            "td",
+                            [
+                              user.isEdit
+                                ? _c("b-input", {
+                                    attrs: {
+                                      size: "is-small",
+                                      placeholder: "Username",
+                                      rounded: ""
+                                    },
+                                    model: {
+                                      value: _vm.dataUserEdit.username,
+                                      callback: function($$v) {
+                                        _vm.$set(
+                                          _vm.dataUserEdit,
+                                          "username",
+                                          $$v
+                                        )
+                                      },
+                                      expression: "dataUserEdit.username"
+                                    }
+                                  })
+                                : _c("span", [
+                                    _vm._v(" " + _vm._s(user.username) + " ")
+                                  ])
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "td",
+                            [
+                              user.isEdit
+                                ? _c("b-input", {
+                                    attrs: {
+                                      size: "is-small",
+                                      placeholder: "kangcinho@gmail.com",
+                                      rounded: "",
+                                      type: "email"
+                                    },
+                                    model: {
+                                      value: _vm.dataUserEdit.email,
+                                      callback: function($$v) {
+                                        _vm.$set(_vm.dataUserEdit, "email", $$v)
+                                      },
+                                      expression: "dataUserEdit.email"
+                                    }
+                                  })
+                                : _c("span", [
+                                    _vm._v(" " + _vm._s(user.email) + " ")
+                                  ])
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "td",
+                            [
+                              user.isEdit
+                                ? _c("b-input", {
+                                    attrs: {
+                                      size: "is-small",
+                                      placeholder: "Nama User",
+                                      rounded: ""
+                                    },
+                                    model: {
+                                      value: _vm.dataUserEdit.namaUser,
+                                      callback: function($$v) {
+                                        _vm.$set(
+                                          _vm.dataUserEdit,
+                                          "namaUser",
+                                          $$v
+                                        )
+                                      },
+                                      expression: "dataUserEdit.namaUser"
+                                    }
+                                  })
+                                : _c("span", [
+                                    _vm._v(" " + _vm._s(user.namaUser) + " ")
+                                  ])
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "td",
+                            { staticClass: "has-text-centered" },
+                            [
+                              user.isEdit
+                                ? _c("b-switch", {
+                                    attrs: { type: "is-info" },
+                                    model: {
+                                      value: _vm.dataUserEdit.canAdmin,
+                                      callback: function($$v) {
+                                        _vm.$set(
+                                          _vm.dataUserEdit,
+                                          "canAdmin",
+                                          $$v
+                                        )
+                                      },
+                                      expression: "dataUserEdit.canAdmin"
+                                    }
+                                  })
+                                : _c("b-switch", {
+                                    attrs: { type: "is-info", disabled: "" },
+                                    model: {
+                                      value: user.canAdmin,
+                                      callback: function($$v) {
+                                        _vm.$set(user, "canAdmin", $$v)
+                                      },
+                                      expression: "user.canAdmin"
+                                    }
+                                  })
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "td",
+                            { staticClass: "has-text-centered" },
+                            [
+                              user.isEdit
+                                ? _c("b-switch", {
+                                    attrs: { type: "is-info" },
+                                    model: {
+                                      value: _vm.dataUserEdit.canInsert,
+                                      callback: function($$v) {
+                                        _vm.$set(
+                                          _vm.dataUserEdit,
+                                          "canInsert",
+                                          $$v
+                                        )
+                                      },
+                                      expression: "dataUserEdit.canInsert"
+                                    }
+                                  })
+                                : _c("b-switch", {
+                                    attrs: { type: "is-info", disabled: "" },
+                                    model: {
+                                      value: user.canInsert,
+                                      callback: function($$v) {
+                                        _vm.$set(user, "canInsert", $$v)
+                                      },
+                                      expression: "user.canInsert"
+                                    }
+                                  })
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "td",
+                            { staticClass: "has-text-centered" },
+                            [
+                              user.isEdit
+                                ? _c("b-switch", {
+                                    attrs: { type: "is-info" },
+                                    model: {
+                                      value: _vm.dataUserEdit.canUpdate,
+                                      callback: function($$v) {
+                                        _vm.$set(
+                                          _vm.dataUserEdit,
+                                          "canUpdate",
+                                          $$v
+                                        )
+                                      },
+                                      expression: "dataUserEdit.canUpdate"
+                                    }
+                                  })
+                                : _c("b-switch", {
+                                    attrs: { type: "is-info", disabled: "" },
+                                    model: {
+                                      value: user.canUpdate,
+                                      callback: function($$v) {
+                                        _vm.$set(user, "canUpdate", $$v)
+                                      },
+                                      expression: "user.canUpdate"
+                                    }
+                                  })
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "td",
+                            { staticClass: "has-text-centered" },
+                            [
+                              user.isEdit
+                                ? _c("b-switch", {
+                                    attrs: { type: "is-info" },
+                                    model: {
+                                      value: _vm.dataUserEdit.canDelete,
+                                      callback: function($$v) {
+                                        _vm.$set(
+                                          _vm.dataUserEdit,
+                                          "canDelete",
+                                          $$v
+                                        )
+                                      },
+                                      expression: "dataUserEdit.canDelete"
+                                    }
+                                  })
+                                : _c("b-switch", {
+                                    attrs: { type: "is-info", disabled: "" },
+                                    model: {
+                                      value: user.canDelete,
+                                      callback: function($$v) {
+                                        _vm.$set(user, "canDelete", $$v)
+                                      },
+                                      expression: "user.canDelete"
+                                    }
+                                  })
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "td",
+                            { staticClass: "has-text-centered" },
+                            [
+                              !user.isEdit
+                                ? _c("b-button", {
+                                    attrs: {
+                                      type: "is-info",
+                                      size: "is-small",
+                                      "icon-pack": "fas",
+                                      "icon-right": "edit",
+                                      title: "Edit Data Pasien"
+                                    },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.changeToEditMode(user, true)
+                                      }
+                                    }
+                                  })
+                                : _vm._e(),
+                              _vm._v(" "),
+                              user.isEdit
+                                ? _c("b-button", {
+                                    attrs: {
+                                      type: "is-info",
+                                      size: "is-small",
+                                      "icon-pack": "fas",
+                                      "icon-right": "save",
+                                      title: "Save Data Pasien"
+                                    },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.updateDataUser(user)
+                                      }
+                                    }
+                                  })
+                                : _vm._e(),
+                              _vm._v(" "),
+                              user.isEdit
+                                ? _c("b-button", {
+                                    attrs: {
+                                      type: "is-warning",
+                                      size: "is-small",
+                                      "icon-pack": "fas",
+                                      "icon-right": "ban",
+                                      title: "Batal Edit Data Pasien"
+                                    },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.changeToEditMode(user, false)
+                                      }
+                                    }
+                                  })
+                                : _vm._e(),
+                              _vm._v(" "),
+                              _c("b-button", {
+                                attrs: {
+                                  type: "is-danger",
+                                  size: "is-small",
+                                  "icon-pack": "fas",
+                                  "icon-right": "trash-alt"
+                                },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.deleteDataUser(user)
+                                  }
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        ])
+                      })
+                    ],
+                    2
+                  )
+                ]
+              )
+            ],
+            1
+          )
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("header", { staticClass: "modal-card-head" }, [
+      _c("p", { staticClass: "modal-card-title" }, [_vm._v("List User")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", { staticClass: "has-text-centered" }, [_vm._v("Username")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "has-text-centered" }, [_vm._v("Email")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "has-text-centered" }, [_vm._v("Nama User")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "has-text-centered" }, [_vm._v("Admin")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "has-text-centered" }, [_vm._v("Insert")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "has-text-centered" }, [_vm._v("Update")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "has-text-centered" }, [_vm._v("Delete")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "has-text-centered" }, [_vm._v("Action")])
+      ])
     ])
   }
 ]
@@ -35337,6 +36292,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/component/content/user/ListUser.vue":
+/*!**********************************************************!*\
+  !*** ./resources/js/component/content/user/ListUser.vue ***!
+  \**********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ListUser_vue_vue_type_template_id_76760237___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ListUser.vue?vue&type=template&id=76760237& */ "./resources/js/component/content/user/ListUser.vue?vue&type=template&id=76760237&");
+/* harmony import */ var _ListUser_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ListUser.vue?vue&type=script&lang=js& */ "./resources/js/component/content/user/ListUser.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ListUser_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ListUser_vue_vue_type_template_id_76760237___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ListUser_vue_vue_type_template_id_76760237___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/component/content/user/ListUser.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/component/content/user/ListUser.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************!*\
+  !*** ./resources/js/component/content/user/ListUser.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ListUser_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./ListUser.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/component/content/user/ListUser.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ListUser_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/component/content/user/ListUser.vue?vue&type=template&id=76760237&":
+/*!*****************************************************************************************!*\
+  !*** ./resources/js/component/content/user/ListUser.vue?vue&type=template&id=76760237& ***!
+  \*****************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ListUser_vue_vue_type_template_id_76760237___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./ListUser.vue?vue&type=template&id=76760237& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/component/content/user/ListUser.vue?vue&type=template&id=76760237&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ListUser_vue_vue_type_template_id_76760237___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ListUser_vue_vue_type_template_id_76760237___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/component/master/App.vue":
 /*!***********************************************!*\
   !*** ./resources/js/component/master/App.vue ***!
@@ -35925,6 +36949,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var _pasien_pasien__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./pasien/pasien */ "./resources/js/store/pasien/pasien.js");
 /* harmony import */ var _petugas_petugas__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./petugas/petugas */ "./resources/js/store/petugas/petugas.js");
+/* harmony import */ var _user_user__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./user/user */ "./resources/js/store/user/user.js");
+
 
 
 
@@ -35933,9 +36959,202 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 /* harmony default export */ __webpack_exports__["default"] = (new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
   modules: {
     pasien: _pasien_pasien__WEBPACK_IMPORTED_MODULE_2__["default"],
-    petugas: _petugas_petugas__WEBPACK_IMPORTED_MODULE_3__["default"]
+    petugas: _petugas_petugas__WEBPACK_IMPORTED_MODULE_3__["default"],
+    user: _user_user__WEBPACK_IMPORTED_MODULE_4__["default"]
   }
 }));
+
+/***/ }),
+
+/***/ "./resources/js/store/user/user.js":
+/*!*****************************************!*\
+  !*** ./resources/js/store/user/user.js ***!
+  \*****************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _userState__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./userState */ "./resources/js/store/user/userState.js");
+/* harmony import */ var _userActions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./userActions */ "./resources/js/store/user/userActions.js");
+/* harmony import */ var _userGetters__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./userGetters */ "./resources/js/store/user/userGetters.js");
+/* harmony import */ var _userMutations__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./userMutations */ "./resources/js/store/user/userMutations.js");
+
+
+
+
+var store = {
+  state: _userState__WEBPACK_IMPORTED_MODULE_0__["default"],
+  mutations: _userMutations__WEBPACK_IMPORTED_MODULE_3__["default"],
+  actions: _userActions__WEBPACK_IMPORTED_MODULE_1__["default"],
+  getters: _userGetters__WEBPACK_IMPORTED_MODULE_2__["default"]
+};
+/* harmony default export */ __webpack_exports__["default"] = (store);
+
+/***/ }),
+
+/***/ "./resources/js/store/user/userActions.js":
+/*!************************************************!*\
+  !*** ./resources/js/store/user/userActions.js ***!
+  \************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _userTypeMutations__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./userTypeMutations */ "./resources/js/store/user/userTypeMutations.js");
+
+
+var actions = {
+  getDataUser: function getDataUser(_ref) {
+    var commit = _ref.commit;
+    return new Promise(function (berhasil, gagal) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/api/getDataUser").then(function (respon) {
+        commit(_userTypeMutations__WEBPACK_IMPORTED_MODULE_1__["SET_DATA_USER"], respon.data);
+      });
+    });
+  },
+  saveDataUser: function saveDataUser(_ref2, data) {
+    var commit = _ref2.commit;
+    return new Promise(function (berhasil, gagal) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/api/saveDataUser', data).then(function (respon) {
+        commit(_userTypeMutations__WEBPACK_IMPORTED_MODULE_1__["ADD_DATA_USER"], respon.data);
+        berhasil("Data User ".concat(data.namaUser, " Berhasil Disimpan!"));
+      })["catch"](function (respon) {
+        gagal("Data User ".concat(data.namaUser, " Gagal Disimpan!"));
+      });
+    });
+  },
+  updateDataUser: function updateDataUser(_ref3, data) {
+    var commit = _ref3.commit;
+    return new Promise(function (berhasil, gagal) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/api/updateDataUser', data).then(function (respon) {
+        commit(_userTypeMutations__WEBPACK_IMPORTED_MODULE_1__["UPDATE_DATA_USER"], respon.data);
+        berhasil("Data User ".concat(data.namaUser, " Berhasil Disimpan!"));
+      })["catch"](function (respon) {
+        gagal("Data User ".concat(data.namaUser, " Gagal Disimpan!"));
+      });
+    });
+  },
+  deleteDataUser: function deleteDataUser(_ref4, data) {
+    var commit = _ref4.commit;
+    return new Promise(function (berhasil, gagal) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/api/deleteDataUser/".concat(data.idUser)).then(function (respon) {
+        commit(_userTypeMutations__WEBPACK_IMPORTED_MODULE_1__["DELETE_DATA_USER"], data);
+        berhasil("Data User ".concat(data.namaUser, " Berhasil Dihapus!"));
+      })["catch"](function (respon) {
+        gagal("Data User ".concat(data.namaUser, " Gagal Disimpan!"));
+      });
+    });
+  }
+};
+/* harmony default export */ __webpack_exports__["default"] = (actions);
+
+/***/ }),
+
+/***/ "./resources/js/store/user/userGetters.js":
+/*!************************************************!*\
+  !*** ./resources/js/store/user/userGetters.js ***!
+  \************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+var getters = {
+  getDataUser: function getDataUser(state) {
+    return state.dataUser.sort(function (a, b) {
+      if (a.updated_at < b.updated_at) {
+        return 1;
+      } else if (a.updated_at > b.updated_at) {
+        return -1;
+      }
+
+      return 0;
+    });
+  }
+};
+/* harmony default export */ __webpack_exports__["default"] = (getters);
+
+/***/ }),
+
+/***/ "./resources/js/store/user/userMutations.js":
+/*!**************************************************!*\
+  !*** ./resources/js/store/user/userMutations.js ***!
+  \**************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _userTypeMutations__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./userTypeMutations */ "./resources/js/store/user/userTypeMutations.js");
+var _mutations;
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+var mutations = (_mutations = {}, _defineProperty(_mutations, _userTypeMutations__WEBPACK_IMPORTED_MODULE_0__["SET_DATA_USER"], function (state, payload) {
+  state.dataUser = payload;
+}), _defineProperty(_mutations, _userTypeMutations__WEBPACK_IMPORTED_MODULE_0__["ADD_DATA_USER"], function (state, payload) {
+  state.dataUser.push(payload);
+}), _defineProperty(_mutations, _userTypeMutations__WEBPACK_IMPORTED_MODULE_0__["UPDATE_DATA_USER"], function (state, payload) {
+  state.dataUser.map(function (user) {
+    if (user.idUser === payload.idUser) {
+      user.username = payload.username;
+      user.namaUser = payload.namaUser;
+      user.email = payload.email;
+      user.canInsert = payload.canInsert;
+      user.canUpdate = payload.canUpdate;
+      user.canDelete = payload.canDelete;
+      user.canAdmin = payload.canAdmin;
+    }
+  });
+}), _defineProperty(_mutations, _userTypeMutations__WEBPACK_IMPORTED_MODULE_0__["DELETE_DATA_USER"], function (state, payload) {
+  state.dataUser.map(function (user, index) {
+    if (user.idUser === payload.idUser) {
+      state.dataUser.splice(index, 1);
+    }
+  });
+}), _mutations);
+/* harmony default export */ __webpack_exports__["default"] = (mutations);
+
+/***/ }),
+
+/***/ "./resources/js/store/user/userState.js":
+/*!**********************************************!*\
+  !*** ./resources/js/store/user/userState.js ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+var state = {
+  dataUser: []
+};
+/* harmony default export */ __webpack_exports__["default"] = (state);
+
+/***/ }),
+
+/***/ "./resources/js/store/user/userTypeMutations.js":
+/*!******************************************************!*\
+  !*** ./resources/js/store/user/userTypeMutations.js ***!
+  \******************************************************/
+/*! exports provided: SET_DATA_USER, ADD_DATA_USER, UPDATE_DATA_USER, DELETE_DATA_USER */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_DATA_USER", function() { return SET_DATA_USER; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADD_DATA_USER", function() { return ADD_DATA_USER; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UPDATE_DATA_USER", function() { return UPDATE_DATA_USER; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DELETE_DATA_USER", function() { return DELETE_DATA_USER; });
+var SET_DATA_USER = 'SET_DATA_USER';
+var ADD_DATA_USER = 'ADD_DATA_USER';
+var UPDATE_DATA_USER = 'UPDATE_DATA_USER';
+var DELETE_DATA_USER = 'DELETE_DATA_USER';
 
 /***/ }),
 

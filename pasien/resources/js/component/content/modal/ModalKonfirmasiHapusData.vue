@@ -4,7 +4,7 @@
       <p class="modal-card-title">Konfirmasi Hapus Data</p>
     </header>
     <section class="modal-card-body">
-      Apa Anda Yakin Menghapus Data Pasien {{ dataPasien.namaPasien }} ?
+      Apa Anda Yakin Menghapus Data {{ nama }} ?
     </section>
       <footer class="modal-card-foot">
           <button class="button" type="button" @click="$parent.close()">Batal</button>
@@ -12,7 +12,7 @@
             type="is-danger"
             icon-left="trash"
             icon-pack="fas"
-            @click="deleteDataPasienPulang">
+            @click="deleteData">
             Hapus
           </b-button>
       </footer>
@@ -20,12 +20,13 @@
 </template>
 
 <script>
+import EventBus from '../../../eventBus'
 export default {
   name:"ModalKonfirmasiHapusData",
-  props:['dataPasien'],
+  props:['nama','data', 'method'],
   methods:{
-    deleteDataPasienPulang(){
-      this.$store.dispatch('deleteDataPasienPulang', this.dataPasien)
+    deleteData(){
+      this.$store.dispatch(this.method, this.data)
       .then( (respon) => {
         this.$parent.close()
         this.$buefy.notification.open({

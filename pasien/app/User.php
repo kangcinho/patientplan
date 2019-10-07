@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password','username','canInsert','canUpdate','canDelete','canAdmin'
     ];
 
     /**
@@ -35,5 +35,20 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'canInsert'=>'boolean',
+        'canUpdate'=>'boolean',
+        'canDelete'=>'boolean',
+        'canAdmin'=>'boolean',
     ];
+
+    protected $table = "users";
+    public $incrementing = false;
+    protected $primaryKey = 'idUser';
+
+    public function getIDUser(){
+        $tanggal = Date('ymd');
+        $time = microtime(true) * 1000;
+        $time = substr($time, -8,6);
+        return  $tanggal.'USER-'.$time;
+    }
 }
