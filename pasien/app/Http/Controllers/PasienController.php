@@ -68,12 +68,28 @@ class PasienController extends Controller
     }
 
     public function getDataPasienPulang(Request $request){
-        $dataPasien = Pasien::orderBy('tanggal', 'desc')
-        ->skip($request->firstPage)
-        ->take($request->lastPage)
-        ->where('namaPasien','like',"%$request->searchNamaPasien%")
-        ->get();
-        $totalDataPasien = Pasien::where('namaPasien','like',"%$request->searchNamaPasien%")->count();
+        $dataPasien = null;
+        $totalDataPasien = null;
+        if($request->tanggalSearch != null OR $request->tanggalSearch != ''){
+            $tglSearch = explode(' ',$this->convertDate($request->tanggalSearch))[0];
+            $dataPasien = Pasien::orderBy('tanggal', 'desc')
+            ->skip($request->firstPage)
+            ->take($request->lastPage)
+            ->where('namaPasien','like',"%$request->searchNamaPasien%")
+            ->where('tanggal', $tglSearch)
+            ->get();
+            $totalDataPasien = Pasien::where('namaPasien','like',"%$request->searchNamaPasien%")
+            ->where('tanggal', $tglSearch)
+            ->count();
+        }else{
+            $dataPasien = Pasien::orderBy('tanggal', 'desc')
+            ->skip($request->firstPage)
+            ->take($request->lastPage)
+            ->where('namaPasien','like',"%$request->searchNamaPasien%")
+            ->get();
+            $totalDataPasien = Pasien::where('namaPasien','like',"%$request->searchNamaPasien%")->count();
+        }
+        
         return response()->json([
             'dataPasien' => $dataPasien,
             'totalDataPasien' => $totalDataPasien

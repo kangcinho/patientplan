@@ -7,9 +7,18 @@ use App\User;
 use App\Http\Helper\RecordLog;
 class UserController extends Controller
 {
-    public function getDataUser(){
-        $users = User::orderBy('updated_at', 'desc')->get();
-        return response()->json($users, 200);
+    public function getDataUser(Request $request){
+        // $users = User::orderBy('updated_at', 'desc')->get();
+        $users = User::orderBy('updated_at', 'desc')
+        ->skip($request->firstPage)
+        ->take($request->lastPage)
+        ->where('namaUser','like',"%$request->searchNamaUser%")
+        ->get();
+        $totalUser = User::where('namaUser','like',"%$request->searchNamaUser%")->count();
+        return response()->json([
+            'users' => $users,
+            'totalUser' => $totalUser
+        ], 200);
     }
 
     public function saveDataUser(Request $request){
@@ -43,13 +52,13 @@ class UserController extends Controller
             $user->isEdit = false;
         // }
         $user->save();
-        RecordLog::logRecord('UPDATE', $user->idPasien, $userOld, $user);
+        RecordLog::logRecord('UPDATE', $user->idUser, $userOld, $user);
         return response()->json($user, 200);
     }
 
     public function deleteDataUser($idUser){
         $user = User::where('idUser', $idUser)->first();
-        RecordLog::logRecord('DELETE', $user->idPasien, $user, null);
+        RecordLog::logRecord('DELETE', $user->idUser, $user, null);
         $user->delete();
         return response()->json([], 200);
     }

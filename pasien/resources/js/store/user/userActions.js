@@ -2,10 +2,13 @@ import axios from 'axios'
 import * as type from './userTypeMutations'
 
 const actions = {
-  getDataUser({commit}){
+  getDataUser({commit}, data){
     return new Promise( (berhasil, gagal) => {
-      axios.get(`/api/getDataUser`, ).then( (respon) => {
-        commit(type.SET_DATA_USER, respon.data)
+      axios.post(`/api/getDataUser`, data).then( (respon) => {
+        commit(type.SET_DATA_USER, respon.data.users)
+        commit(type.SET_DATA_USER_TOTAL, respon.data.totalUser)
+        // console.log(respon.data.totalUser)
+        berhasil("hore berhasil")
       })
     })
   },

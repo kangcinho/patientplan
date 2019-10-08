@@ -25,7 +25,7 @@ Route::post('updateDataPasienPulang', 'PasienController@updateDataPasienPulang')
 Route::get('deleteDataPasienPulang/{idPasien}', 'PasienController@deleteDataPasienPulang');
 
 //Section User
-Route::get('getDataUser', 'UserController@getDataUser');
+Route::post('getDataUser', 'UserController@getDataUser');
 Route::post('saveDataUser', 'UserController@saveDataUser');
 Route::post('updateDataUser', 'UserController@updateDataUser');
 Route::get('deleteDataUser/{idUser}', 'UserController@deleteDataUser');

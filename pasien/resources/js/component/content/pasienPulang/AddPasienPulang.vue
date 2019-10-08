@@ -253,7 +253,7 @@ export default {
       this.isComponentModal = false
     },
     hapusFieldAll(){
-      this.dataPasienPulang.tanggal= new Date()
+      this.dataPasienPulang.tanggal= null
       this.dataPasienPulang.noreg = this.dataPasienPulang.nrm = this.dataPasienPulang.namaPasien = this.dataPasienPulang.kamar = this.dataPasienPulang.petugasFO = this.dataPasienPulang.petugasPerawat = this.dataPasienPulang.keterangan = ''
       this.dataPasienPulang.waktuVerif = this.dataPasienPulang.waktuIKS = this.dataPasienPulang.waktuSelesai = this.dataPasienPulang.waktuPasien = this.dataPasienPulang.waktuLunas = null
       this.dataPasienPulang.isWaktu = this.isComponentModal = false

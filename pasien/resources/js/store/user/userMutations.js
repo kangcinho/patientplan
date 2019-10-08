@@ -25,6 +25,9 @@ const mutations = {
         state.dataUser.splice(index, 1)
       }
     })
+  },
+  [type.SET_DATA_USER_TOTAL](state,payload){
+    state.dataUserTotal = payload
   }
 }
 

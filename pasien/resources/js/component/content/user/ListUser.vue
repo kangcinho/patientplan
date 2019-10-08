@@ -15,7 +15,9 @@
               icon="search" 
               expanded
               rounded
-              v-model="searching">
+              v-model="searchNamaUser"
+              @keyup.native.enter="searchNamaUserToDB"
+              >
             </b-input>
           </b-field>
         </div>
@@ -183,9 +185,25 @@
               </tr>
             </tbody>
           </table>
+          <b-pagination
+            icon-pack="fas"
+            :total="pagging.total"
+            :current.sync="pagging.current"
+            :range-before="pagging.rangeBefore"
+            :range-after="pagging.rangeAfter"
+            :per-page="pagging.perPage"
+            rounded
+            icon-prev="chevron-left"
+            icon-next="chevron-right"
+            aria-next-label="Next page"
+            aria-previous-label="Previous page"
+            aria-page-label="Page"
+            aria-current-label="Current page">
+          </b-pagination>
         </div>
       </div>
     </section>
+    <b-loading is-full-page :active.sync="isLoading" :can-cancel="false"></b-loading>
   </div>
 </template>
 
@@ -199,7 +217,6 @@ export default {
   },
   data(){
     return {
-      searching: '',
       isTambahData: false,
       dataUserNew:{
         username: null,
@@ -220,21 +237,60 @@ export default {
         canUpdate: false,
         canDelete: false
       },
-      disableEdit: false
+      pagging:{
+        total: 0,
+        current: 1,
+        perPage: 8,
+        rangeBefore: 2,
+        rangeAfter: 2
+      },
+      disableEdit: false,
+      searchNamaUser: null,
+      isLoading: false
     }
   },
   mounted(){
-    this.$store.dispatch('getDataUser')
+    let firstPage,lastPage      
+    firstPage = (this.pagging.current - 1) * this.pagging.perPage
+    lastPage = this.pagging.perPage
+    this.isLoading = true
+    this.$store.dispatch('getDataUser', {firstPage,lastPage, searchNamaUser: this.searchNamaUser})
+    .then( (respon) => {
+      this.isLoading = false
+      this.pagging.total =  this.$store.getters.getDataUserTotal
+    })
+    .catch( (respon) => {
+      this.isLoading = false
+    })
   },
   computed:{
     dataUsers(){
       return this.$store.getters.getDataUser
     }
   },
+  watch:{
+    'pagging.current'(newVal, oldVal){
+      let firstPage,lastPage      
+      firstPage = (this.pagging.current - 1) * this.pagging.perPage
+      lastPage = this.pagging.perPage
+      this.isLoading = true
+      this.$store.dispatch('getDataUser', {firstPage,lastPage, searchNamaUser: this.searchNamaUser})
+      .then( (respon) => {
+        this.isLoading = false
+        this.pagging.total =  this.$store.getters.getDataUserTotal
+        console.log(this.pagging.total)
+      })
+      .catch( (respon) => {
+        this.isLoading = false
+      })
+    },
+  },
   methods:{
     saveDataUser(){
+      this.isLoading = true
       this.$store.dispatch('saveDataUser', this.dataUserNew)
       .then( (respon) => {
+        this.isLoading = false
         this.isTambahData = false
         this.hapusFieldAll()
         this.$buefy.notification.open({
@@ -243,6 +299,7 @@ export default {
         })
       })
       .catch( (respon) => {
+        this.isLoading = false
         this.$buefy.notification.open({
           message: respon,
           type: 'is-danger',
@@ -252,8 +309,10 @@ export default {
     updateDataUser(userData){
       this.dataUserEdit.idUser = userData.idUser
       userData.isEdit = false
+      this.isLoading = true
       this.$store.dispatch('updateDataUser', this.dataUserEdit)
       .then( (respon) => {
+        this.isLoading = false
         this.isTambahData = false
         this.disableEdit = false
         // this.hapusFieldAll()
@@ -263,6 +322,7 @@ export default {
         })
       })
       .catch( (respon) => {
+        this.isLoading = false
         this.$buefy.notification.open({
           message: respon,
           type: 'is-danger',
@@ -314,6 +374,21 @@ export default {
       this.dataUserEdit.canInsert = userData.canInsert
       this.dataUserEdit.canUpdate = userData.canUpdate
       this.dataUserEdit.canDelete = userData.canDelete
+    },
+    searchNamaUserToDB(){
+      let firstPage,lastPage      
+      firstPage = (this.pagging.current - 1) * this.pagging.perPage
+      lastPage = this.pagging.perPage
+      this.isLoading = true
+      this.$store.dispatch('getDataUser', {firstPage,lastPage, searchNamaUser: this.searchNamaUser})
+      .then( (respon) => {
+        this.isLoading = false
+        this.pagging.total =  this.$store.getters.getDataUserTotal
+        this.pagging.current = 1
+      })
+      .catch( (respon) => {
+        this.isLoading = false
+      })
     }
   }
 }

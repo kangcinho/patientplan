@@ -8,7 +8,8 @@ const getters = {
       }
       return 0
     })
-  }
+  },
+  getDataUserTotal: (state) => state.dataUserTotal
 }
 
 export default getters

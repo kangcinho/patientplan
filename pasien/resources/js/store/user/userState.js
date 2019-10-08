@@ -1,5 +1,6 @@
 const state = {
-  dataUser: []
+  dataUser: [],
+  dataUserTotal: 0
 }
 
 export default state

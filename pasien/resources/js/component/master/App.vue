@@ -4,7 +4,6 @@
       <Content></Content>
       <!-- <ListUser></ListUser> -->
   </div>
-
 </template>
 
 <script>

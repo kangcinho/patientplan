@@ -1,18 +1,34 @@
 <template>
   <div class="columns is-multiline">
-    <div class="column is-full">
+    <div class="column">
+      <b-field>
+        <b-datepicker
+          icon-pack="fas"
+          icon="calendar-alt"
+          :date-formatter="(date) => $moment(date).format('DD MMM YYYY')"
+          v-model="tanggalSearch"
+          placeholder="Pilih Periode Pasien Pulang"
+          rounded
+          editable
+          @keyup.native.enter="searchNamaPasienToDB"
+          @input="searchNamaPasienToDB"
+          >
+        </b-datepicker>
+      </b-field>
+    </div>
+    <div class="column is-two-thirds">
       <b-input
         rounded
         icon-pack="fas"
         icon="search" 
         placeholder="Cari Nama Pasien Pulang"
-        v-model="searchNamaPasien"
         @keyup.native.enter="searchNamaPasienToDB"
+        v-model="searchNamaPasien"
       >
       </b-input>
     </div>
     <div class="column">
-      <table class="table is-bordered is-striped is-narrow" style="width:100%; font-size:11.5px">
+      <table class="table is-bordered is-striped is-narrow " style="width:100%; font-size:11.5px">
         <thead>
           <tr>
             <th rowspan="2" class="has-text-centered width25">Tgl Pulang</th>
@@ -208,7 +224,7 @@
         aria-current-label="Current page">
       </b-pagination>
     </div>
-
+    <b-loading is-full-page :active.sync="isLoading" :can-cancel="false"></b-loading>
     <!-- <b-modal :active.sync="isModalKonfirmasiHapusData" >
       <ModalKonfirmasiHapusData></ModalKonfirmasiHapusData>
     </b-modal> -->
@@ -251,6 +267,9 @@ export default {
       },
       searchNamaPasien: '',
       isModalKonfirmasiHapusData: false,
+      isAllPeriode: false,
+      tanggalSearch: new Date(),
+      isLoading: false
     }
   },
   computed:{
@@ -282,10 +301,14 @@ export default {
       let firstPage,lastPage      
       firstPage = (this.pagging.current - 1) * this.pagging.perPage
       lastPage = this.pagging.perPage
-      // console.log(firstPage,lastPage)
-      this.$store.dispatch('getDataPasienPulang', {firstPage,lastPage, searchNamaPasien: this.searchNamaPasien})
+      this.isLoading = true
+      this.$store.dispatch('getDataPasienPulang', {firstPage,lastPage, searchNamaPasien: this.searchNamaPasien, tanggalSearch: this.tanggalSearch})
       .then( (respon) => {
+        this.isLoading = false
         this.pagging.total =  this.$store.getters.getTotalPasienPulang
+      })
+      .catch( (respon) => {
+        this.isLoading = false
       })
     },
   },
@@ -316,9 +339,10 @@ export default {
       this.disableEdit = false
       this.dataPasienPulang.noreg = dataPasien.noreg
       this.dataPasienPulang.idPasien = dataPasien.idPasien
-      
+      this.isLoading = true
       this.$store.dispatch('updateDataPasienPulang', this.dataPasienPulang)
       .then( (respon) => {
+        this.isLoading = false
         this.hapusFieldAll()
         this.$buefy.notification.open({
           message: respon,
@@ -326,6 +350,7 @@ export default {
         })
       })
       .catch( (respon) => {
+        this.isLoading = false
         this.$buefy.notification.open({
           message: respon,
           type: 'is-danger',
@@ -378,10 +403,15 @@ export default {
       let firstPage,lastPage
       firstPage = 0
       lastPage = this.pagging.perPage
-      this.$store.dispatch('getDataPasienPulang', {firstPage,lastPage, searchNamaPasien: this.searchNamaPasien})
+      this.isLoading = true
+      this.$store.dispatch('getDataPasienPulang', {firstPage,lastPage, searchNamaPasien: this.searchNamaPasien, tanggalSearch: this.tanggalSearch})
       .then( (respon) => {
+        this.isLoading = false
         this.pagging.total =  this.$store.getters.getTotalPasienPulang
         this.pagging.current = 1
+      })
+      .catch((respon) => {
+        this.isLoading = false
       })
     },
     deleteDataPasienPulang(dataPasien){
@@ -396,19 +426,6 @@ export default {
           'method': 'deleteDataPasienPulang'
         }
       })
-      // this.$store.dispatch('deleteDataPasienPulang', dataPasien)
-      // .then( (respon) => {
-      //   this.$buefy.notification.open({
-      //     message: respon,
-      //     type: 'is-success'
-      //   })
-      // })
-      // .catch( (respon) => {
-      //   this.$buefy.notification.open({
-      //     message: respon,
-      //     type: 'is-danger'
-      //   })
-      // })
     }
   },
   filters:{
@@ -420,12 +437,18 @@ export default {
     },
   },
   mounted(){
+    this.isLoading = true
     let firstPage,lastPage
     firstPage = (this.pagging.current - 1) * this.pagging.perPage
     lastPage = this.pagging.perPage
-    this.$store.dispatch('getDataPasienPulang', {firstPage,lastPage, searchNamaPasien: this.searchNamaPasien})
+    this.$store.dispatch('getDataPasienPulang', {firstPage,lastPage, searchNamaPasien: this.searchNamaPasien, tanggalSearch: this.tanggalSearch})
     .then( (respon) => {
+      this.isLoading = false
       this.pagging.total =  this.$store.getters.getTotalPasienPulang
+      console.log(this.pagging.total)
+    })
+    .catch( (respon) => {
+      this.isLoading = false
     })
   }
 }
