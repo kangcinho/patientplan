@@ -1842,6 +1842,31 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({});
 
 /***/ }),
@@ -16189,9 +16214,62 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div")
+  return _c(
+    "div",
+    { staticClass: "modal-card", staticStyle: { width: "auto" } },
+    [
+      _vm._m(0),
+      _vm._v(" "),
+      _c("section", { staticClass: "modal-card-body" }, [
+        _c(
+          "div",
+          { staticClass: "column" },
+          [
+            _c("b-field", { attrs: { label: "Username" } }, [_c("b-input")], 1),
+            _vm._v(" "),
+            _c(
+              "b-field",
+              { attrs: { label: "Password" } },
+              [
+                _c("b-input", {
+                  attrs: {
+                    type: "password",
+                    "password-reveal": "",
+                    "icon-pack": "fas"
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "b-button",
+              {
+                attrs: {
+                  type: "is-primary",
+                  "icon-pack": "fas",
+                  "icon-left": "sign-in-alt"
+                }
+              },
+              [_vm._v("\n        Login\n      ")]
+            )
+          ],
+          1
+        )
+      ])
+    ]
+  )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("header", { staticClass: "modal-card-head" }, [
+      _c("p", { staticClass: "modal-card-title" }, [_vm._v("Login")])
+    ])
+  }
+]
 render._withStripped = true
 
 
