@@ -53,6 +53,13 @@ class PasienController extends Controller
             }else{
                 $dataPasien->keterangan = "IKS - ".$dataPasien->namaPerusahaan;
             }
+
+            $cekPasien = Pasien::where('noReg', $dataPasien->noReg)->first();
+            if($cekPasien){
+                $dataPasien->isDone = true;
+            }else{
+                $dataPasien->isDone = false;
+            }
         }
         return response()->json($dataPasiens);
     }
@@ -98,7 +105,7 @@ class PasienController extends Controller
 
     public function deleteDataPasienPulang($idPasien){
         $dataPasien = Pasien::where('idPasien', $idPasien)->first();
-        RecordLog::logRecord('DELETE', $dataPasien->idPasien, $dataPasien, null);
+        RecordLog::logRecord('DELETE', $dataPasien->idPasien, $dataPasien, null, null);
         $dataPasien->delete();
        
         return response()->json([], 200);
@@ -118,6 +125,8 @@ class PasienController extends Controller
             $dataPasien->nrm = $request->nrm;
             $dataPasien->namaPasien = $request->namaPasien;
             $dataPasien->kamar = $request->kamar;
+            $dataPasien->isTerencana = $request->isTerencana;
+            $dataPasien->noKartu = $request->noKartu;
             $dataPasien->keterangan = $request->keterangan;
             $dataPasien->idUser = null;
             $dataPasien->waktuVerif = null;
@@ -149,7 +158,7 @@ class PasienController extends Controller
                 $dataPasien->petugasPerawat = $request->petugasPerawat;    
             }
             $dataPasien->save();
-            RecordLog::logRecord('INSERT', $dataPasien->idPasien, null, $dataPasien);
+            RecordLog::logRecord('INSERT', $dataPasien->idPasien, null, $dataPasien, null);
             return response()->json($dataPasien, 200);
         }
         return response()->json($dataPasien, 200);
@@ -176,8 +185,9 @@ class PasienController extends Controller
             }
             $pasienPulang->petugasFO = $request->petugasFO;
             $pasienPulang->petugasPerawat = $request->petugasPerawat;
+            $pasienPulang->isTerencana = $request->isTerencana;
             $pasienPulang->save();
-            RecordLog::logRecord('UPDATE', $pasienPulang->idPasien, $pasienDataOld, $pasienPulang);
+            RecordLog::logRecord('UPDATE', $pasienPulang->idPasien, $pasienDataOld, $pasienPulang, null);
             return response()->json($pasienPulang, 200);
         }
         return response()->json([], 500);
@@ -276,7 +286,7 @@ class PasienController extends Controller
             $pasien->keterangan = $dataPasien->keterangan;
             $pasien->isTerencana = true;
             $pasien->noKartu = $dataPasien->noKartu;
-            $pasien->idUser = null;
+            $pasien->idUser = 'SYSTEM';
             $pasien->waktuVerif = null;
             $pasien->waktuIKS = null;
             $pasien->waktuSelesai = null;
@@ -286,6 +296,7 @@ class PasienController extends Controller
             $pasien->petugasPerawat = null;
             $pasien->isEdit = false;
             $pasien->save();
+            RecordLog::logRecord('INSERT', $pasien->idPasien, null, $pasien, 'SYSTEM');
         }
     }
 }

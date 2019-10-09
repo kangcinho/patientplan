@@ -8,6 +8,11 @@ const mutations = {
   },
   [type.ADD_DATA_PASIEN_PULANG](state, payload){
     state.dataPasienPulang.push(payload)
+    state.dataPasienRegistrasi.map( (data) => {
+      if(data.noReg == payload.noReg){
+        data.isDone = true
+      }
+    })
   },
   [type.UPDATE_DATA_PASIEN_PULANG](state, payload){
     state.dataPasienPulang.map( (dataPasien) => {
@@ -19,6 +24,7 @@ const mutations = {
         dataPasien.waktuLunas = payload.waktuLunas
         dataPasien.petugasFO = payload.petugasFO
         dataPasien.petugasPerawat = payload.petugasPerawat
+        dataPasien.isTerencana = payload.isTerencana
       }
     })
   },

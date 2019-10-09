@@ -5847,23 +5847,23 @@ readers do not read off random characters that represent icons */
   font-weight: 900;
 }
 
-.width11 {
-  max-width: 11px;
-  word-wrap: break-word;
+.wrapWord {
+  word-wrap: break-word !important;
 }
 
-.width25 {
-  max-width: 25px;
-  word-wrap: break-word;
+.sizeKamar {
+  width: 20px !important;
 }
 
-.width30 {
-  max-width: 30px;
-  word-wrap: break-word;
+.sizeKeterangan {
+  width: 100px !important;
 }
 
-.width60 {
-  max-width: 60px;
-  word-wrap: break-word;
+.sizeWaktu {
+  width: 82px !important;
+}
+
+.sizePetugas {
+  width: 240px !important;
 }
 

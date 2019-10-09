@@ -28,11 +28,19 @@
           narrowed
           hoverable
           mobile-cards
+          style="font-size:11px"
           >
 
         <template slot-scope="props">
           <b-table-column field="noReg" label="NoReg" centered>
-            {{ props.row.noReg }}
+            {{ props.row.noReg }} 
+            <span v-if="props.row.isDone">
+              <b-icon
+                icon="check-circle"
+                pack="fas"
+              >
+              </b-icon>
+            </span> 
           </b-table-column>
 
           <b-table-column field="nrm" label="NRM">
@@ -51,6 +59,10 @@
             {{ props.row.keterangan }}
           </b-table-column>
 
+          <b-table-column field="noKartu" label="Kartu">
+            {{ props.row.noKartu }}
+          </b-table-column>
+
           <b-table-column label="Action" centered>
             <b-button
               type="is-primary"
@@ -60,6 +72,8 @@
               @click="fetchData(props.row)">
             </b-button>
           </b-table-column>
+
+          
         </template>
 
         <template slot="empty">

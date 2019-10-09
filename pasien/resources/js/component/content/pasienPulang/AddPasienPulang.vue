@@ -66,7 +66,7 @@
           </b-input>
         </b-field>
 
-        <b-field expanded>
+        <b-field>
           <b-input
             type="text"
             placeholder="Keterangan Pasien"
@@ -78,10 +78,23 @@
             >
           </b-input>
         </b-field>
-      </b-field>   
+        <b-field>
+          <b-input
+            type="text"
+            placeholder="Nomor Kartu Kepersertaan"
+            validation-message="Nomor Kartu Harus Diisi"
+            v-model="dataPasienPulang.noKartu"
+            required
+            rounded
+            readonly
+            >
+          </b-input>
+        </b-field>
+      </b-field>
 
       <b-field>
         <b-checkbox v-model="dataPasienPulang.isWaktu">Saya Ingin Menambahkan Waktu</b-checkbox>
+        <b-checkbox v-model="dataPasienPulang.isTerencana">Pasien Pulang Sesuai Rencana</b-checkbox>
       </b-field>
 
       <b-field grouped v-if="dataPasienPulang.isWaktu">
@@ -212,6 +225,8 @@ export default {
         petugasPerawat:'',
         keterangan:'',
         isWaktu: false,
+        isTerencana: false,
+        noKartu: null
       },
       errorValidasi:{
         tanggal: null,
@@ -250,13 +265,14 @@ export default {
       this.dataPasienPulang.namaPasien = data.namaPasien
       this.dataPasienPulang.kamar = data.kamar
       this.dataPasienPulang.keterangan = data.keterangan
+      this.dataPasienPulang.noKartu = data.noKartu
       this.isComponentModal = false
     },
     hapusFieldAll(){
       this.dataPasienPulang.tanggal= null
-      this.dataPasienPulang.noReg = this.dataPasienPulang.nrm = this.dataPasienPulang.namaPasien = this.dataPasienPulang.kamar = this.dataPasienPulang.petugasFO = this.dataPasienPulang.petugasPerawat = this.dataPasienPulang.keterangan = ''
+      this.dataPasienPulang.noKartu = this.dataPasienPulang.noReg = this.dataPasienPulang.nrm = this.dataPasienPulang.namaPasien = this.dataPasienPulang.kamar = this.dataPasienPulang.petugasFO = this.dataPasienPulang.petugasPerawat = this.dataPasienPulang.keterangan = ''
       this.dataPasienPulang.waktuVerif = this.dataPasienPulang.waktuIKS = this.dataPasienPulang.waktuSelesai = this.dataPasienPulang.waktuPasien = this.dataPasienPulang.waktuLunas = null
-      this.dataPasienPulang.isWaktu = this.isComponentModal = false
+      this.dataPasienPulang.isTerencana = this.dataPasienPulang.isWaktu = this.isComponentModal = false
     },
     saveDataPasienPulang(){
       if(this.validateDataPasienPulang(this.dataPasienPulang)){

@@ -27,34 +27,49 @@
       >
       </b-input>
     </div>
-    <div class="column">
-      <table class="table is-bordered is-striped is-narrow " style="width:100%; font-size:11.5px">
+    <div class="column is-full">
+      <div class="table-container">
+      <table class="table is-bordered is-striped is-narrow " style="font-size:0.6em">
         <thead>
           <tr>
-            <th rowspan="2" class="has-text-centered width25">Tgl Pulang</th>
-            <th rowspan="2" class="has-text-centered width11">Kmr</th>
-            <th rowspan="2" class="has-text-centered" :class="classWidthRow">Nama Pasien</th>
+            <th rowspan="2" class="has-text-centered sizeKeterangan">Tgl Pulang</th>
+            <th rowspan="2" class="has-text-centered sizeKamar">Kmr</th>
+            <th rowspan="2" class="has-text-centered sizeKeterangan">Nama Pasien</th>
             <th colspan="5" class="has-text-centered">Waktu Konfirmasi</th>
             <th colspan="2" class="has-text-centered">Petugas Jaga</th>
-            <th rowspan="2" class="has-text-centered" :class="classWidthRow">Keterangan</th>
-            <th rowspan="2" class="has-text-centered width30">Action</th>
+            <th rowspan="2" class="has-text-centered sizeKeterangan">Keterangan</th>
+            <th rowspan="2" class="has-text-centered sizeKeterangan">Action</th>
           </tr>
         <tr>
-          <th class="has-text-centered width25">Verif</th>
-          <th class="has-text-centered width25">IKS</th>
-          <th class="has-text-centered width25">Selesai</th>
-          <th class="has-text-centered width25">Pasien</th>
-          <th class="has-text-centered width25">Lunas</th>
-          <th class="has-text-centered">FO</th>
-          <th class="has-text-centered">Perawat</th>
+          <th class="has-text-centered sizeWaktu">Verif</th>
+          <th class="has-text-centered sizeWaktu">IKS</th>
+          <th class="has-text-centered sizeWaktu">Selesai</th>
+          <th class="has-text-centered sizeWaktu">Pasien</th>
+          <th class="has-text-centered sizeWaktu">Lunas</th>
+          <th class="has-text-centered sizePetugas">FO</th>
+          <th class="has-text-centered sizePetugas">Perawat</th>
         </tr>
         </thead>
         <tbody v-if="getPasienPulang.length > 0">
           <tr v-for="pasien in getPasienPulang" :key="pasien.idPasien">
-            <td class="has-text-centered width25">{{ pasien.tanggal | moment("DD MMM YYYY") }}</td>
-            <td class="has-text-centered width11">{{ pasien.kamar }}</td>
-            <td class="has-text-centered" :class="classWidthRow">{{ pasien.namaPasien }}</td>
-            <td class="has-text-centered width25">
+            <td class="has-text-centered wrapWord sizeKeterangan">
+              {{ pasien.tanggal | moment("DD MMM YYYY") }}
+              <br/>
+              <span v-if="pasien.isTerencana && !pasien.isEdit" style="font-size: 10px">
+                <b-icon
+                  size="is-small"
+                  icon="check-double"
+                  pack="fas"
+                >
+                </b-icon>
+              </span>
+              <span v-if="pasien.isEdit">
+                <b-checkbox v-model="dataPasienPulang.isTerencana">Terencana</b-checkbox>
+              </span>
+              </td>
+            <td class="has-text-centered wrapWord sizeKamar">{{ pasien.kamar }}</td>
+            <td class="has-text-centered wrapWord sizeKeterangan">{{ pasien.namaPasien }}</td>
+            <td class="has-text-centered wrapWord sizeWaktu">
               <span v-if="!pasien.isEdit">{{ pasien.waktuVerif | showOnlyTime }}</span>
               <span v-else>
                 <b-clockpicker
@@ -67,7 +82,7 @@
                 </b-clockpicker>
               </span>
             </td>
-            <td class="has-text-centered width25">
+            <td class="has-text-centered wrapWord sizeWaktu">
               <span v-if="!pasien.isEdit">{{ pasien.waktuIKS | showOnlyTime }}</span>
               <span v-else>
                 <b-clockpicker
@@ -81,7 +96,7 @@
               </span>
               
             </td>
-            <td class="has-text-centered width25">
+            <td class="has-text-centered wrapWord sizeWaktu">
               <span v-if="!pasien.isEdit">{{ pasien.waktuSelesai | showOnlyTime }}</span>
               <span v-else>
                 <b-clockpicker
@@ -94,7 +109,7 @@
                 </b-clockpicker>
               </span>
             </td>
-            <td class="has-text-centered width25">
+            <td class="has-text-centered wrapWord sizeWaktu">
               <span v-if="!pasien.isEdit">{{ pasien.waktuPasien | showOnlyTime }}</span>
               <span v-else>
                 <b-clockpicker
@@ -107,7 +122,7 @@
                 </b-clockpicker>
               </span>             
             </td>
-            <td class="has-text-centered width25">
+            <td class="has-text-centered wrapWord sizeWaktu">
               <span v-if="!pasien.isEdit">{{ pasien.waktuLunas | showOnlyTime }}</span>
               <span v-else>
                 <b-clockpicker
@@ -120,7 +135,7 @@
                 </b-clockpicker>
               </span>                
             </td>
-            <td class="has-text-centered width60">
+            <td class="has-text-centered wrapWord sizePetugas">
               <span v-if="!pasien.isEdit">{{ pasien.petugasFO }}</span>
               <span v-else>
                 <b-autocomplete
@@ -137,7 +152,7 @@
                 </b-autocomplete>
               </span>
             </td>
-            <td class="has-text-centered width60">
+            <td class="has-text-centered wrapWord sizePetugas">
               <span v-if="!pasien.isEdit">{{ pasien.petugasPerawat }}</span>
               <span v-else>
                 <b-autocomplete
@@ -154,8 +169,8 @@
                 </b-autocomplete>
               </span>
             </td>
-            <td class="has-text-centered" :class="classWidthRow">{{ pasien.keterangan }}</td>
-            <td class="has-text-centered width30">
+            <td class="has-text-centered wrapWord sizeKeterangan">{{ pasien.keterangan }} <br/> {{ pasien.noKartu }} </td>
+            <td class="has-text-centered wrapWord sizeKeterangan">
               <b-button 
                 type="is-info"
                 size="is-small"
@@ -208,6 +223,7 @@
           </tr>
         </tbody>
       </table>
+      </div>
       <b-pagination
         icon-pack="fas"
         :total="pagging.total"
@@ -255,6 +271,7 @@ export default {
         petugasFO:'',
         petugasPerawat:'',
         keterangan:'',
+        isTerencana: false,
       },
       disableEdit: false,
       classWidthRow: 'width60',
@@ -369,7 +386,7 @@ export default {
       this.dataPasienPulang.tanggal= null
       this.dataPasienPulang.noReg = this.dataPasienPulang.nrm = this.dataPasienPulang.namaPasien = this.dataPasienPulang.kamar = this.dataPasienPulang.petugasFO = this.dataPasienPulang.petugasPerawat = this.dataPasienPulang.keterangan = ''
       this.dataPasienPulang.waktuVerif = this.dataPasienPulang.waktuIKS = this.dataPasienPulang.waktuSelesai = this.dataPasienPulang.waktuPasien = this.dataPasienPulang.waktuLunas = null
-      this.dataPasienPulang.isWaktu = this.isComponentModal = false
+      this.dataPasienPulang.isTerencana = this.dataPasienPulang.isWaktu = this.isComponentModal = false
     },
     fillData(data){
       if(data.waktuVerif != null){
@@ -398,6 +415,12 @@ export default {
       if(data.petugasPerawat != null){
         this.dataPasienPulang.petugasPerawat = data.petugasPerawat
       }
+      if(data.isTerencana){
+        this.dataPasienPulang.isTerencana = true
+      }else{
+        this.dataPasienPulang.isTerencana = false
+      }
+        
     },
     searchNamaPasienToDB(){
       let firstPage,lastPage

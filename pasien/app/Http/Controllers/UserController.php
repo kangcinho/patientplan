@@ -34,7 +34,7 @@ class UserController extends Controller
         $user->canDelete = $request->canDelete;
         $user->isEdit = false;
         $user->save();
-        RecordLog::logRecord('INSERT', $user->idUser, null, $user);
+        RecordLog::logRecord('INSERT', $user->idUser, null, $user, null);
         return response()->json($user, 200);
     }
 
@@ -52,13 +52,13 @@ class UserController extends Controller
             $user->isEdit = false;
         // }
         $user->save();
-        RecordLog::logRecord('UPDATE', $user->idUser, $userOld, $user);
+        RecordLog::logRecord('UPDATE', $user->idUser, $userOld, $user, null);
         return response()->json($user, 200);
     }
 
     public function deleteDataUser($idUser){
         $user = User::where('idUser', $idUser)->first();
-        RecordLog::logRecord('DELETE', $user->idUser, $user, null);
+        RecordLog::logRecord('DELETE', $user->idUser, $user, null, null);
         $user->delete();
         return response()->json([], 200);
     }
