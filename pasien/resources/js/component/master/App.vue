@@ -1,7 +1,8 @@
 <template>
   <div>
       <Header></Header>
-      <Content></Content>
+      <router-view></router-view>
+      <!-- <Content></Content> -->
       <!-- <ListUser></ListUser> -->
   </div>
 </template>

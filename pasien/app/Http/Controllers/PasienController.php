@@ -216,6 +216,7 @@ class PasienController extends Controller
         $this->autoSaveDataPasien($dataNoRegPasienSCs,2);
         $this->autoSaveDataPasien($dataNoRegPasienNormals,1);
     }
+    
     public function autoGetPasienFromRegistrasi($jasaID){
         $sanataRegistrasi = \DB::connection('sqlsrv')
             ->table('SIMtrRJ')
