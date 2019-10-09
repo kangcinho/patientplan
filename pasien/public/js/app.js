@@ -2229,7 +2229,7 @@ __webpack_require__.r(__webpack_exports__);
     return {
       dataPasienPulang: {
         tanggal: null,
-        noreg: null,
+        noReg: null,
         nrm: '',
         namaPasien: '',
         kamar: '',
@@ -2246,8 +2246,8 @@ __webpack_require__.r(__webpack_exports__);
       errorValidasi: {
         tanggal: null,
         tanggalMessage: null,
-        noreg: null,
-        noregMessage: null
+        noReg: null,
+        noRegMessage: null
       },
       isComponentModal: false
     };
@@ -2273,7 +2273,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     fillData: function fillData(data) {
-      this.dataPasienPulang.noreg = data.noReg;
+      this.dataPasienPulang.noReg = data.noReg;
       this.dataPasienPulang.nrm = data.nrm;
       this.dataPasienPulang.namaPasien = data.namaPasien;
       this.dataPasienPulang.kamar = data.kamar;
@@ -2282,7 +2282,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     hapusFieldAll: function hapusFieldAll() {
       this.dataPasienPulang.tanggal = null;
-      this.dataPasienPulang.noreg = this.dataPasienPulang.nrm = this.dataPasienPulang.namaPasien = this.dataPasienPulang.kamar = this.dataPasienPulang.petugasFO = this.dataPasienPulang.petugasPerawat = this.dataPasienPulang.keterangan = '';
+      this.dataPasienPulang.noReg = this.dataPasienPulang.nrm = this.dataPasienPulang.namaPasien = this.dataPasienPulang.kamar = this.dataPasienPulang.petugasFO = this.dataPasienPulang.petugasPerawat = this.dataPasienPulang.keterangan = '';
       this.dataPasienPulang.waktuVerif = this.dataPasienPulang.waktuIKS = this.dataPasienPulang.waktuSelesai = this.dataPasienPulang.waktuPasien = this.dataPasienPulang.waktuLunas = null;
       this.dataPasienPulang.isWaktu = this.isComponentModal = false;
     },
@@ -2316,15 +2316,15 @@ __webpack_require__.r(__webpack_exports__);
         this.errorValidasi.tanggalMessage = null;
       }
 
-      if (dataPasien.noreg == null || dataPasien.noreg == '') {
-        this.errorValidasi.noreg = true;
-        this.errorValidasi.noregMessage = "Sayang, ini harus diisi yaa...";
+      if (dataPasien.noReg == null || dataPasien.noReg == '') {
+        this.errorValidasi.noReg = true;
+        this.errorValidasi.noRegMessage = "Sayang, ini harus diisi yaa...";
       } else {
-        this.errorValidasi.noreg = false;
-        this.errorValidasi.noregMessage = null;
+        this.errorValidasi.noReg = false;
+        this.errorValidasi.noRegMessage = null;
       }
 
-      if (!this.errorValidasi.tanggal && !this.errorValidasi.noreg) {
+      if (!this.errorValidasi.tanggal && !this.errorValidasi.noReg) {
         return true;
       }
 
@@ -2597,7 +2597,7 @@ __webpack_require__.r(__webpack_exports__);
       dataPasienPulang: {
         idPasien: '',
         tanggal: null,
-        noreg: '',
+        noReg: '',
         nrm: '',
         namaPasien: '',
         kamar: '',
@@ -2701,7 +2701,7 @@ __webpack_require__.r(__webpack_exports__);
 
       dataPasien.isEdit = false;
       this.disableEdit = false;
-      this.dataPasienPulang.noreg = dataPasien.noreg;
+      this.dataPasienPulang.noReg = dataPasien.noReg;
       this.dataPasienPulang.idPasien = dataPasien.idPasien;
       this.isLoading = true;
       this.$store.dispatch('updateDataPasienPulang', this.dataPasienPulang).then(function (respon) {
@@ -2729,7 +2729,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     hapusFieldAll: function hapusFieldAll() {
       this.dataPasienPulang.tanggal = null;
-      this.dataPasienPulang.noreg = this.dataPasienPulang.nrm = this.dataPasienPulang.namaPasien = this.dataPasienPulang.kamar = this.dataPasienPulang.petugasFO = this.dataPasienPulang.petugasPerawat = this.dataPasienPulang.keterangan = '';
+      this.dataPasienPulang.noReg = this.dataPasienPulang.nrm = this.dataPasienPulang.namaPasien = this.dataPasienPulang.kamar = this.dataPasienPulang.petugasFO = this.dataPasienPulang.petugasPerawat = this.dataPasienPulang.keterangan = '';
       this.dataPasienPulang.waktuVerif = this.dataPasienPulang.waktuIKS = this.dataPasienPulang.waktuSelesai = this.dataPasienPulang.waktuPasien = this.dataPasienPulang.waktuLunas = null;
       this.dataPasienPulang.isWaktu = this.isComponentModal = false;
     },
@@ -16465,8 +16465,8 @@ var render = function() {
             "b-field",
             {
               attrs: {
-                type: { "is-danger": _vm.errorValidasi.noreg },
-                message: _vm.errorValidasi.noregMessage
+                type: { "is-danger": _vm.errorValidasi.noReg },
+                message: _vm.errorValidasi.noRegMessage
               }
             },
             [
@@ -16484,11 +16484,11 @@ var render = function() {
                   }
                 },
                 model: {
-                  value: _vm.dataPasienPulang.noreg,
+                  value: _vm.dataPasienPulang.noReg,
                   callback: function($$v) {
-                    _vm.$set(_vm.dataPasienPulang, "noreg", $$v)
+                    _vm.$set(_vm.dataPasienPulang, "noReg", $$v)
                   },
-                  expression: "dataPasienPulang.noreg"
+                  expression: "dataPasienPulang.noReg"
                 }
               })
             ],

@@ -15,9 +15,10 @@ class CreatePasienTable extends Migration
     {
         Schema::create('pasien', function (Blueprint $table) {
             $table->string('idPasien');
-            $table->string('noreg');
+            $table->string('noReg');
             $table->datetime('tanggal');
             $table->string('nrm');
+            $table->string('noKartu')->nullable();
             $table->string('namaPasien');
             $table->string('kamar');
             $table->datetime('waktuVerif')->nullable();
@@ -29,6 +30,7 @@ class CreatePasienTable extends Migration
             $table->string("petugasPerawat")->nullable();
             $table->text('keterangan');
             $table->boolean('isEdit')->default(false);
+            $table->boolean('isTerencana')->default(false);
             $table->string('idUser')->nullable();
             $table->primary('idPasien');
             $table->timestamps();

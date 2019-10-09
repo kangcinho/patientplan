@@ -13,7 +13,7 @@ class PasienController extends Controller
         
         $sanataRegistrasi = \DB::connection('sqlsrv')
                     ->table('SIMtrRegistrasi')
-                    ->selectRaw('NoReg as noReg, NRM as nrm, NamaPasien_Reg as namaPasien, NoKamar as kamar, SIMmJenisKerjasama.JenisKerjasama as jenisKerjasama, BPJSMurni, SilverPlus as silverPlus, NaikKelas as naikKelas, mCustomer.Nama_Customer as namaPerusahaan')
+                    ->selectRaw('NoReg as noReg, NRM as nrm, NamaPasien_Reg as namaPasien, SIMtrRegistrasi.NoAnggota as noKartu, NoKamar as kamar, SIMmJenisKerjasama.JenisKerjasama as jenisKerjasama, BPJSMurni, SilverPlus as silverPlus, NaikKelas as naikKelas, mCustomer.Nama_Customer as namaPerusahaan')
                     ->join('SIMmJenisKerjasama', 'SIMmJenisKerjasama.JenisKerjasamaID', 'SIMtrRegistrasi.JenisKerjasamaID')
                     ->leftjoin('mCustomer', 'mCustomer.Kode_Customer', 'SIMtrRegistrasi.KodePerusahaan')
                     ->where('StatusBayar', 'Belum')
@@ -24,7 +24,7 @@ class PasienController extends Controller
 
         $sanataKasir = \DB::connection('sqlsrv')
                     ->table('SIMtrKasir')
-                    ->selectRaw('SIMtrRegistrasi.NoReg as noReg, SIMtrRegistrasi.NRM as nrm, SIMtrRegistrasi.NamaPasien_Reg as namaPasien, SIMtrRegistrasi.NoKamar as kamar, SIMmJenisKerjasama.JenisKerjasama as jenisKerjasama, SIMtrRegistrasi.BPJSMurni as BPJSMurni, SIMtrRegistrasi.SilverPlus as silverPlus, SIMtrRegistrasi.NaikKelas as naikKelas, mCustomer.Nama_Customer as namaPerusahaan')
+                    ->selectRaw('SIMtrRegistrasi.NoReg as noReg, SIMtrRegistrasi.NRM as nrm, SIMtrRegistrasi.NamaPasien_Reg as namaPasien, SIMtrRegistrasi.NoKamar as kamar, SIMtrRegistrasi.NoAnggota as noKartu, SIMmJenisKerjasama.JenisKerjasama as jenisKerjasama, SIMtrRegistrasi.BPJSMurni as BPJSMurni, SIMtrRegistrasi.SilverPlus as silverPlus, SIMtrRegistrasi.NaikKelas as naikKelas, mCustomer.Nama_Customer as namaPerusahaan')
                     ->join('SIMtrRegistrasi', 'SIMtrRegistrasi.NoReg', 'SIMtrKasir.NoReg')
                     ->join('SIMmJenisKerjasama', 'SIMmJenisKerjasama.JenisKerjasamaID', 'SIMtrRegistrasi.JenisKerjasamaID')
                     ->leftjoin('mCustomer', 'mCustomer.Kode_Customer', 'SIMtrRegistrasi.KodePerusahaan')
@@ -106,14 +106,14 @@ class PasienController extends Controller
 
     public function saveDataPasienPulang(Request $request){
         $tanggal = $this->convertDate($request->tanggal);
-        $dataPasien = Pasien::where('noreg', $request->noreg)->get();
+        $dataPasien = Pasien::where('noReg', $request->noReg)->get();
 
         if(count($dataPasien)){
             return response()->json([], 500);
         }else{
             $dataPasien = new Pasien;
             $dataPasien->idPasien = $dataPasien->getIDPasien();
-            $dataPasien->noreg = $request->noreg;
+            $dataPasien->noReg = $request->noReg;
             $dataPasien->tanggal = $tanggal;
             $dataPasien->nrm = $request->nrm;
             $dataPasien->namaPasien = $request->namaPasien;
@@ -185,5 +185,107 @@ class PasienController extends Controller
 
     public function convertDate($date){
         return date('Y-m-d H:i:s', strtotime($date));
+    }
+
+
+    public function autoGetPasien(){
+        $jasaSC = ['JAS00011', 'JAS00012','JAS01231','JAS01232', 'JAS01484'];
+        $jasaNormal = ['JAS00008'];
+
+        $listRegistrasiSCFromRegistrasi = $this->autoGetPasienFromRegistrasi($jasaSC);
+        $listRegistrasiNormalFromRegistrasi = $this->autoGetPasienFromRegistrasi($jasaNormal);
+        
+        $listRegistrasiSCFromKasir = $this->autoGetPasienFromKasir($jasaSC);
+        $listRegistrasiNormalSCFromKasir = $this->autoGetPasienFromKasir($jasaNormal);
+        
+        $dataNoRegPasienSCs = collect();
+        $dataNoRegPasienSCs = $dataNoRegPasienSCs->concat($listRegistrasiSCFromRegistrasi)->concat($listRegistrasiSCFromKasir);
+
+        $dataNoRegPasienNormals = collect();
+        $dataNoRegPasienNormals = $dataNoRegPasienNormals->concat($listRegistrasiNormalFromRegistrasi)->concat($listRegistrasiNormalSCFromKasir);
+        $this->autoSaveDataPasien($dataNoRegPasienSCs,2);
+        $this->autoSaveDataPasien($dataNoRegPasienNormals,1);
+    }
+    public function autoGetPasienFromRegistrasi($jasaID){
+        $sanataRegistrasi = \DB::connection('sqlsrv')
+            ->table('SIMtrRJ')
+            ->selectRaw('SIMtrRJ.RegNo as noReg, SIMtrRJ.Tanggal as tanggal, SIMtrRegistrasi.NRM as nrm, SIMtrRegistrasi.NamaPasien_Reg as namaPasien, SIMtrRegistrasi.NoKamar as kamar, SIMtrRegistrasi.NoAnggota as noKartu, SIMmJenisKerjasama.JenisKerjasama as jenisKerjasama, SIMtrRegistrasi.BPJSMurni as BPJSMurni, SIMtrRegistrasi.SilverPlus as silverPlus, SIMtrRegistrasi.NaikKelas as naikKelas, mCustomer.Nama_Customer as namaPerusahaan')
+            ->join('SIMtrRJTransaksi', 'SIMtrRJ.NoBukti', 'SIMtrRJTransaksi.NoBukti')
+            ->join('SIMtrRegistrasi', 'SIMtrRJ.RegNo', 'SIMtrRegistrasi.NoReg')
+            ->join('SIMmJenisKerjasama', 'SIMmJenisKerjasama.JenisKerjasamaID', 'SIMtrRegistrasi.JenisKerjasamaID')
+            ->join('mCustomer', 'mCustomer.Kode_Customer', 'SIMtrRegistrasi.KodePerusahaan')
+            ->whereIn('SIMtrRJ.RegNo', function($query) {
+                    $query->select('NoReg')->from('SIMtrRegistrasi')->where('Batal', 0)->where('RawatInap',1)->where('StatusBayar', 'Belum');
+                })
+            ->whereIn('SIMtrRJTransaksi.JasaID', $jasaID)
+            ->get();
+        return $sanataRegistrasi;
+    }
+
+    public function autoGetPasienFromKasir($jasaID){
+        $tanggalSekarang = \Carbon\Carbon::now()->toDateString();
+        $tanggalKemarin = \Carbon\Carbon::now()->subDays(1)->toDateString();
+        $sanataKasir = \DB::connection('sqlsrv')
+            ->table('SIMtrRJ')
+            ->selectRaw('SIMtrRJ.RegNo as noReg, SIMtrRJ.Tanggal as tanggal, SIMtrRegistrasi.NRM as nrm, SIMtrRegistrasi.NamaPasien_Reg as namaPasien, SIMtrRegistrasi.NoKamar as kamar, SIMtrRegistrasi.NoAnggota as noKartu, SIMmJenisKerjasama.JenisKerjasama as jenisKerjasama, SIMtrRegistrasi.BPJSMurni as BPJSMurni, SIMtrRegistrasi.SilverPlus as silverPlus, SIMtrRegistrasi.NaikKelas as naikKelas, mCustomer.Nama_Customer as namaPerusahaan')
+            ->join('SIMtrRJTransaksi', 'SIMtrRJ.NoBukti', 'SIMtrRJTransaksi.NoBukti')
+            ->join('SIMtrRegistrasi', 'SIMtrRJ.RegNo', 'SIMtrRegistrasi.NoReg')
+            ->join('SIMmJenisKerjasama', 'SIMmJenisKerjasama.JenisKerjasamaID', 'SIMtrRegistrasi.JenisKerjasamaID')
+            ->join('mCustomer', 'mCustomer.Kode_Customer', 'SIMtrRegistrasi.KodePerusahaan')
+            ->whereIn('SIMtrRJ.RegNo', function($query) use ($tanggalSekarang, $tanggalKemarin) {
+                    $query->select('NoReg')->from('SIMtrKasir')
+                    ->where('Batal', 0)
+                    ->where('RJ','RI')
+                    ->where('Tanggal','>=', $tanggalKemarin)
+                    ->where('Tanggal','<=', $tanggalSekarang);
+                })
+            ->whereIn('SIMtrRJTransaksi.JasaID', $jasaID)
+            ->get();
+        return $sanataKasir;
+    }
+    public function autoSaveDataPasien($dataPasienCollection, $jumlahHari){
+        foreach($dataPasienCollection as $dataPasien){
+            $pasien = Pasien::where('noReg', $dataPasien->noReg)->first();
+            if($pasien){
+                continue;
+            }
+
+            if($dataPasien->jenisKerjasama == "UMUM"){
+                $dataPasien->keterangan = "Umum";
+            }else if($dataPasien->jenisKerjasama == "BPJS"){
+                if($dataPasien->BPJSMurni){
+                    $dataPasien->keterangan = "BPJS - BPJS Murni";
+                }else if($dataPasien->silverPlus){
+                    $dataPasien->keterangan = "BPJS - Silver Plus";
+                }else if($dataPasien->naikKelas){
+                    $dataPasien->keterangan = "BPJS - Silver Top Up";
+                }else{
+                    $dataPasien->keterangan = "BPJS";
+                }
+            }else{
+                $dataPasien->keterangan = "IKS - ".$dataPasien->namaPerusahaan;
+            }
+
+            $pasien = new Pasien;
+            $pasien->idPasien = $pasien->getIDPasien();
+            $pasien->noReg = $dataPasien->noReg;
+            $pasien->tanggal = \Carbon\Carbon::parse($dataPasien->tanggal)->addDays($jumlahHari);
+            $pasien->nrm = $dataPasien->nrm;
+            $pasien->namaPasien = $dataPasien->namaPasien;
+            $pasien->kamar = $dataPasien->kamar;
+            $pasien->keterangan = $dataPasien->keterangan;
+            $pasien->isTerencana = true;
+            $pasien->noKartu = $dataPasien->noKartu;
+            $pasien->idUser = null;
+            $pasien->waktuVerif = null;
+            $pasien->waktuIKS = null;
+            $pasien->waktuSelesai = null;
+            $pasien->waktuPasien = null;
+            $pasien->waktuLunas = null;
+            $pasien->petugasFO = null;
+            $pasien->petugasPerawat = null;
+            $pasien->isEdit = false;
+            $pasien->save();
+        }
     }
 }

@@ -243,7 +243,7 @@ export default {
       dataPasienPulang:{
         idPasien:'',
         tanggal: null,
-        noreg:'',
+        noReg:'',
         nrm:'',
         namaPasien:'',
         kamar:'',
@@ -337,7 +337,7 @@ export default {
     updateDataPasien(dataPasien){
       dataPasien.isEdit = false
       this.disableEdit = false
-      this.dataPasienPulang.noreg = dataPasien.noreg
+      this.dataPasienPulang.noReg = dataPasien.noReg
       this.dataPasienPulang.idPasien = dataPasien.idPasien
       this.isLoading = true
       this.$store.dispatch('updateDataPasienPulang', this.dataPasienPulang)
@@ -367,7 +367,7 @@ export default {
     },
     hapusFieldAll(){
       this.dataPasienPulang.tanggal= null
-      this.dataPasienPulang.noreg = this.dataPasienPulang.nrm = this.dataPasienPulang.namaPasien = this.dataPasienPulang.kamar = this.dataPasienPulang.petugasFO = this.dataPasienPulang.petugasPerawat = this.dataPasienPulang.keterangan = ''
+      this.dataPasienPulang.noReg = this.dataPasienPulang.nrm = this.dataPasienPulang.namaPasien = this.dataPasienPulang.kamar = this.dataPasienPulang.petugasFO = this.dataPasienPulang.petugasPerawat = this.dataPasienPulang.keterangan = ''
       this.dataPasienPulang.waktuVerif = this.dataPasienPulang.waktuIKS = this.dataPasienPulang.waktuSelesai = this.dataPasienPulang.waktuPasien = this.dataPasienPulang.waktuLunas = null
       this.dataPasienPulang.isWaktu = this.isComponentModal = false
     },

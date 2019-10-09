@@ -15,11 +15,11 @@
         
       </b-field>
 
-      <b-field  :type="{'is-danger': errorValidasi.noreg }" :message="errorValidasi.noregMessage">
+      <b-field  :type="{'is-danger': errorValidasi.noReg }" :message="errorValidasi.noRegMessage">
         <b-input placeholder="Nomor Registrasi" 
           icon="search" 
           icon-pack="fas" 
-          v-model="dataPasienPulang.noreg"
+          v-model="dataPasienPulang.noReg"
           @focus="isComponentModal = true"
           rounded
           readonly
@@ -199,7 +199,7 @@ export default {
     return {
       dataPasienPulang:{
         tanggal: null,
-        noreg:null,
+        noReg:null,
         nrm:'',
         namaPasien:'',
         kamar:'',
@@ -216,8 +216,8 @@ export default {
       errorValidasi:{
         tanggal: null,
         tanggalMessage: null,
-        noreg: null,
-        noregMessage: null,
+        noReg: null,
+        noRegMessage: null,
       },
       isComponentModal: false,
     }
@@ -245,7 +245,7 @@ export default {
   },
   methods:{
     fillData(data){
-      this.dataPasienPulang.noreg = data.noReg
+      this.dataPasienPulang.noReg = data.noReg
       this.dataPasienPulang.nrm = data.nrm
       this.dataPasienPulang.namaPasien = data.namaPasien
       this.dataPasienPulang.kamar = data.kamar
@@ -254,7 +254,7 @@ export default {
     },
     hapusFieldAll(){
       this.dataPasienPulang.tanggal= null
-      this.dataPasienPulang.noreg = this.dataPasienPulang.nrm = this.dataPasienPulang.namaPasien = this.dataPasienPulang.kamar = this.dataPasienPulang.petugasFO = this.dataPasienPulang.petugasPerawat = this.dataPasienPulang.keterangan = ''
+      this.dataPasienPulang.noReg = this.dataPasienPulang.nrm = this.dataPasienPulang.namaPasien = this.dataPasienPulang.kamar = this.dataPasienPulang.petugasFO = this.dataPasienPulang.petugasPerawat = this.dataPasienPulang.keterangan = ''
       this.dataPasienPulang.waktuVerif = this.dataPasienPulang.waktuIKS = this.dataPasienPulang.waktuSelesai = this.dataPasienPulang.waktuPasien = this.dataPasienPulang.waktuLunas = null
       this.dataPasienPulang.isWaktu = this.isComponentModal = false
     },
@@ -285,14 +285,14 @@ export default {
         this.errorValidasi.tanggal = false
         this.errorValidasi.tanggalMessage = null
       }
-      if(dataPasien.noreg == null || dataPasien.noreg == ''){
-        this.errorValidasi.noreg = true
-        this.errorValidasi.noregMessage = "Sayang, ini harus diisi yaa..."
+      if(dataPasien.noReg == null || dataPasien.noReg == ''){
+        this.errorValidasi.noReg = true
+        this.errorValidasi.noRegMessage = "Sayang, ini harus diisi yaa..."
       }else{
-        this.errorValidasi.noreg = false
-        this.errorValidasi.noregMessage = null
+        this.errorValidasi.noReg = false
+        this.errorValidasi.noRegMessage = null
       }
-      if(!this.errorValidasi.tanggal && !this.errorValidasi.noreg){
+      if(!this.errorValidasi.tanggal && !this.errorValidasi.noReg){
         return true
       }
       return false

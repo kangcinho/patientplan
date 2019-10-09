@@ -29,3 +29,7 @@ Route::post('getDataUser', 'UserController@getDataUser');
 Route::post('saveDataUser', 'UserController@saveDataUser');
 Route::post('updateDataUser', 'UserController@updateDataUser');
 Route::get('deleteDataUser/{idUser}', 'UserController@deleteDataUser');
+
+
+//Automatisasi Riwata Pasien Pulang with Cronjob
+Route::get('autoGetPasien', 'PasienController@autoGetPasien');
