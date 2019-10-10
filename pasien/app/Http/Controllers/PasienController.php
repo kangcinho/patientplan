@@ -300,4 +300,14 @@ class PasienController extends Controller
             RecordLog::logRecord('INSERT', $pasien->idPasien, null, $pasien, 'SYSTEM');
         }
     }
+    public function getDataExportPasienPulang(Request $request){
+        $tglAwal = $this->convertDate($request->awal);
+        $tglAkhir = $this->convertDate($request->akhir);
+        $dataPasien = Pasien::where('tanggal', '>=', $tglAwal)
+            ->where('tanggal', '<=', $tglAkhir)
+            ->orderBy('created_at','asc')
+            ->get();
+        
+        return response()->json($dataPasien, 200);
+    }
 }

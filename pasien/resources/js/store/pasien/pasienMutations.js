@@ -37,6 +37,9 @@ const mutations = {
         state.dataPasienPulang.splice(index, 1)
       }
     })
+  },
+  [type.EXPORT_DATA_TO_EXCEL](state, payload){
+    state.dataExportPasienPulang = payload
   }
 }
 

@@ -10,7 +10,8 @@ const getters = {
       return 0
     })
   },
-  getTotalPasienPulang: (state) => state.totalPasienPulang
+  getTotalPasienPulang: (state) => state.totalPasienPulang,
+  getExportPasienPulang: (state) => state.dataExportPasienPulang
 }
 
 export default getters

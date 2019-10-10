@@ -240,22 +240,73 @@
         aria-current-label="Current page">
       </b-pagination>
     </div>
+    <!-- <export-excel
+      class   = "button is-primary"
+      :data   = "json_data"
+      :fields = "json_fields"
+      worksheet = "My Worksheet"
+      name    = "filename.xls">
+      Download Excel (you can customize this with html code!)
+    </export-excel> -->
+    <b-button
+      type="is-primary"
+      size="is-small"
+      icon-pack="fas"
+      icon-left="download"
+      @click="modalEksportData"
+      >
+      Export
+    </b-button>
     <b-loading is-full-page :active.sync="isLoading" :can-cancel="false"></b-loading>
-    <!-- <b-modal :active.sync="isModalKonfirmasiHapusData" >
-      <ModalKonfirmasiHapusData></ModalKonfirmasiHapusData>
-    </b-modal> -->
+
   </div>
 </template>
 
 <script>
 import ModalKonfirmasiHapusData from '../modal/ModalKonfirmasiHapusData'
+import ModalEksportData from '../modal/ModalEksportData'
 export default {
   name: "ListPasienPulang",
   components:{
-    ModalKonfirmasiHapusData
+    ModalKonfirmasiHapusData,
+    ModalEksportData
   },
   data(){
     return {
+      // json_data: [
+      //       {
+      //           'name': 'Tony Peña',
+      //           'city': 'New York',
+      //           'country': 'United States',
+      //           'birthdate': '1978-03-15',
+      //           'phone': {
+      //               'mobile': '1-541-754-3010',
+      //               'landline': '(541) 754-3010'
+      //           }
+      //       },
+      //       {
+      //           'name': 'Thessaloniki',
+      //           'city': 'Athens',
+      //           'country': 'Greece',
+      //           'birthdate': '1987-11-23',
+      //           'phone': {
+      //               'mobile': '+1 855 275 5071',
+      //               'landline': '(2741) 2621-244'
+      //           }
+      //       }
+      //   ],
+      // json_fields: {
+      //       'Complete name': 'name',
+      //       'City': 'city',
+      //       'Telephone': 'phone.mobile',
+      //       'Telephone 2' : {
+      //           field: 'phone.landline',
+      //           callback: (value) => {
+      //               return `Landline Phone - ${value}`;
+      //           }
+      //       },
+      //   },
+      
       dataPasienPulang:{
         idPasien:'',
         tanggal: null,
@@ -330,6 +381,14 @@ export default {
     },
   },
   methods:{
+    modalEksportData(){
+      this.$buefy.modal.open({
+        parent: this,
+        component: ModalEksportData,
+        hasModalCard: true,
+        fullScreen: true
+      })
+    },
     changeToEditMode(dataPasien, mode){
        //Can Edit Only One Field Live
       if(mode){
@@ -468,7 +527,6 @@ export default {
     .then( (respon) => {
       this.isLoading = false
       this.pagging.total =  this.$store.getters.getTotalPasienPulang
-      console.log(this.pagging.total)
     })
     .catch( (respon) => {
       this.isLoading = false

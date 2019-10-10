@@ -61,6 +61,18 @@ const actions = {
         gagal(`Data ${data.namaPasien} Gagal Dihapus!`)
       })
     })
+  },
+  getDataExportPasienPulang( {commit}, data){
+    return new Promise( (berhasil, gagal) => {
+      axios.post('/api/getDataExportPasienPulang', data)
+      .then( (respon) => {
+        commit(type.EXPORT_DATA_TO_EXCEL, respon.data)
+        berhasil("Data Eksport Get")
+      })
+      .catch( (respon) => {
+        gagal("Data Eksport Gagal")
+      })
+    })
   }
 }
 
