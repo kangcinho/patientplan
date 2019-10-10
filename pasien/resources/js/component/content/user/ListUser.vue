@@ -43,6 +43,7 @@
                 <th class="has-text-centered">Insert</th>
                 <th class="has-text-centered">Update</th>
                 <th class="has-text-centered">Delete</th>
+                <th class="has-text-centered">Report</th>
                 <th class="has-text-centered">Action</th>
               </tr>
             </thead>
@@ -87,6 +88,9 @@
                 </td>
                 <td class="has-text-centered">
                   <b-switch type="is-info" v-model="dataUserNew.canDelete"></b-switch>
+                </td>
+                <td class="has-text-centered">
+                  <b-switch type="is-info" v-model="dataUserNew.canEkspor"></b-switch>
                 </td>
                 <td class="has-text-centered">
                   <b-button
@@ -149,6 +153,10 @@
                 <td class="has-text-centered">
                   <b-switch type="is-info" v-model="dataUserEdit.canDelete" v-if="user.isEdit"></b-switch>
                   <b-switch type="is-info" v-model="user.canDelete" v-else disabled></b-switch>
+                </td>
+                <td class="has-text-centered">
+                  <b-switch type="is-info" v-model="dataUserEdit.canEkspor" v-if="user.isEdit"></b-switch>
+                  <b-switch type="is-info" v-model="user.canEkspor" v-else disabled></b-switch>
                 </td>
                 <td class="has-text-centered">
                   <b-button 
@@ -225,7 +233,8 @@ export default {
         canAdmin: false,
         canInsert: false,
         canUpdate: false,
-        canDelete: false
+        canDelete: false,
+        canEkspor: false
       },
       dataUserEdit:{
         idUser: null,
@@ -235,7 +244,8 @@ export default {
         canAdmin: false,
         canInsert: false,
         canUpdate: false,
-        canDelete: false
+        canDelete: false,
+        canEkspor: false
       },
       pagging:{
         total: 0,
@@ -363,7 +373,7 @@ export default {
     },
     hapusFieldAll(){
       this.dataUserNew.username = this.dataUserNew.email = this.dataUserNew.namaUser = this.dataUserEdit.username = this.dataUserEdit.email = this.dataUserEdit.namaUser = this.dataUserEdit.idUser = null 
-      this.dataUserNew.canAdmin = this.dataUserNew.canInsert = this.dataUserNew.canUpdate = this.dataUserNew.canDelete = this.dataUserEdit.canAdmin = this.dataUserEdit.canInsert = this.dataUserEdit.canUpdate = this.dataUserEdit.canDelete = false   
+      this.dataUserNew.canAdmin = this.dataUserNew.canInsert = this.dataUserNew.canUpdate = this.dataUserNew.canDelete = this.dataUserNew.canEkspor = this.dataUserEdit.canAdmin = this.dataUserEdit.canInsert = this.dataUserEdit.canUpdate = this.dataUserEdit.canDelete = this.dataUserEdit.canEkspor = false    
     },
     fillData(userData){
       this.dataUserEdit.idUser = userData.idUser
@@ -374,6 +384,7 @@ export default {
       this.dataUserEdit.canInsert = userData.canInsert
       this.dataUserEdit.canUpdate = userData.canUpdate
       this.dataUserEdit.canDelete = userData.canDelete
+      this.dataUserEdit.canEkspor = userData.canEkspor
     },
     searchNamaUserToDB(){
       let firstPage,lastPage      

@@ -16,6 +16,7 @@ const mutations = {
         user.canUpdate = payload.canUpdate
         user.canDelete = payload.canDelete
         user.canAdmin = payload.canAdmin
+        user.canEkspor = payload.canEkspor
       }
     })
   },

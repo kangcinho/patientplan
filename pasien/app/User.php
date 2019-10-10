@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','username','canInsert','canUpdate','canDelete','canAdmin'
+        'name', 'email', 'password','username','canInsert','canUpdate','canDelete','canAdmin', 'canEkspor'
     ];
 
     /**
@@ -39,6 +39,7 @@ class User extends Authenticatable
         'canUpdate'=>'boolean',
         'canDelete'=>'boolean',
         'canAdmin'=>'boolean',
+        'canEkspor'=>'boolean'
     ];
 
     protected $table = "users";

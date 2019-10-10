@@ -1867,7 +1867,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-/* harmony default export */ __webpack_exports__["default"] = ({});
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'LoginPage',
+  data: function data() {
+    return {
+      login: {
+        username: null,
+        password: null
+      }
+    };
+  }
+});
 
 /***/ }),
 
@@ -3153,6 +3164,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3170,7 +3189,8 @@ __webpack_require__.r(__webpack_exports__);
         canAdmin: false,
         canInsert: false,
         canUpdate: false,
-        canDelete: false
+        canDelete: false,
+        canEkspor: false
       },
       dataUserEdit: {
         idUser: null,
@@ -3180,7 +3200,8 @@ __webpack_require__.r(__webpack_exports__);
         canAdmin: false,
         canInsert: false,
         canUpdate: false,
-        canDelete: false
+        canDelete: false,
+        canEkspor: false
       },
       pagging: {
         total: 0,
@@ -3325,7 +3346,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     hapusFieldAll: function hapusFieldAll() {
       this.dataUserNew.username = this.dataUserNew.email = this.dataUserNew.namaUser = this.dataUserEdit.username = this.dataUserEdit.email = this.dataUserEdit.namaUser = this.dataUserEdit.idUser = null;
-      this.dataUserNew.canAdmin = this.dataUserNew.canInsert = this.dataUserNew.canUpdate = this.dataUserNew.canDelete = this.dataUserEdit.canAdmin = this.dataUserEdit.canInsert = this.dataUserEdit.canUpdate = this.dataUserEdit.canDelete = false;
+      this.dataUserNew.canAdmin = this.dataUserNew.canInsert = this.dataUserNew.canUpdate = this.dataUserNew.canDelete = this.dataUserNew.canEkspor = this.dataUserEdit.canAdmin = this.dataUserEdit.canInsert = this.dataUserEdit.canUpdate = this.dataUserEdit.canDelete = this.dataUserEdit.canEkspor = false;
     },
     fillData: function fillData(userData) {
       this.dataUserEdit.idUser = userData.idUser;
@@ -3336,6 +3357,7 @@ __webpack_require__.r(__webpack_exports__);
       this.dataUserEdit.canInsert = userData.canInsert;
       this.dataUserEdit.canUpdate = userData.canUpdate;
       this.dataUserEdit.canDelete = userData.canDelete;
+      this.dataUserEdit.canEkspor = userData.canEkspor;
     },
     searchNamaUserToDB: function searchNamaUserToDB() {
       var _this6 = this;
@@ -3373,8 +3395,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Header__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Header */ "./resources/js/component/master/Header.vue");
 /* harmony import */ var _Content__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Content */ "./resources/js/component/master/Content.vue");
 /* harmony import */ var _content_user_ListUser__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../content/user/ListUser */ "./resources/js/component/content/user/ListUser.vue");
-//
-//
 //
 //
 //
@@ -16225,7 +16245,22 @@ var render = function() {
           "div",
           { staticClass: "column" },
           [
-            _c("b-field", { attrs: { label: "Username" } }, [_c("b-input")], 1),
+            _c(
+              "b-field",
+              { attrs: { label: "Username" } },
+              [
+                _c("b-input", {
+                  model: {
+                    value: _vm.login.username,
+                    callback: function($$v) {
+                      _vm.$set(_vm.login, "username", $$v)
+                    },
+                    expression: "login.username"
+                  }
+                })
+              ],
+              1
+            ),
             _vm._v(" "),
             _c(
               "b-field",
@@ -16236,6 +16271,13 @@ var render = function() {
                     type: "password",
                     "password-reveal": "",
                     "icon-pack": "fas"
+                  },
+                  model: {
+                    value: _vm.login.password,
+                    callback: function($$v) {
+                      _vm.$set(_vm.login, "password", $$v)
+                    },
+                    expression: "login.password"
                   }
                 })
               ],
@@ -18218,6 +18260,28 @@ var render = function() {
                               "td",
                               { staticClass: "has-text-centered" },
                               [
+                                _c("b-switch", {
+                                  attrs: { type: "is-info" },
+                                  model: {
+                                    value: _vm.dataUserNew.canEkspor,
+                                    callback: function($$v) {
+                                      _vm.$set(
+                                        _vm.dataUserNew,
+                                        "canEkspor",
+                                        $$v
+                                      )
+                                    },
+                                    expression: "dataUserNew.canEkspor"
+                                  }
+                                })
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              { staticClass: "has-text-centered" },
+                              [
                                 _c("b-button", {
                                   attrs: {
                                     size: "is-small",
@@ -18455,6 +18519,39 @@ var render = function() {
                             "td",
                             { staticClass: "has-text-centered" },
                             [
+                              user.isEdit
+                                ? _c("b-switch", {
+                                    attrs: { type: "is-info" },
+                                    model: {
+                                      value: _vm.dataUserEdit.canEkspor,
+                                      callback: function($$v) {
+                                        _vm.$set(
+                                          _vm.dataUserEdit,
+                                          "canEkspor",
+                                          $$v
+                                        )
+                                      },
+                                      expression: "dataUserEdit.canEkspor"
+                                    }
+                                  })
+                                : _c("b-switch", {
+                                    attrs: { type: "is-info", disabled: "" },
+                                    model: {
+                                      value: user.canEkspor,
+                                      callback: function($$v) {
+                                        _vm.$set(user, "canEkspor", $$v)
+                                      },
+                                      expression: "user.canEkspor"
+                                    }
+                                  })
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "td",
+                            { staticClass: "has-text-centered" },
+                            [
                               !user.isEdit
                                 ? _c("b-button", {
                                     attrs: {
@@ -18602,6 +18699,8 @@ var staticRenderFns = [
         _c("th", { staticClass: "has-text-centered" }, [_vm._v("Update")]),
         _vm._v(" "),
         _c("th", { staticClass: "has-text-centered" }, [_vm._v("Delete")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "has-text-centered" }, [_vm._v("Report")]),
         _vm._v(" "),
         _c("th", { staticClass: "has-text-centered" }, [_vm._v("Action")])
       ])
@@ -40777,6 +40876,7 @@ var mutations = (_mutations = {}, _defineProperty(_mutations, _userTypeMutations
       user.canUpdate = payload.canUpdate;
       user.canDelete = payload.canDelete;
       user.canAdmin = payload.canAdmin;
+      user.canEkspor = payload.canEkspor;
     }
   });
 }), _defineProperty(_mutations, _userTypeMutations__WEBPACK_IMPORTED_MODULE_0__["DELETE_DATA_USER"], function (state, payload) {

@@ -32,6 +32,7 @@ class UserController extends Controller
         $user->canInsert = $request->canInsert;
         $user->canUpdate = $request->canUpdate;
         $user->canDelete = $request->canDelete;
+        $user->canEkspor = $request->canEkspor;
         $user->isEdit = false;
         $user->save();
         RecordLog::logRecord('INSERT', $user->idUser, null, $user, null);
@@ -49,6 +50,7 @@ class UserController extends Controller
             $user->canInsert = $request->canInsert;
             $user->canUpdate = $request->canUpdate;
             $user->canDelete = $request->canDelete;
+            $user->canEkspor = $request->canEkspor;
             $user->isEdit = false;
         // }
         $user->save();

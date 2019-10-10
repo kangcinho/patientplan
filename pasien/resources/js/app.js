@@ -7,7 +7,6 @@ import router from './router'
 Vue.use(require('vue-moment'));
 Vue.use(Buefy)
 
-
 new Vue({
   el: '#app',
   store,

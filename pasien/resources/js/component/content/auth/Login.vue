@@ -6,10 +6,11 @@
     <section class="modal-card-body">
       <div class="column">
         <b-field label="Username">
-          <b-input></b-input>
+          <b-input v-model="login.username"></b-input>
         </b-field>
         <b-field label="Password">
           <b-input 
+            v-model="login.password"
             type="password" 
             password-reveal
             icon-pack="fas"
@@ -29,7 +30,15 @@
 
 <script>
 export default {
-
+  name: 'LoginPage',
+  data(){
+    return {
+      login:{
+        username: null,
+        password: null
+      }
+    }
+  }
 }
 </script>
 

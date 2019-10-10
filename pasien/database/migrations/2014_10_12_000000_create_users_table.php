@@ -24,6 +24,7 @@ class CreateUsersTable extends Migration
             $table->boolean('canUpdate')->default(0);
             $table->boolean('canDelete')->default(0);
             $table->boolean('canAdmin')->default(0);
+            $table->boolean('canEkspor')->default(0);
             $table->boolean('isEdit')->default(0);
             $table->primary('idUser');
             $table->rememberToken();
