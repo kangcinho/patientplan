@@ -2036,7 +2036,33 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     getExportPasienPulang: function getExportPasienPulang() {
-      return this.$store.getters.getExportPasienPulang;
+      var _this2 = this;
+
+      var dataExportPasienPulang = this.$store.getters.getExportPasienPulang;
+      dataExportPasienPulang.map(function (dataPasien) {
+        dataPasien.tanggal = _this2.$moment(dataPasien.tanggal).format("DD MMM YYYY");
+
+        if (dataPasien.waktuVerif != null) {
+          dataPasien.waktuVerif = _this2.$moment(dataPasien.waktuVerif).format("H:mm:ss");
+        }
+
+        if (dataPasien.waktuSelesai != null) {
+          dataPasien.waktuSelesai = _this2.$moment(dataPasien.waktuSelesai).format("H:mm:ss");
+        }
+
+        if (dataPasien.waktuIKS != null) {
+          dataPasien.waktuIKS = _this2.$moment(dataPasien.waktuIKS).format("H:mm:ss");
+        }
+
+        if (dataPasien.waktuPasien != null) {
+          dataPasien.waktuPasien = _this2.$moment(dataPasien.waktuPasien).format("H:mm:ss");
+        }
+
+        if (dataPasien.waktuLunas != null) {
+          dataPasien.waktuLunas = _this2.$moment(dataPasien.waktuLunas).format("H:mm:ss");
+        }
+      });
+      return dataExportPasienPulang;
     },
     filename: function filename() {
       return "Riwayat Pasien Pulang Periode ".concat(this.tanggal.awal, " - ").concat(this.tanggal.akhir, ".xls");
@@ -2857,14 +2883,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2875,39 +2893,6 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      // json_data: [
-      //       {
-      //           'name': 'Tony Peña',
-      //           'city': 'New York',
-      //           'country': 'United States',
-      //           'birthdate': '1978-03-15',
-      //           'phone': {
-      //               'mobile': '1-541-754-3010',
-      //               'landline': '(541) 754-3010'
-      //           }
-      //       },
-      //       {
-      //           'name': 'Thessaloniki',
-      //           'city': 'Athens',
-      //           'country': 'Greece',
-      //           'birthdate': '1987-11-23',
-      //           'phone': {
-      //               'mobile': '+1 855 275 5071',
-      //               'landline': '(2741) 2621-244'
-      //           }
-      //       }
-      //   ],
-      // json_fields: {
-      //       'Complete name': 'name',
-      //       'City': 'city',
-      //       'Telephone': 'phone.mobile',
-      //       'Telephone 2' : {
-      //           field: 'phone.landline',
-      //           callback: (value) => {
-      //               return `Landline Phone - ${value}`;
-      //           }
-      //       },
-      //   },
       dataPasienPulang: {
         idPasien: '',
         tanggal: null,
@@ -18299,7 +18284,7 @@ var render = function() {
         "div",
         { staticClass: "column is-full" },
         [
-          _c("div", { staticClass: "table-container" }, [
+          _c("div", [
             _c(
               "table",
               {
@@ -18400,10 +18385,7 @@ var render = function() {
                           _vm._v(" "),
                           _c(
                             "td",
-                            {
-                              staticClass:
-                                "has-text-centered wrapWord sizeWaktu"
-                            },
+                            { staticClass: "has-text-centered sizeWaktu" },
                             [
                               !pasien.isEdit
                                 ? _c("span", [
@@ -18448,10 +18430,7 @@ var render = function() {
                           _vm._v(" "),
                           _c(
                             "td",
-                            {
-                              staticClass:
-                                "has-text-centered wrapWord sizeWaktu"
-                            },
+                            { staticClass: "has-text-centered sizeWaktu" },
                             [
                               !pasien.isEdit
                                 ? _c("span", [
@@ -18493,10 +18472,7 @@ var render = function() {
                           _vm._v(" "),
                           _c(
                             "td",
-                            {
-                              staticClass:
-                                "has-text-centered wrapWord sizeWaktu"
-                            },
+                            { staticClass: "has-text-centered sizeWaktu" },
                             [
                               !pasien.isEdit
                                 ? _c("span", [
@@ -18541,10 +18517,7 @@ var render = function() {
                           _vm._v(" "),
                           _c(
                             "td",
-                            {
-                              staticClass:
-                                "has-text-centered wrapWord sizeWaktu"
-                            },
+                            { staticClass: "has-text-centered sizeWaktu" },
                             [
                               !pasien.isEdit
                                 ? _c("span", [
@@ -18589,10 +18562,7 @@ var render = function() {
                           _vm._v(" "),
                           _c(
                             "td",
-                            {
-                              staticClass:
-                                "has-text-centered wrapWord sizeWaktu"
-                            },
+                            { staticClass: "has-text-centered sizeWaktu" },
                             [
                               !pasien.isEdit
                                 ? _c("span", [
@@ -18637,10 +18607,7 @@ var render = function() {
                           _vm._v(" "),
                           _c(
                             "td",
-                            {
-                              staticClass:
-                                "has-text-centered wrapWord sizePetugas"
-                            },
+                            { staticClass: "has-text-centered sizePetugas" },
                             [
                               !pasien.isEdit
                                 ? _c("span", [_vm._v(_vm._s(pasien.petugasFO))])
@@ -18695,10 +18662,7 @@ var render = function() {
                           _vm._v(" "),
                           _c(
                             "td",
-                            {
-                              staticClass:
-                                "has-text-centered wrapWord sizePetugas"
-                            },
+                            { staticClass: "has-text-centered sizePetugas" },
                             [
                               !pasien.isEdit
                                 ? _c("span", [

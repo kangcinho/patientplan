@@ -28,8 +28,8 @@
       </b-input>
     </div>
     <div class="column is-full">
-      <div class="table-container">
-      <table class="table is-bordered is-striped is-narrow " style="font-size:0.6em">
+      <div >
+      <table class="table is-bordered is-striped is-narrow " style="font-size:0.6em;">
         <thead>
           <tr>
             <th rowspan="2" class="has-text-centered sizeKeterangan">Tgl Pulang</th>
@@ -69,7 +69,7 @@
               </td>
             <td class="has-text-centered wrapWord sizeKamar">{{ pasien.kamar }}</td>
             <td class="has-text-centered wrapWord sizeKeterangan">{{ pasien.namaPasien }}</td>
-            <td class="has-text-centered wrapWord sizeWaktu">
+            <td class="has-text-centered sizeWaktu">
               <span v-if="!pasien.isEdit">{{ pasien.waktuVerif | showOnlyTime }}</span>
               <span v-else>
                 <b-clockpicker
@@ -82,7 +82,7 @@
                 </b-clockpicker>
               </span>
             </td>
-            <td class="has-text-centered wrapWord sizeWaktu">
+            <td class="has-text-centered sizeWaktu">
               <span v-if="!pasien.isEdit">{{ pasien.waktuIKS | showOnlyTime }}</span>
               <span v-else>
                 <b-clockpicker
@@ -96,7 +96,7 @@
               </span>
               
             </td>
-            <td class="has-text-centered wrapWord sizeWaktu">
+            <td class="has-text-centered sizeWaktu">
               <span v-if="!pasien.isEdit">{{ pasien.waktuSelesai | showOnlyTime }}</span>
               <span v-else>
                 <b-clockpicker
@@ -109,7 +109,7 @@
                 </b-clockpicker>
               </span>
             </td>
-            <td class="has-text-centered wrapWord sizeWaktu">
+            <td class="has-text-centered sizeWaktu">
               <span v-if="!pasien.isEdit">{{ pasien.waktuPasien | showOnlyTime }}</span>
               <span v-else>
                 <b-clockpicker
@@ -122,7 +122,7 @@
                 </b-clockpicker>
               </span>             
             </td>
-            <td class="has-text-centered wrapWord sizeWaktu">
+            <td class="has-text-centered sizeWaktu">
               <span v-if="!pasien.isEdit">{{ pasien.waktuLunas | showOnlyTime }}</span>
               <span v-else>
                 <b-clockpicker
@@ -135,7 +135,7 @@
                 </b-clockpicker>
               </span>                
             </td>
-            <td class="has-text-centered wrapWord sizePetugas">
+            <td class="has-text-centered sizePetugas">
               <span v-if="!pasien.isEdit">{{ pasien.petugasFO }}</span>
               <span v-else>
                 <b-autocomplete
@@ -152,7 +152,7 @@
                 </b-autocomplete>
               </span>
             </td>
-            <td class="has-text-centered wrapWord sizePetugas">
+            <td class="has-text-centered sizePetugas">
               <span v-if="!pasien.isEdit">{{ pasien.petugasPerawat }}</span>
               <span v-else>
                 <b-autocomplete
@@ -240,14 +240,6 @@
         aria-current-label="Current page">
       </b-pagination>
     </div>
-    <!-- <export-excel
-      class   = "button is-primary"
-      :data   = "json_data"
-      :fields = "json_fields"
-      worksheet = "My Worksheet"
-      name    = "filename.xls">
-      Download Excel (you can customize this with html code!)
-    </export-excel> -->
     <b-button
       type="is-primary"
       size="is-small"
@@ -272,41 +264,7 @@ export default {
     ModalEksportData
   },
   data(){
-    return {
-      // json_data: [
-      //       {
-      //           'name': 'Tony Peña',
-      //           'city': 'New York',
-      //           'country': 'United States',
-      //           'birthdate': '1978-03-15',
-      //           'phone': {
-      //               'mobile': '1-541-754-3010',
-      //               'landline': '(541) 754-3010'
-      //           }
-      //       },
-      //       {
-      //           'name': 'Thessaloniki',
-      //           'city': 'Athens',
-      //           'country': 'Greece',
-      //           'birthdate': '1987-11-23',
-      //           'phone': {
-      //               'mobile': '+1 855 275 5071',
-      //               'landline': '(2741) 2621-244'
-      //           }
-      //       }
-      //   ],
-      // json_fields: {
-      //       'Complete name': 'name',
-      //       'City': 'city',
-      //       'Telephone': 'phone.mobile',
-      //       'Telephone 2' : {
-      //           field: 'phone.landline',
-      //           callback: (value) => {
-      //               return `Landline Phone - ${value}`;
-      //           }
-      //       },
-      //   },
-      
+    return {      
       dataPasienPulang:{
         idPasien:'',
         tanggal: null,

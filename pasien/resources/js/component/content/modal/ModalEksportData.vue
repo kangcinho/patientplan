@@ -143,7 +143,27 @@ export default {
   },
   computed: {
     getExportPasienPulang(){
-      return this.$store.getters.getExportPasienPulang
+      const dataExportPasienPulang =  this.$store.getters.getExportPasienPulang
+      dataExportPasienPulang.map( (dataPasien) => {
+        dataPasien.tanggal = this.$moment(dataPasien.tanggal).format("DD MMM YYYY")
+        if(dataPasien.waktuVerif != null){
+          dataPasien.waktuVerif = this.$moment(dataPasien.waktuVerif).format("H:mm:ss")
+        }
+        if(dataPasien.waktuSelesai != null){
+          dataPasien.waktuSelesai = this.$moment(dataPasien.waktuSelesai).format("H:mm:ss")
+        }
+        if(dataPasien.waktuIKS != null){
+          dataPasien.waktuIKS = this.$moment(dataPasien.waktuIKS).format("H:mm:ss")
+        }
+        if(dataPasien.waktuPasien != null){
+          dataPasien.waktuPasien = this.$moment(dataPasien.waktuPasien).format("H:mm:ss")
+        }
+        if(dataPasien.waktuLunas != null){
+          dataPasien.waktuLunas = this.$moment(dataPasien.waktuLunas).format("H:mm:ss")
+        }
+      })
+
+      return dataExportPasienPulang
     },
     filename(){
       return `Riwayat Pasien Pulang Periode ${this.tanggal.awal} - ${this.tanggal.akhir}.xls`
