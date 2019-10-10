@@ -41628,6 +41628,11 @@ var mutations = (_mutations = {}, _defineProperty(_mutations, _pasienTypeMutatio
       state.dataPasienPulang.splice(index, 1);
     }
   });
+  state.dataPasienRegistrasi.map(function (dataRegistrasi) {
+    if (dataRegistrasi.noReg === payload.noReg) {
+      dataRegistrasi.isDone = false;
+    }
+  });
 }), _defineProperty(_mutations, _pasienTypeMutations__WEBPACK_IMPORTED_MODULE_0__["EXPORT_DATA_TO_EXCEL"], function (state, payload) {
   state.dataExportPasienPulang = payload;
 }), _mutations);

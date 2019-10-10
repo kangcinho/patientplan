@@ -37,6 +37,11 @@ const mutations = {
         state.dataPasienPulang.splice(index, 1)
       }
     })
+    state.dataPasienRegistrasi.map( (dataRegistrasi) => {
+      if(dataRegistrasi.noReg === payload.noReg){
+        dataRegistrasi.isDone = false
+      }
+    })
   },
   [type.EXPORT_DATA_TO_EXCEL](state, payload){
     state.dataExportPasienPulang = payload
