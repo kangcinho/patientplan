@@ -6,27 +6,37 @@
     <section class="modal-card-body">
       <div class="column">
         <b-field class="is-grouped">
-          <b-datepicker
+          <b-field 
+            :type="{'is-danger': tanggalError.errorAwal}"
+            :message="tanggalError.errorAwalMessage"
             expanded
-            rounded
-            placeholder="Periode Awal"
-            v-model="tanggal.awal"
-            icon-pack="fas"
-            icon="calendar-check"
-            :date-formatter="(date) => $moment(date).format('DD MMM YYYY')"
             >
-          </b-datepicker>
-
-          <b-datepicker
+            <b-datepicker
+              rounded
+              placeholder="Periode Awal"
+              v-model="tanggal.awal"
+              icon-pack="fas"
+              icon="calendar-check"
+              :date-formatter="(date) => $moment(date).format('DD MMM YYYY')"
+              >
+            </b-datepicker>
+          </b-field>
+          <b-field 
+            :type="{'is-danger': tanggalError.errorAkhir}"
+            :message="tanggalError.errorAkhirMessage"
             expanded
-            rounded
-            v-model="tanggal.akhir"
-            placeholder="Periode Akhir"
-            icon-pack="fas"
-            icon="calendar-check"
-            :date-formatter="(date) => $moment(date).format('DD MMM YYYY')"
             >
-          </b-datepicker>
+            <b-datepicker
+              expanded
+              rounded
+              v-model="tanggal.akhir"
+              placeholder="Periode Akhir"
+              icon-pack="fas"
+              icon="calendar-check"
+              :date-formatter="(date) => $moment(date).format('DD MMM YYYY')"
+              >
+            </b-datepicker>
+          </b-field>
         </b-field>
         <b-button
           type="is-primary"
@@ -68,6 +78,12 @@ export default {
         awal: null,
         akhir: null
       },
+      tanggalError:{
+        errorAwal: false,
+        errorAwalMessage: null,
+        errorAkhir: false,
+        errorAkhirMessage: null,
+      },
       fields: {
         'No Reg': 'noReg',
         'Tanggal': 'tanggal',
@@ -88,13 +104,41 @@ export default {
   },
   methods:{
     exportDataToExcel(){
-      this.$store.dispatch('getDataExportPasienPulang', this.tanggal)
-      .then( (respon) => {
-        this.$refs.ekspor.click()
-      })
-      .catch( (respon) => {
+      if(this.validasiData()){     
+        this.$store.dispatch('getDataExportPasienPulang', this.tanggal)
+        .then( (respon) => {
+          this.$refs.ekspor.click()
+          this.hapusData()
+          this.$parent.close()
+        })
+        .catch( (respon) => {
 
-      })
+        })
+      }
+    },
+    validasiData(){
+      if(this.tanggal.awal == null || this.tanggal.awal == ''){
+        this.tanggalError.errorAwal = true
+        this.tanggalError.errorAwalMessage = "Ini Jangan Lupa Diisi ya Sayang..."
+        return false
+      }else{
+        this.tanggalError.errorAwal = false
+        this.tanggalError.errorAwalMessage = null
+      }
+
+      if(this.tanggal.akhir == null || this.tanggal.akhir == ''){
+        this.tanggalError.errorAkhir = true
+        this.tanggalError.errorAkhirMessage = "Sayang, Aku sedih kalau kamu lupain aku"
+        return false
+      }else{
+        this.tanggalError.errorAkhir = false
+        this.tanggalError.errorAkhirMessage = null
+      }
+      return true
+    },
+    hapusData(){
+      this.tanggal.awal = this.tanggal.akhir = this.tanggalError.errorAwalMessage = this.tanggalError.errorAkhirMessage = null
+      this.tanggalError.errorAwal = this.tanggalError.errorAkhir = false
     }
   },
   computed: {

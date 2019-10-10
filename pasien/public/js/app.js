@@ -1952,6 +1952,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ModalEksportData",
   data: function data() {
@@ -1959,6 +1969,12 @@ __webpack_require__.r(__webpack_exports__);
       tanggal: {
         awal: null,
         akhir: null
+      },
+      tanggalError: {
+        errorAwal: false,
+        errorAwalMessage: null,
+        errorAkhir: false,
+        errorAkhirMessage: null
       },
       fields: {
         'No Reg': 'noReg',
@@ -1982,9 +1998,40 @@ __webpack_require__.r(__webpack_exports__);
     exportDataToExcel: function exportDataToExcel() {
       var _this = this;
 
-      this.$store.dispatch('getDataExportPasienPulang', this.tanggal).then(function (respon) {
-        _this.$refs.ekspor.click();
-      })["catch"](function (respon) {});
+      if (this.validasiData()) {
+        this.$store.dispatch('getDataExportPasienPulang', this.tanggal).then(function (respon) {
+          _this.$refs.ekspor.click();
+
+          _this.hapusData();
+
+          _this.$parent.close();
+        })["catch"](function (respon) {});
+      }
+    },
+    validasiData: function validasiData() {
+      if (this.tanggal.awal == null || this.tanggal.awal == '') {
+        this.tanggalError.errorAwal = true;
+        this.tanggalError.errorAwalMessage = "Ini Jangan Lupa Diisi ya Sayang...";
+        return false;
+      } else {
+        this.tanggalError.errorAwal = false;
+        this.tanggalError.errorAwalMessage = null;
+      }
+
+      if (this.tanggal.akhir == null || this.tanggal.akhir == '') {
+        this.tanggalError.errorAkhir = true;
+        this.tanggalError.errorAkhirMessage = "Sayang, Aku sedih kalau kamu lupain aku";
+        return false;
+      } else {
+        this.tanggalError.errorAkhir = false;
+        this.tanggalError.errorAkhirMessage = null;
+      }
+
+      return true;
+    },
+    hapusData: function hapusData() {
+      this.tanggal.awal = this.tanggal.akhir = this.tanggalError.errorAwalMessage = this.tanggalError.errorAkhirMessage = null;
+      this.tanggalError.errorAwal = this.tanggalError.errorAkhir = false;
     }
   },
   computed: {
@@ -17174,45 +17221,70 @@ var render = function() {
               "b-field",
               { staticClass: "is-grouped" },
               [
-                _c("b-datepicker", {
-                  attrs: {
-                    expanded: "",
-                    rounded: "",
-                    placeholder: "Periode Awal",
-                    "icon-pack": "fas",
-                    icon: "calendar-check",
-                    "date-formatter": function(date) {
-                      return _vm.$moment(date).format("DD MMM YYYY")
+                _c(
+                  "b-field",
+                  {
+                    attrs: {
+                      type: { "is-danger": _vm.tanggalError.errorAwal },
+                      message: _vm.tanggalError.errorAwalMessage,
+                      expanded: ""
                     }
                   },
-                  model: {
-                    value: _vm.tanggal.awal,
-                    callback: function($$v) {
-                      _vm.$set(_vm.tanggal, "awal", $$v)
-                    },
-                    expression: "tanggal.awal"
-                  }
-                }),
+                  [
+                    _c("b-datepicker", {
+                      attrs: {
+                        rounded: "",
+                        placeholder: "Periode Awal",
+                        "icon-pack": "fas",
+                        icon: "calendar-check",
+                        "date-formatter": function(date) {
+                          return _vm.$moment(date).format("DD MMM YYYY")
+                        }
+                      },
+                      model: {
+                        value: _vm.tanggal.awal,
+                        callback: function($$v) {
+                          _vm.$set(_vm.tanggal, "awal", $$v)
+                        },
+                        expression: "tanggal.awal"
+                      }
+                    })
+                  ],
+                  1
+                ),
                 _vm._v(" "),
-                _c("b-datepicker", {
-                  attrs: {
-                    expanded: "",
-                    rounded: "",
-                    placeholder: "Periode Akhir",
-                    "icon-pack": "fas",
-                    icon: "calendar-check",
-                    "date-formatter": function(date) {
-                      return _vm.$moment(date).format("DD MMM YYYY")
+                _c(
+                  "b-field",
+                  {
+                    attrs: {
+                      type: { "is-danger": _vm.tanggalError.errorAkhir },
+                      message: _vm.tanggalError.errorAkhirMessage,
+                      expanded: ""
                     }
                   },
-                  model: {
-                    value: _vm.tanggal.akhir,
-                    callback: function($$v) {
-                      _vm.$set(_vm.tanggal, "akhir", $$v)
-                    },
-                    expression: "tanggal.akhir"
-                  }
-                })
+                  [
+                    _c("b-datepicker", {
+                      attrs: {
+                        expanded: "",
+                        rounded: "",
+                        placeholder: "Periode Akhir",
+                        "icon-pack": "fas",
+                        icon: "calendar-check",
+                        "date-formatter": function(date) {
+                          return _vm.$moment(date).format("DD MMM YYYY")
+                        }
+                      },
+                      model: {
+                        value: _vm.tanggal.akhir,
+                        callback: function($$v) {
+                          _vm.$set(_vm.tanggal, "akhir", $$v)
+                        },
+                        expression: "tanggal.akhir"
+                      }
+                    })
+                  ],
+                  1
+                )
               ],
               1
             ),
