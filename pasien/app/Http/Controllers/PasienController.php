@@ -307,7 +307,7 @@ class PasienController extends Controller
             ->where('tanggal', '<=', $tglAkhir)
             ->orderBy('created_at','asc')
             ->get();
-        
+            RecordLog::logRecord('REPORT', null, $tglAwal, $tglAkhir, null);
         return response()->json($dataPasien, 200);
     }
 }
