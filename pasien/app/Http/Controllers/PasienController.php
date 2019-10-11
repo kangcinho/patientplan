@@ -105,18 +105,24 @@ class PasienController extends Controller
 
     public function deleteDataPasienPulang($idPasien){
         $dataPasien = Pasien::where('idPasien', $idPasien)->first();
+        $status = "Data Pasien $dataPasien->namaPasien Berhasil Dihapus!";
         RecordLog::logRecord('DELETE', $dataPasien->idPasien, $dataPasien, null, null);
         $dataPasien->delete();
        
-        return response()->json([], 200);
+        return response()->json([
+            'status' => $status
+        ], 200);
     }
 
     public function saveDataPasienPulang(Request $request){
         $tanggal = $this->convertDate($request->tanggal);
-        $dataPasien = Pasien::where('noReg', $request->noReg)->get();
+        $dataPasien = Pasien::where('noReg', $request->noReg)->first();
 
-        if(count($dataPasien)){
-            return response()->json([], 500);
+        if($dataPasien){
+            $status = "Data No Registrasi $dataPasien->noReg Sudah Pernah Tersimpan!";
+            return response()->json([
+                'status' => $status
+            ], 403);
         }else{
             $dataPasien = new Pasien;
             $dataPasien->idPasien = $dataPasien->getIDPasien();
@@ -159,9 +165,12 @@ class PasienController extends Controller
             }
             $dataPasien->save();
             RecordLog::logRecord('INSERT', $dataPasien->idPasien, null, $dataPasien, null);
-            return response()->json($dataPasien, 200);
+            $status = "Data Pasien $dataPasien->namaPasien Berhasil Disimpan!";
+            return response()->json([
+                'status' => $status,
+                'dataPasien' => $dataPasien
+            ], 200);
         }
-        return response()->json($dataPasien, 200);
     }
     
     public function updateDataPasienPulang(Request $request){
@@ -188,9 +197,16 @@ class PasienController extends Controller
             $pasienPulang->isTerencana = $request->isTerencana;
             $pasienPulang->save();
             RecordLog::logRecord('UPDATE', $pasienPulang->idPasien, $pasienDataOld, $pasienPulang, null);
-            return response()->json($pasienPulang, 200);
+            $status = "Data Pasien $pasienPulang->namaPasien Berhasil DiUpdate!";
+            return response()->json([
+                'status' => $status,
+                'dataPasien' => $pasienPulang
+            ], 200);
         }
-        return response()->json([], 500);
+        $status = "Data Pasien Gagal DiUpdate!";
+        return response()->json([
+            'status' => $status
+        ], 500);
     }
 
     public function convertDate($date){
@@ -307,7 +323,11 @@ class PasienController extends Controller
             ->where('tanggal', '<=', $tglAkhir)
             ->orderBy('created_at','asc')
             ->get();
-            RecordLog::logRecord('REPORT', null, $tglAwal, $tglAkhir, null);
-        return response()->json($dataPasien, 200);
+        RecordLog::logRecord('REPORT', null, $tglAwal, $tglAkhir, null);
+        $status = "Data Terkonversi ke Excel";
+        return response()->json([
+            'status' => $status,
+            'dataPasien' => $dataPasien
+        ], 200);
     }
 }

@@ -20,6 +20,7 @@
           type="is-primary"
           icon-pack="fas"
           icon-left="sign-in-alt"
+          @click="loginUser"
           >
           Login
         </b-button>
@@ -37,6 +38,14 @@ export default {
         username: null,
         password: null
       }
+    }
+  },
+  methods:{
+    loginUser(){
+      this.$store.dispatch('loginUser', this.login)
+      .then( (respon) => {
+        console.log('berhasil')
+      })
     }
   }
 }

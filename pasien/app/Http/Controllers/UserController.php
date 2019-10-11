@@ -27,7 +27,7 @@ class UserController extends Controller
         $user->namaUser = $request->namaUser;
         $user->username = $request->username;
         $user->email = $request->email;
-        $user->password = '1212';
+        $user->password = bcrypt('123456');
         $user->canAdmin = $request->canAdmin;
         $user->canInsert = $request->canInsert;
         $user->canUpdate = $request->canUpdate;
@@ -36,7 +36,11 @@ class UserController extends Controller
         $user->isEdit = false;
         $user->save();
         RecordLog::logRecord('INSERT', $user->idUser, null, $user, null);
-        return response()->json($user, 200);
+        $status = "Data Username $user->username Berhasil Disimpan!";
+        return response()->json([
+            'status' => $status,
+            'user' => $user
+        ], 200);
     }
 
     public function updateDataUser(Request $request){
@@ -55,13 +59,20 @@ class UserController extends Controller
         // }
         $user->save();
         RecordLog::logRecord('UPDATE', $user->idUser, $userOld, $user, null);
-        return response()->json($user, 200);
+        $status = "Data Username $user->username Berhasil DiUpdate!";
+        return response()->json([
+            'status' => $status,
+            'user' => $user
+        ], 200);
     }
 
     public function deleteDataUser($idUser){
         $user = User::where('idUser', $idUser)->first();
+        $status = "Data Username $user->username Berhasil Dihapus!";
         RecordLog::logRecord('DELETE', $user->idUser, $user, null, null);
         $user->delete();
-        return response()->json([], 200);
+        return response()->json([
+            'status' => $status,
+        ], 200);
     }
 }

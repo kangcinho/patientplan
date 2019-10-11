@@ -1868,6 +1868,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'LoginPage',
   data: function data() {
@@ -1877,6 +1878,13 @@ __webpack_require__.r(__webpack_exports__);
         password: null
       }
     };
+  },
+  methods: {
+    loginUser: function loginUser() {
+      this.$store.dispatch('loginUser', this.login).then(function (respon) {
+        console.log('berhasil');
+      });
+    }
   }
 });
 
@@ -1990,7 +1998,8 @@ __webpack_require__.r(__webpack_exports__);
         'Waktu Lunas': 'waktuLunas',
         'Petugas FO': 'petugasFO',
         'Petugas Perawat': 'petugasPerawat',
-        'Keterangan': 'keterangan'
+        'Keterangan': 'keterangan',
+        'Terencana Pulang': 'isTerencana'
       }
     };
   },
@@ -17149,7 +17158,8 @@ var render = function() {
                   type: "is-primary",
                   "icon-pack": "fas",
                   "icon-left": "sign-in-alt"
-                }
+                },
+                on: { click: _vm.loginUser }
               },
               [_vm._v("\n        Login\n      ")]
             )
@@ -18288,7 +18298,8 @@ var render = function() {
             _c(
               "table",
               {
-                staticClass: "table is-bordered is-striped is-narrow ",
+                staticClass:
+                  "table is-bordered is-striped is-narrow is-fullwidth",
                 staticStyle: { "font-size": "0.6em" }
               },
               [
@@ -41484,13 +41495,13 @@ var actions = {
     var commit = _ref2.commit;
     return new Promise(function (berhasil, gagal) {
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/api/saveDataPasienPulang', data).then(function (respon) {
-        commit(_pasienTypeMutations__WEBPACK_IMPORTED_MODULE_1__["ADD_DATA_PASIEN_PULANG"], respon.data);
+        commit(_pasienTypeMutations__WEBPACK_IMPORTED_MODULE_1__["ADD_DATA_PASIEN_PULANG"], respon.data.dataPasien);
 
         if (respon.status == 200) {
-          berhasil("BERHASIL! Data ".concat(respon.data.namaPasien, " Berhasil Disimpan!"));
+          berhasil(respon.data.status);
         }
       })["catch"](function (respon) {
-        gagal("GAGAL! Data Sudah Ditemukan Di Database");
+        gagal('Gagal! Data Sudah Pernah Tersimpan');
       });
     });
   },
@@ -41509,11 +41520,11 @@ var actions = {
     return new Promise(function (berhasil, gagal) {
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/api/updateDataPasienPulang', data).then(function (respon) {
         if (respon.status == 200) {
-          commit(_pasienTypeMutations__WEBPACK_IMPORTED_MODULE_1__["UPDATE_DATA_PASIEN_PULANG"], respon.data);
-          berhasil("Berhasil! Data ".concat(respon.data.namaPasien, " Berhasil DiUpdate!"));
+          commit(_pasienTypeMutations__WEBPACK_IMPORTED_MODULE_1__["UPDATE_DATA_PASIEN_PULANG"], respon.data.dataPasien);
+          berhasil(respon.data.status);
         }
       })["catch"](function (respon) {
-        gagal("Data Gagal Di Update");
+        gagal(respon);
       });
     });
   },
@@ -41523,10 +41534,10 @@ var actions = {
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/api/deleteDataPasienPulang/".concat(data.idPasien)).then(function (respon) {
         if (respon.status == 200) {
           commit(_pasienTypeMutations__WEBPACK_IMPORTED_MODULE_1__["DELETE_DATA_PASIEN_PULANG"], data);
-          berhasil("Berhasil! Data ".concat(data.namaPasien, " Berhasil Dihapus!"));
+          berhasil(respon.data.status);
         }
       })["catch"](function (respon) {
-        gagal("Data ".concat(data.namaPasien, " Gagal Dihapus!"));
+        gagal(respon);
       });
     });
   },
@@ -41534,8 +41545,8 @@ var actions = {
     var commit = _ref6.commit;
     return new Promise(function (berhasil, gagal) {
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/api/getDataExportPasienPulang', data).then(function (respon) {
-        commit(_pasienTypeMutations__WEBPACK_IMPORTED_MODULE_1__["EXPORT_DATA_TO_EXCEL"], respon.data);
-        berhasil("Data Eksport Get");
+        commit(_pasienTypeMutations__WEBPACK_IMPORTED_MODULE_1__["EXPORT_DATA_TO_EXCEL"], respon.data.dataPasien);
+        berhasil(respon.data.status);
       })["catch"](function (respon) {
         gagal("Data Eksport Gagal");
       });
@@ -41888,8 +41899,7 @@ var actions = {
     return new Promise(function (berhasil, gagal) {
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post("/api/getDataUser", data).then(function (respon) {
         commit(_userTypeMutations__WEBPACK_IMPORTED_MODULE_1__["SET_DATA_USER"], respon.data.users);
-        commit(_userTypeMutations__WEBPACK_IMPORTED_MODULE_1__["SET_DATA_USER_TOTAL"], respon.data.totalUser); // console.log(respon.data.totalUser)
-
+        commit(_userTypeMutations__WEBPACK_IMPORTED_MODULE_1__["SET_DATA_USER_TOTAL"], respon.data.totalUser);
         berhasil("hore berhasil");
       });
     });
@@ -41898,8 +41908,8 @@ var actions = {
     var commit = _ref2.commit;
     return new Promise(function (berhasil, gagal) {
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/api/saveDataUser', data).then(function (respon) {
-        commit(_userTypeMutations__WEBPACK_IMPORTED_MODULE_1__["ADD_DATA_USER"], respon.data);
-        berhasil("Data User ".concat(data.namaUser, " Berhasil Disimpan!"));
+        commit(_userTypeMutations__WEBPACK_IMPORTED_MODULE_1__["ADD_DATA_USER"], respon.data.user);
+        berhasil(respon.data.status);
       })["catch"](function (respon) {
         gagal("Data User ".concat(data.namaUser, " Gagal Disimpan!"));
       });
@@ -41909,8 +41919,8 @@ var actions = {
     var commit = _ref3.commit;
     return new Promise(function (berhasil, gagal) {
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/api/updateDataUser', data).then(function (respon) {
-        commit(_userTypeMutations__WEBPACK_IMPORTED_MODULE_1__["UPDATE_DATA_USER"], respon.data);
-        berhasil("Data User ".concat(data.namaUser, " Berhasil Disimpan!"));
+        commit(_userTypeMutations__WEBPACK_IMPORTED_MODULE_1__["UPDATE_DATA_USER"], respon.data.user);
+        berhasil(respon.data.status);
       })["catch"](function (respon) {
         gagal("Data User ".concat(data.namaUser, " Gagal Disimpan!"));
       });
@@ -41921,7 +41931,7 @@ var actions = {
     return new Promise(function (berhasil, gagal) {
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/api/deleteDataUser/".concat(data.idUser)).then(function (respon) {
         commit(_userTypeMutations__WEBPACK_IMPORTED_MODULE_1__["DELETE_DATA_USER"], data);
-        berhasil("Data User ".concat(data.namaUser, " Berhasil Dihapus!"));
+        berhasil(respon.data.status);
       })["catch"](function (respon) {
         gagal("Data User ".concat(data.namaUser, " Gagal Disimpan!"));
       });
@@ -42001,7 +42011,7 @@ var mutations = (_mutations = {}, _defineProperty(_mutations, _userTypeMutations
   });
 }), _defineProperty(_mutations, _userTypeMutations__WEBPACK_IMPORTED_MODULE_0__["SET_DATA_USER_TOTAL"], function (state, payload) {
   state.dataUserTotal = payload;
-}), _mutations);
+}), _defineProperty(_mutations, _userTypeMutations__WEBPACK_IMPORTED_MODULE_0__["LOGIN_USER"], function (state, payload) {}), _mutations);
 /* harmony default export */ __webpack_exports__["default"] = (mutations);
 
 /***/ }),
@@ -42027,7 +42037,7 @@ var state = {
 /*!******************************************************!*\
   !*** ./resources/js/store/user/userTypeMutations.js ***!
   \******************************************************/
-/*! exports provided: SET_DATA_USER, ADD_DATA_USER, UPDATE_DATA_USER, DELETE_DATA_USER, SET_DATA_USER_TOTAL */
+/*! exports provided: SET_DATA_USER, ADD_DATA_USER, UPDATE_DATA_USER, DELETE_DATA_USER, SET_DATA_USER_TOTAL, LOGIN_USER */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -42037,11 +42047,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UPDATE_DATA_USER", function() { return UPDATE_DATA_USER; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DELETE_DATA_USER", function() { return DELETE_DATA_USER; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_DATA_USER_TOTAL", function() { return SET_DATA_USER_TOTAL; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LOGIN_USER", function() { return LOGIN_USER; });
 var SET_DATA_USER = 'SET_DATA_USER';
 var ADD_DATA_USER = 'ADD_DATA_USER';
 var UPDATE_DATA_USER = 'UPDATE_DATA_USER';
 var DELETE_DATA_USER = 'DELETE_DATA_USER';
 var SET_DATA_USER_TOTAL = 'SET_DATA_USER_TOTAL';
+var LOGIN_USER = 'LOGIN_USER';
 
 /***/ }),
 
@@ -42063,8 +42075,8 @@ var SET_DATA_USER_TOTAL = 'SET_DATA_USER_TOTAL';
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\DEVELOVER\pasienPulang\pasien\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! D:\DEVELOVER\pasienPulang\pasien\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\Develover\ongoing\pasienPulang\pasien\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\Develover\ongoing\pasienPulang\pasien\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

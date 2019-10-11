@@ -29,7 +29,7 @@
     </div>
     <div class="column is-full">
       <div >
-      <table class="table is-bordered is-striped is-narrow " style="font-size:0.6em;">
+      <table class="table is-bordered is-striped is-narrow is-fullwidth" style="font-size:0.6em;">
         <thead>
           <tr>
             <th rowspan="2" class="has-text-centered sizeKeterangan">Tgl Pulang</th>

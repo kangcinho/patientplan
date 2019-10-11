@@ -98,7 +98,8 @@ export default {
         'Waktu Lunas': 'waktuLunas',
         'Petugas FO': 'petugasFO',
         'Petugas Perawat': 'petugasPerawat',
-        'Keterangan': 'keterangan'
+        'Keterangan': 'keterangan',
+        'Terencana Pulang': 'isTerencana'
       },
     }
   },

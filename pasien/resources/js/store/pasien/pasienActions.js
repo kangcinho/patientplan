@@ -13,14 +13,14 @@ const actions = {
     return new Promise( (berhasil, gagal) => {
       axios.post('/api/saveDataPasienPulang', data)
       .then( (respon) => {
-        commit(type.ADD_DATA_PASIEN_PULANG, respon.data)
+        commit(type.ADD_DATA_PASIEN_PULANG, respon.data.dataPasien)
         if(respon.status == 200){
-          berhasil(`BERHASIL! Data ${respon.data.namaPasien} Berhasil Disimpan!`)
+          berhasil(respon.data.status)
         }
       })
       .catch( (respon) => {
-        gagal(`GAGAL! Data Sudah Ditemukan Di Database`)
-      })      
+        gagal('Gagal! Data Sudah Pernah Tersimpan')
+      })
     })
   },
   
@@ -39,12 +39,12 @@ const actions = {
       axios.post('/api/updateDataPasienPulang', data)
       .then( (respon) => {
         if(respon.status == 200){
-          commit(type.UPDATE_DATA_PASIEN_PULANG, respon.data)
-          berhasil(`Berhasil! Data ${respon.data.namaPasien} Berhasil DiUpdate!`)
+          commit(type.UPDATE_DATA_PASIEN_PULANG, respon.data.dataPasien)
+          berhasil(respon.data.status)
         }
       })
       .catch( (respon) => {
-        gagal(`Data Gagal Di Update`)
+        gagal(respon)
       })
     })
   },
@@ -54,11 +54,11 @@ const actions = {
       .then( (respon) => {
         if(respon.status == 200){
           commit(type.DELETE_DATA_PASIEN_PULANG, data)
-          berhasil(`Berhasil! Data ${data.namaPasien} Berhasil Dihapus!`)
+          berhasil(respon.data.status)
         }
       })
       .catch( (respon) => {
-        gagal(`Data ${data.namaPasien} Gagal Dihapus!`)
+        gagal(respon)
       })
     })
   },
@@ -66,8 +66,8 @@ const actions = {
     return new Promise( (berhasil, gagal) => {
       axios.post('/api/getDataExportPasienPulang', data)
       .then( (respon) => {
-        commit(type.EXPORT_DATA_TO_EXCEL, respon.data)
-        berhasil("Data Eksport Get")
+        commit(type.EXPORT_DATA_TO_EXCEL, respon.data.dataPasien)
+        berhasil(respon.data.status)
       })
       .catch( (respon) => {
         gagal("Data Eksport Gagal")
