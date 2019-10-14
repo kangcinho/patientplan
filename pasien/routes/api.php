@@ -17,7 +17,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Route::group(['middleware' => 'auth:api'], function(){
+Route::group(['middleware' => 'auth:api'], function(){
     //Section Pasien Pulang
     Route::get('getDataPasienRegistrasiFromSanata', 'PasienController@getDataPasienRegistrasiFromSanata');
     Route::get('getDataPetugasFromSanata', 'PasienController@getDataPetugasFromSanata');
@@ -34,11 +34,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
     //EXPORT DATA
     Route::post('getDataExportPasienPulang', 'PasienController@getDataExportPasienPulang');
-// });
+});
 
 //Automatisasi Riwata Pasien Pulang with Cronjob
 Route::get('autoGetPasien', 'PasienController@autoGetPasien');
 
-//Login
+
+//AUTH
 Route::post('login','UserAuthController@login');
-// Route::post('logout', '');
+Route::get('logout', 'UserAuthController@logout');
+Route::get('refresh', 'UserAuthController@refresh');

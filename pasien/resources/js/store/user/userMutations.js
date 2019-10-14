@@ -29,9 +29,6 @@ const mutations = {
   },
   [type.SET_DATA_USER_TOTAL](state,payload){
     state.dataUserTotal = payload
-  },
-  [type.LOGIN_USER](state,payload){
-    
   }
 }
 
