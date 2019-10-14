@@ -1,0 +1,13 @@
+Run Laravel + Vue without Php artisan Serve or change DocumentRoot
+1. Router.js
+   change  
+    base: process.env.BASE_URL,
+    to
+    base: "ongoing/pasienPulang/pasien/public",
+
+2. bootstrap.js
+    Add base url default config. 
+    window.axios.defaults.baseURL= 'http://localhost/ongoing/pasienPulang/pasien/public'
+
+3. app.css
+   change all url what you need to change.

@@ -8,6 +8,7 @@ Vue.use(Router)
 
 const router = new Router({
   mode: 'history',
+  // base: "ongoing/pasienPulang/pasien/public",
   base: process.env.BASE_URL,
   routes:[
     {

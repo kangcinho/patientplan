@@ -40807,7 +40807,8 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
  * to our Laravel back-end. This library automatically handles sending the
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
-window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js"); // window.axios.defaults.baseURL= 'http://localhost/ongoing/pasienPulang/pasien/public'
+
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 window.axios.defaults.headers.common['Authorization'] = localStorage.getItem('token') != 'null' ? 'Bearer ' + localStorage.getItem('token') : ''; // window.axios.defaults.headers.common['Content-Type'] = 'application/json'
 
@@ -41560,6 +41561,7 @@ __webpack_require__.r(__webpack_exports__);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]);
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
   mode: 'history',
+  // base: "ongoing/pasienPulang/pasien/public",
   base: process.env.BASE_URL,
   routes: [{
     path: '/',
@@ -42430,8 +42432,8 @@ var SET_DATA_USER_TOTAL = 'SET_DATA_USER_TOTAL';
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\DEVELOVER\pasienPulang\pasien\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! D:\DEVELOVER\pasienPulang\pasien\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\Develover\ongoing\pasienPulang\pasien\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\Develover\ongoing\pasienPulang\pasien\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

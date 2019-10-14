@@ -7,7 +7,7 @@
  */
 
 window.axios = require('axios');
-
+// window.axios.defaults.baseURL= 'http://localhost/ongoing/pasienPulang/pasien/public'
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
 window.axios.defaults.headers.common['Authorization'] = localStorage.getItem('token') != 'null' ? 'Bearer ' + localStorage.getItem('token'):''
 // window.axios.defaults.headers.common['Content-Type'] = 'application/json'

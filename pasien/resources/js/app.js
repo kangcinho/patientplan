@@ -9,7 +9,6 @@ import excel from 'vue-excel-export'
 Vue.use(require('vue-moment'))
 Vue.use(Buefy)
 Vue.use(excel)
-
 new Vue({
   el: '#app',
   store,
