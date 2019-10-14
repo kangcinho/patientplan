@@ -15,6 +15,16 @@ export default {
     Header,
     Content,
     ListUser
+  },
+  computed:{
+    isAuth(){
+      return this.$store.getters.getAuth
+    }
+  },
+  created(){
+    // if(this.isAuth){
+      // this.$router.push({ 'name': PasienPage})
+    // }
   }
 }
 </script>

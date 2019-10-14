@@ -1,3 +1,4 @@
+require("./bootstrap")
 import Vue from 'vue'
 import App from './component/master/App'
 import Buefy from 'buefy'

@@ -61,6 +61,10 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'canAdmin' => \App\Http\Middleware\CheckCanAdmin::class,
+        'canInsert' => \App\Http\Middleware\CheckCanInsert::class,
+        'canUpdate' => \App\Http\Middleware\CheckCanUpdate::class,
+        'canDelete' => \App\Http\Middleware\CheckCanDelete::class,
+        'canEkspor' => \App\Http\Middleware\CheckCanEkspor::class,
     ];
 
     /**

@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-    <div class="card-header">
+    <div class="card-header" v-if="getDataUser.canInsert">
       <div class="card-header-title is-centered ">
         <b-collapse
           class="panel"
@@ -46,6 +46,11 @@ export default {
     this.$store.dispatch('getDataPasienRegistrasiFromSanata')
     this.$store.dispatch('getDataPetugasFromSanata')
     EventBus.$on('expandForm', () => { this.isOpenFormTambahRiwayatPasienPulang = false })
+  },
+  computed:{
+    getDataUser(){
+      return this.$store.getters.getDataUserLogin
+    }
   }
 }
 </script>

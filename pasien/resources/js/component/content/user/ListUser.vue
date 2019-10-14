@@ -271,6 +271,10 @@ export default {
     })
     .catch( (respon) => {
       this.isLoading = false
+      this.$buefy.notification.open({
+        message: respon,
+        type: 'is-danger',
+      })
     })
   },
   computed:{
@@ -399,6 +403,10 @@ export default {
       })
       .catch( (respon) => {
         this.isLoading = false
+        this.$buefy.notification.open({
+          message: respon,
+          type: 'is-danger',
+        })
       })
     }
   }

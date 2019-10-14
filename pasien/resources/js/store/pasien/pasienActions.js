@@ -4,8 +4,12 @@ import * as type from './pasienTypeMutations'
 const actions = {
   getDataPasienRegistrasiFromSanata({commit}){
     return new Promise( (berhasil, gagal) => {
-      axios.get('/api/getDataPasienRegistrasiFromSanata', ).then( (respon) => {
+      axios.get('/api/getDataPasienRegistrasiFromSanata', )
+      .then( (respon) => {
         commit(type.SET_DATA_PASIEN_REGISTRASI, respon.data)
+      })
+      .catch( (error) => {
+        gagal(error.response.data.error)
       })
     })
   },
@@ -18,8 +22,8 @@ const actions = {
           berhasil(respon.data.status)
         }
       })
-      .catch( (respon) => {
-        gagal('Gagal! Data Sudah Pernah Tersimpan')
+      .catch( (error) => {
+        gagal(error.response.data.error)
       })
     })
   },
@@ -32,6 +36,9 @@ const actions = {
         commit(type.SET_DATA_TOTAL_PASIEN_PULANG, respon.data.totalDataPasien)
         berhasil('getDataPasienPulang berhasil')
       })
+      .catch( (error) => {
+        gagal(error.response.data.error)
+      })
     })
   },
   updateDataPasienPulang({commit}, data){
@@ -43,8 +50,8 @@ const actions = {
           berhasil(respon.data.status)
         }
       })
-      .catch( (respon) => {
-        gagal(respon)
+      .catch( (error) => {
+        gagal(error.response.data.error)
       })
     })
   },
@@ -57,8 +64,8 @@ const actions = {
           berhasil(respon.data.status)
         }
       })
-      .catch( (respon) => {
-        gagal(respon)
+      .catch( (error) => {
+        gagal(error.response.data.error)
       })
     })
   },
@@ -69,8 +76,8 @@ const actions = {
         commit(type.EXPORT_DATA_TO_EXCEL, respon.data.dataPasien)
         berhasil(respon.data.status)
       })
-      .catch( (respon) => {
-        gagal("Data Eksport Gagal")
+      .catch( (error) => {
+        gagal(error.response.data.error)
       })
     })
   }

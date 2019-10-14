@@ -44,7 +44,17 @@ export default {
     loginUser(){
       this.$store.dispatch('loginUser', this.login)
       .then( (respon) => {
-        console.log('berhasil')
+        this.$buefy.notification.open({
+          message: respon,
+          type: 'is-info',
+        })
+        this.$router.push({'name': 'PasienPage'})
+      })
+      .catch( (respon) => {
+        this.$buefy.notification.open({
+          message: respon,
+          type: 'is-danger',
+        })
       })
     }
   }

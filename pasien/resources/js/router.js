@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import Login from '../js/component/content/auth/Login'
 import Pasien from '../js/component/master/Content'
 import User from '../js/component/content/user/ListUser'
-
+import store from './store/store'
 Vue.use(Router)
 
 const router = new Router({
@@ -14,24 +14,38 @@ const router = new Router({
       path: '/',
       name: 'LoginPage',
       component: Login,
-      beforeEnter(to, from, next){
-        next({ 'name' : 'PasienPage'})
-      }
     },
     {
       path: '/login',
       name: 'LoginPageSecond',
-      component: Login
+      component: Login,
+      meta: {
+        auth: false
+      }
     },
     {
       path: '/pasien',
       name: 'PasienPage',
-      component: Pasien
+      component: Pasien,
+      meta: {
+        auth: true
+      }
     },
     {
       path: '/user',
       name: 'UserPage',
-      component: User
+      component: User,
+      meta: {
+        auth: true
+      },
+      beforeEnter(to, from, next){
+        const user = store.getters.getDataUserLogin.canAdmin
+        if(user){
+          next()
+        }else{
+          next({ 'name' : 'PasienPage'})
+        }
+      }
     }
   ],
   scrollBehavior( to, from, savePosisi){
@@ -42,4 +56,20 @@ const router = new Router({
   }
 })
 
+router.beforeEach( (to, from, next) => {
+  const isAuth = store.getters.getAuth
+  if(to.matched.some( record => record.meta.auth )){
+    if(!isAuth){
+      next({ 'name' : 'LoginPageSecond'})
+    }else{
+      next()
+    }
+  }else{
+    if(isAuth){
+      next({ 'name': 'PasienPage'})
+    }else{
+      next()
+    }
+  }
+})
 export default router

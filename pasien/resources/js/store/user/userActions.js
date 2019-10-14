@@ -4,10 +4,14 @@ import * as type from './userTypeMutations'
 const actions = {
   getDataUser({commit}, data){
     return new Promise( (berhasil, gagal) => {
-      axios.post(`/api/getDataUser`, data).then( (respon) => {
+      axios.post(`/api/getDataUser`, data)
+      .then( (respon) => {
         commit(type.SET_DATA_USER, respon.data.users)
         commit(type.SET_DATA_USER_TOTAL, respon.data.totalUser)
         berhasil("hore berhasil")
+      })
+      .catch( (error) => {
+        gagal(error.response.data.error)
       })
     })
   },
@@ -18,8 +22,8 @@ const actions = {
         commit(type.ADD_DATA_USER, respon.data.user)
         berhasil(respon.data.status)
       })
-      .catch( (respon) => {
-        gagal(`Data User ${data.namaUser} Gagal Disimpan!`)
+      .catch( (error) => {
+        gagal(error.response.data.error)
       })
     })
   },
@@ -30,8 +34,8 @@ const actions = {
         commit(type.UPDATE_DATA_USER, respon.data.user)
         berhasil(respon.data.status)
       })
-      .catch( (respon) => {
-        gagal(`Data User ${data.namaUser} Gagal Disimpan!`)
+      .catch( (error) => {
+        gagal(error.response.data.error)
       })
     })
   },
@@ -42,8 +46,8 @@ const actions = {
         commit(type.DELETE_DATA_USER, data)
         berhasil(respon.data.status)
       })
-      .catch( (respon) => {
-        gagal(`Data User ${data.namaUser} Gagal Disimpan!`)
+      .catch( (error) => {
+        gagal(error.response.data.error)
       })
     })
   },

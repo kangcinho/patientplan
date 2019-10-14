@@ -176,7 +176,7 @@
                 size="is-small"
                 icon-pack="fas"
                 icon-right="edit" 
-                v-if="!pasien.isEdit"
+                v-if="!pasien.isEdit && getDataUser.canUpdate"
                 title="Edit Data Pasien"
                 @click="changeToEditMode(pasien, true)"/>
               <b-button 
@@ -184,7 +184,7 @@
                 size="is-small"
                 icon-pack="fas"
                 icon-right="save" 
-                v-if="pasien.isEdit"
+                v-if="pasien.isEdit && getDataUser.canUpdate"
                 title="Save Data Pasien"
                 @click="updateDataPasien(pasien)"/>
               <b-button 
@@ -192,7 +192,7 @@
                 size="is-small"
                 icon-pack="fas"
                 icon-right="ban"
-                v-if="pasien.isEdit"
+                v-if="pasien.isEdit && getDataUser.canUpdate"
                 title="Batal Edit Data Pasien"
                 @click="changeToEditMode(pasien, false)"/>
               <b-button
@@ -200,6 +200,7 @@
                 size="is-small"
                 icon-pack="fas"
                 icon-right="trash-alt" 
+                v-if="getDataUser.canDelete"
                 @click="deleteDataPasienPulang(pasien)"/>
             </td>
           </tr>
@@ -224,6 +225,7 @@
         </tbody>
       </table>
       </div>
+      <br/>
       <b-pagination
         icon-pack="fas"
         :total="pagging.total"
@@ -245,6 +247,7 @@
       size="is-small"
       icon-pack="fas"
       icon-left="download"
+      v-if="getDataUser.canEkspor"
       @click="modalEksportData"
       >
       Export
@@ -320,6 +323,9 @@ export default {
           .toLowerCase()
           .indexOf(this.dataPasienPulang.petugasPerawat.toLowerCase()) >= 0
       })
+    },
+    getDataUser(){
+      return this.$store.getters.getDataUserLogin
     }
   },
   watch:{
@@ -452,6 +458,10 @@ export default {
       })
       .catch((respon) => {
         this.isLoading = false
+        this.$buefy.notification.open({
+          message: respon,
+          type: 'is-danger',
+        })
       })
     },
     deleteDataPasienPulang(dataPasien){

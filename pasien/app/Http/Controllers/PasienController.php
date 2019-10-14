@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Pasien;
 use App\Http\Helper\RecordLog;
+use App\User;
 class PasienController extends Controller
 {
     public function getDataPasienRegistrasiFromSanata(){
@@ -12,15 +13,15 @@ class PasienController extends Controller
         $tanggalKemarin = \Carbon\Carbon::now()->subDays(1)->toDateString();
         
         $sanataRegistrasi = \DB::connection('sqlsrv')
-                    ->table('SIMtrRegistrasi')
-                    ->selectRaw('NoReg as noReg, NRM as nrm, NamaPasien_Reg as namaPasien, SIMtrRegistrasi.NoAnggota as noKartu, NoKamar as kamar, SIMmJenisKerjasama.JenisKerjasama as jenisKerjasama, BPJSMurni, SilverPlus as silverPlus, NaikKelas as naikKelas, mCustomer.Nama_Customer as namaPerusahaan')
-                    ->join('SIMmJenisKerjasama', 'SIMmJenisKerjasama.JenisKerjasamaID', 'SIMtrRegistrasi.JenisKerjasamaID')
-                    ->leftjoin('mCustomer', 'mCustomer.Kode_Customer', 'SIMtrRegistrasi.KodePerusahaan')
-                    ->where('StatusBayar', 'Belum')
-                    ->where('RawatInap', 1)
-                    ->where('Batal', 0)
-                    ->orderBy('NoReg', 'asc')
-                    ->get();
+            ->table('SIMtrRegistrasi')
+            ->selectRaw('NoReg as noReg, NRM as nrm, NamaPasien_Reg as namaPasien, SIMtrRegistrasi.NoAnggota as noKartu, NoKamar as kamar, SIMmJenisKerjasama.JenisKerjasama as jenisKerjasama, BPJSMurni, SilverPlus as silverPlus, NaikKelas as naikKelas, mCustomer.Nama_Customer as namaPerusahaan')
+            ->join('SIMmJenisKerjasama', 'SIMmJenisKerjasama.JenisKerjasamaID', 'SIMtrRegistrasi.JenisKerjasamaID')
+            ->leftjoin('mCustomer', 'mCustomer.Kode_Customer', 'SIMtrRegistrasi.KodePerusahaan')
+            ->where('StatusBayar', 'Belum')
+            ->where('RawatInap', 1)
+            ->where('Batal', 0)
+            ->orderBy('NoReg', 'asc')
+            ->get();
 
         $sanataKasir = \DB::connection('sqlsrv')
                     ->table('SIMtrKasir')
@@ -121,7 +122,7 @@ class PasienController extends Controller
         if($dataPasien){
             $status = "Data No Registrasi $dataPasien->noReg Sudah Pernah Tersimpan!";
             return response()->json([
-                'status' => $status
+                'error' => $status
             ], 403);
         }else{
             $dataPasien = new Pasien;
@@ -205,7 +206,7 @@ class PasienController extends Controller
         }
         $status = "Data Pasien Gagal DiUpdate!";
         return response()->json([
-            'status' => $status
+            'error' => $status
         ], 500);
     }
 

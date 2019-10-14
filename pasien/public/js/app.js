@@ -1881,8 +1881,22 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     loginUser: function loginUser() {
+      var _this = this;
+
       this.$store.dispatch('loginUser', this.login).then(function (respon) {
-        console.log('berhasil');
+        _this.$buefy.notification.open({
+          message: respon,
+          type: 'is-info'
+        });
+
+        _this.$router.push({
+          'name': 'PasienPage'
+        });
+      })["catch"](function (respon) {
+        _this.$buefy.notification.open({
+          message: respon,
+          type: 'is-danger'
+        });
       });
     }
   }
@@ -2892,6 +2906,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2955,6 +2972,9 @@ __webpack_require__.r(__webpack_exports__);
       return this.dataPetugas.filter(function (petugas) {
         return petugas.namaCustomer.toString().toLowerCase().indexOf(_this2.dataPasienPulang.petugasPerawat.toLowerCase()) >= 0;
       });
+    },
+    getDataUser: function getDataUser() {
+      return this.$store.getters.getDataUserLogin;
     }
   },
   watch: {
@@ -3112,6 +3132,11 @@ __webpack_require__.r(__webpack_exports__);
         _this6.pagging.current = 1;
       })["catch"](function (respon) {
         _this6.isLoading = false;
+
+        _this6.$buefy.notification.open({
+          message: respon,
+          type: 'is-danger'
+        });
       });
     },
     deleteDataPasienPulang: function deleteDataPasienPulang(dataPasien) {
@@ -3447,6 +3472,11 @@ __webpack_require__.r(__webpack_exports__);
       _this.pagging.total = _this.$store.getters.getDataUserTotal;
     })["catch"](function (respon) {
       _this.isLoading = false;
+
+      _this.$buefy.notification.open({
+        message: respon,
+        type: 'is-danger'
+      });
     });
   },
   computed: {
@@ -3592,6 +3622,11 @@ __webpack_require__.r(__webpack_exports__);
         _this6.pagging.current = 1;
       })["catch"](function (respon) {
         _this6.isLoading = false;
+
+        _this6.$buefy.notification.open({
+          message: respon,
+          type: 'is-danger'
+        });
       });
     }
   }
@@ -3627,6 +3662,15 @@ __webpack_require__.r(__webpack_exports__);
     Header: _Header__WEBPACK_IMPORTED_MODULE_0__["default"],
     Content: _Content__WEBPACK_IMPORTED_MODULE_1__["default"],
     ListUser: _content_user_ListUser__WEBPACK_IMPORTED_MODULE_2__["default"]
+  },
+  computed: {
+    isAuth: function isAuth() {
+      return this.$store.getters.getAuth;
+    }
+  },
+  created: function created() {// if(this.isAuth){
+    // this.$router.push({ 'name': PasienPage})
+    // }
   }
 });
 
@@ -3695,6 +3739,11 @@ __webpack_require__.r(__webpack_exports__);
     _eventBus__WEBPACK_IMPORTED_MODULE_2__["default"].$on('expandForm', function () {
       _this.isOpenFormTambahRiwayatPasienPulang = false;
     });
+  },
+  computed: {
+    getDataUser: function getDataUser() {
+      return this.$store.getters.getDataUserLogin;
+    }
   }
 });
 
@@ -3725,8 +3774,38 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "HeaderComponent"
+  name: "HeaderComponent",
+  computed: {
+    isAuth: function isAuth() {
+      return this.$store.getters.getAuth;
+    },
+    getDataUser: function getDataUser() {
+      return this.$store.getters.getDataUserLogin;
+    }
+  },
+  methods: {
+    logout: function logout() {
+      var _this = this;
+
+      this.$store.dispatch('logoutUser').then(function (respon) {
+        _this.$buefy.notification.open({
+          message: respon,
+          type: 'is-info'
+        });
+
+        _this.$router.push({
+          'name': 'LoginPageSecond'
+        });
+      });
+    }
+  }
 });
 
 /***/ }),
@@ -18750,7 +18829,7 @@ var render = function() {
                                 "has-text-centered wrapWord sizeKeterangan"
                             },
                             [
-                              !pasien.isEdit
+                              !pasien.isEdit && _vm.getDataUser.canUpdate
                                 ? _c("b-button", {
                                     attrs: {
                                       type: "is-info",
@@ -18770,7 +18849,7 @@ var render = function() {
                                   })
                                 : _vm._e(),
                               _vm._v(" "),
-                              pasien.isEdit
+                              pasien.isEdit && _vm.getDataUser.canUpdate
                                 ? _c("b-button", {
                                     attrs: {
                                       type: "is-info",
@@ -18787,7 +18866,7 @@ var render = function() {
                                   })
                                 : _vm._e(),
                               _vm._v(" "),
-                              pasien.isEdit
+                              pasien.isEdit && _vm.getDataUser.canUpdate
                                 ? _c("b-button", {
                                     attrs: {
                                       type: "is-warning",
@@ -18807,19 +18886,23 @@ var render = function() {
                                   })
                                 : _vm._e(),
                               _vm._v(" "),
-                              _c("b-button", {
-                                attrs: {
-                                  type: "is-danger",
-                                  size: "is-small",
-                                  "icon-pack": "fas",
-                                  "icon-right": "trash-alt"
-                                },
-                                on: {
-                                  click: function($event) {
-                                    return _vm.deleteDataPasienPulang(pasien)
-                                  }
-                                }
-                              })
+                              _vm.getDataUser.canDelete
+                                ? _c("b-button", {
+                                    attrs: {
+                                      type: "is-danger",
+                                      size: "is-small",
+                                      "icon-pack": "fas",
+                                      "icon-right": "trash-alt"
+                                    },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.deleteDataPasienPulang(
+                                          pasien
+                                        )
+                                      }
+                                    }
+                                  })
+                                : _vm._e()
                             ],
                             1
                           )
@@ -18863,6 +18946,8 @@ var render = function() {
             )
           ]),
           _vm._v(" "),
+          _c("br"),
+          _vm._v(" "),
           _c("b-pagination", {
             attrs: {
               "icon-pack": "fas",
@@ -18889,19 +18974,21 @@ var render = function() {
         1
       ),
       _vm._v(" "),
-      _c(
-        "b-button",
-        {
-          attrs: {
-            type: "is-primary",
-            size: "is-small",
-            "icon-pack": "fas",
-            "icon-left": "download"
-          },
-          on: { click: _vm.modalEksportData }
-        },
-        [_vm._v("\n    Export\n  ")]
-      ),
+      _vm.getDataUser.canEkspor
+        ? _c(
+            "b-button",
+            {
+              attrs: {
+                type: "is-primary",
+                size: "is-small",
+                "icon-pack": "fas",
+                "icon-left": "download"
+              },
+              on: { click: _vm.modalEksportData }
+            },
+            [_vm._v("\n    Export\n  ")]
+          )
+        : _vm._e(),
       _vm._v(" "),
       _c("b-loading", {
         attrs: {
@@ -19782,60 +19869,64 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "card" }, [
-    _c("div", { staticClass: "card-header" }, [
-      _c(
-        "div",
-        { staticClass: "card-header-title is-centered " },
-        [
+    _vm.getDataUser.canInsert
+      ? _c("div", { staticClass: "card-header" }, [
           _c(
-            "b-collapse",
-            {
-              staticClass: "panel",
-              staticStyle: { width: "100%" },
-              attrs: { open: _vm.isOpenFormTambahRiwayatPasienPulang },
-              on: {
-                "update:open": function($event) {
-                  _vm.isOpenFormTambahRiwayatPasienPulang = $event
-                }
-              }
-            },
+            "div",
+            { staticClass: "card-header-title is-centered " },
             [
               _c(
-                "div",
+                "b-collapse",
                 {
-                  staticClass: "panel-heading",
-                  attrs: { slot: "trigger", role: "button" },
-                  slot: "trigger"
+                  staticClass: "panel",
+                  staticStyle: { width: "100%" },
+                  attrs: { open: _vm.isOpenFormTambahRiwayatPasienPulang },
+                  on: {
+                    "update:open": function($event) {
+                      _vm.isOpenFormTambahRiwayatPasienPulang = $event
+                    }
+                  }
                 },
                 [
                   _c(
-                    "strong",
+                    "div",
+                    {
+                      staticClass: "panel-heading",
+                      attrs: { slot: "trigger", role: "button" },
+                      slot: "trigger"
+                    },
                     [
-                      _c("b-icon", { attrs: { pack: "fas", icon: "plus" } }),
-                      _vm._v(
-                        "\n            Daftar Riwayat Pasien Pulang\n          "
+                      _c(
+                        "strong",
+                        [
+                          _c("b-icon", {
+                            attrs: { pack: "fas", icon: "plus" }
+                          }),
+                          _vm._v(
+                            "\n            Daftar Riwayat Pasien Pulang\n          "
+                          )
+                        ],
+                        1
                       )
-                    ],
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "panel-tab",
+                      staticStyle: { "margin-top": "10px" }
+                    },
+                    [_c("AddPasienPulang")],
                     1
                   )
                 ]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass: "panel-tab",
-                  staticStyle: { "margin-top": "10px" }
-                },
-                [_c("AddPasienPulang")],
-                1
               )
-            ]
+            ],
+            1
           )
-        ],
-        1
-      )
-    ]),
+        ])
+      : _vm._e(),
     _vm._v(" "),
     _c("div", { staticClass: "card-content" }, [_c("ListPasienPulang")], 1)
   ])
@@ -19870,18 +19961,42 @@ var render = function() {
         "template",
         { slot: "start" },
         [
-          _c(
-            "b-navbar-item",
-            { attrs: { tag: "router-link", to: { name: "UserPage" } } },
-            [_c("b-icon", { attrs: { pack: "fas", icon: "users" } })],
-            1
-          ),
+          _vm.isAuth && _vm.getDataUser.canAdmin
+            ? _c(
+                "b-navbar-item",
+                { attrs: { tag: "router-link", to: { name: "UserPage" } } },
+                [_c("b-icon", { attrs: { pack: "fas", icon: "users" } })],
+                1
+              )
+            : _vm._e(),
           _vm._v(" "),
-          _c(
-            "b-navbar-item",
-            { attrs: { tag: "router-link", to: { name: "LoginPageSecond" } } },
-            [_vm._v("\n          Login\n      ")]
-          )
+          _vm.isAuth
+            ? _c(
+                "b-navbar-item",
+                { attrs: { tag: "router-link", to: { name: "PasienPage" } } },
+                [_vm._v("\n        Pasien\n      ")]
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          !_vm.isAuth
+            ? _c(
+                "b-navbar-item",
+                {
+                  attrs: { tag: "router-link", to: { name: "LoginPageSecond" } }
+                },
+                [_vm._v("\n        Login\n      ")]
+              )
+            : _c(
+                "b-navbar-item",
+                {
+                  nativeOn: {
+                    click: function($event) {
+                      return _vm.logout($event)
+                    }
+                  }
+                },
+                [_vm._v("\n        Logout\n      ")]
+              )
         ],
         1
       )
@@ -40656,6 +40771,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./store/store */ "./resources/js/store/store.js");
 /* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./router */ "./resources/js/router.js");
 /* harmony import */ var vue_excel_export__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vue-excel-export */ "./node_modules/vue-excel-export/index.js");
+__webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
+
 
 
 
@@ -40673,6 +40790,41 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
     return h(_component_master_App__WEBPACK_IMPORTED_MODULE_1__["default"]);
   }
 });
+
+/***/ }),
+
+/***/ "./resources/js/bootstrap.js":
+/*!***********************************!*\
+  !*** ./resources/js/bootstrap.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// window._ = require('lodash');
+
+/**
+ * We'll load the axios HTTP library which allows us to easily issue requests
+ * to our Laravel back-end. This library automatically handles sending the
+ * CSRF token as a header based on the value of the "XSRF" token cookie.
+ */
+window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.headers.common['Authorization'] = localStorage.getItem('token') != 'null' ? 'Bearer ' + localStorage.getItem('token') : ''; // window.axios.defaults.headers.common['Content-Type'] = 'application/json'
+
+window.axios.defaults.headers.common['X-CSRF-TOKEN'] = window.csrf;
+/**
+ * Echo exposes an expressive API for subscribing to channels and listening
+ * for events that are broadcast by Laravel. Echo and event broadcasting
+ * allows your team to easily build robust real-time web applications.
+ */
+// import Echo from 'laravel-echo';
+// window.Pusher = require('pusher-js');
+// window.Echo = new Echo({
+//     broadcaster: 'pusher',
+//     key: process.env.MIX_PUSHER_APP_KEY,
+//     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+//     encrypted: true
+// });
 
 /***/ }),
 
@@ -41398,6 +41550,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _js_component_content_auth_Login__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../js/component/content/auth/Login */ "./resources/js/component/content/auth/Login.vue");
 /* harmony import */ var _js_component_master_Content__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../js/component/master/Content */ "./resources/js/component/master/Content.vue");
 /* harmony import */ var _js_component_content_user_ListUser__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../js/component/content/user/ListUser */ "./resources/js/component/content/user/ListUser.vue");
+/* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./store/store */ "./resources/js/store/store.js");
+
 
 
 
@@ -41410,30 +41564,68 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
   routes: [{
     path: '/',
     name: 'LoginPage',
-    component: _js_component_content_auth_Login__WEBPACK_IMPORTED_MODULE_2__["default"],
-    beforeEnter: function beforeEnter(to, from, next) {
-      next({
-        'name': 'PasienPage'
-      });
-    }
+    component: _js_component_content_auth_Login__WEBPACK_IMPORTED_MODULE_2__["default"]
   }, {
     path: '/login',
     name: 'LoginPageSecond',
-    component: _js_component_content_auth_Login__WEBPACK_IMPORTED_MODULE_2__["default"]
+    component: _js_component_content_auth_Login__WEBPACK_IMPORTED_MODULE_2__["default"],
+    meta: {
+      auth: false
+    }
   }, {
     path: '/pasien',
     name: 'PasienPage',
-    component: _js_component_master_Content__WEBPACK_IMPORTED_MODULE_3__["default"]
+    component: _js_component_master_Content__WEBPACK_IMPORTED_MODULE_3__["default"],
+    meta: {
+      auth: true
+    }
   }, {
     path: '/user',
     name: 'UserPage',
-    component: _js_component_content_user_ListUser__WEBPACK_IMPORTED_MODULE_4__["default"]
+    component: _js_component_content_user_ListUser__WEBPACK_IMPORTED_MODULE_4__["default"],
+    meta: {
+      auth: true
+    },
+    beforeEnter: function beforeEnter(to, from, next) {
+      var user = _store_store__WEBPACK_IMPORTED_MODULE_5__["default"].getters.getDataUserLogin.canAdmin;
+
+      if (user) {
+        next();
+      } else {
+        next({
+          'name': 'PasienPage'
+        });
+      }
+    }
   }],
   scrollBehavior: function scrollBehavior(to, from, savePosisi) {
     return {
       x: 0,
       y: 0
     };
+  }
+});
+router.beforeEach(function (to, from, next) {
+  var isAuth = _store_store__WEBPACK_IMPORTED_MODULE_5__["default"].getters.getAuth;
+
+  if (to.matched.some(function (record) {
+    return record.meta.auth;
+  })) {
+    if (!isAuth) {
+      next({
+        'name': 'LoginPageSecond'
+      });
+    } else {
+      next();
+    }
+  } else {
+    if (isAuth) {
+      next({
+        'name': 'PasienPage'
+      });
+    } else {
+      next();
+    }
   }
 });
 /* harmony default export */ __webpack_exports__["default"] = (router);
@@ -41479,17 +41671,33 @@ var store = {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _authtypeMutations__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./authtypeMutations */ "./resources/js/store/auth/authtypeMutations.js");
+/* harmony import */ var _authTypeMutations__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./authTypeMutations */ "./resources/js/store/auth/authTypeMutations.js");
 
 
 var actions = {
   loginUser: function loginUser(_ref, data) {
     var commit = _ref.commit;
-    axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/api/login', data).then(function (respon) {
-      commit(_authtypeMutations__WEBPACK_IMPORTED_MODULE_1__["SET_DATA_USER_LOGIN"], data);
-      console.log("Berhasil");
-    })["catch"](function (respon) {
-      console.log(respon);
+    return new Promise(function (berhasil, gagal) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/api/login', data).then(function (respon) {
+        commit(_authTypeMutations__WEBPACK_IMPORTED_MODULE_1__["SET_DATA_USER_LOGIN"], respon.data.user);
+        commit(_authTypeMutations__WEBPACK_IMPORTED_MODULE_1__["SET_DATA_USER_TOKEN"], respon.data.token);
+        axios__WEBPACK_IMPORTED_MODULE_0___default.a.defaults.headers.common = {
+          'Authorization': 'Bearer ' + respon.data.token
+        };
+        berhasil("User Login");
+      })["catch"](function (respon) {
+        gagal("Username / Password Salah");
+      });
+    });
+  },
+  logoutUser: function logoutUser(_ref2) {
+    var commit = _ref2.commit;
+    return new Promise(function (berhasil, gagal) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api/logout').then(function (respon) {
+        commit(_authTypeMutations__WEBPACK_IMPORTED_MODULE_1__["SET_DATA_USER_LOGIN"], respon.data.user);
+        commit(_authTypeMutations__WEBPACK_IMPORTED_MODULE_1__["SET_DATA_USER_TOKEN"], respon.data.token);
+        berhasil('User LogOut');
+      });
     });
   }
 };
@@ -41506,7 +41714,14 @@ var actions = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-var getters = {};
+var getters = {
+  getAuth: function getAuth(state) {
+    return state.token != null && state.token != '' && state.token != 'null';
+  },
+  getDataUserLogin: function getDataUserLogin(state) {
+    return state.dataUserLogin;
+  }
+};
 /* harmony default export */ __webpack_exports__["default"] = (getters);
 
 /***/ }),
@@ -41520,15 +41735,19 @@ var getters = {};
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _authtypeMutations__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./authtypeMutations */ "./resources/js/store/auth/authtypeMutations.js");
+/* harmony import */ var _authTypeMutations__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./authTypeMutations */ "./resources/js/store/auth/authTypeMutations.js");
+var _mutations;
+
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
-
-var mutations = _defineProperty({}, _authtypeMutations__WEBPACK_IMPORTED_MODULE_0__["SET_DATA_USER_LOGIN"], function (state, payload) {
+var mutations = (_mutations = {}, _defineProperty(_mutations, _authTypeMutations__WEBPACK_IMPORTED_MODULE_0__["SET_DATA_USER_LOGIN"], function (state, payload) {
   state.dataUserLogin = payload;
-});
-
+  localStorage.setItem('userData', JSON.stringify(payload));
+}), _defineProperty(_mutations, _authTypeMutations__WEBPACK_IMPORTED_MODULE_0__["SET_DATA_USER_TOKEN"], function (state, payload) {
+  state.token = payload;
+  localStorage.setItem('token', payload);
+}), _mutations);
 /* harmony default export */ __webpack_exports__["default"] = (mutations);
 
 /***/ }),
@@ -41543,25 +41762,28 @@ var mutations = _defineProperty({}, _authtypeMutations__WEBPACK_IMPORTED_MODULE_
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 var state = {
-  dataUserLogin: []
+  dataUserLogin: JSON.parse(localStorage.getItem('userData')),
+  token: localStorage.getItem('token')
 };
 /* harmony default export */ __webpack_exports__["default"] = (state);
 
 /***/ }),
 
-/***/ "./resources/js/store/auth/authtypeMutations.js":
+/***/ "./resources/js/store/auth/authTypeMutations.js":
 /*!******************************************************!*\
-  !*** ./resources/js/store/auth/authtypeMutations.js ***!
+  !*** ./resources/js/store/auth/authTypeMutations.js ***!
   \******************************************************/
-/*! exports provided: LOGIN_USER, SET_DATA_USER_LOGIN */
+/*! exports provided: LOGIN_USER, SET_DATA_USER_LOGIN, SET_DATA_USER_TOKEN */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LOGIN_USER", function() { return LOGIN_USER; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_DATA_USER_LOGIN", function() { return SET_DATA_USER_LOGIN; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_DATA_USER_TOKEN", function() { return SET_DATA_USER_TOKEN; });
 var LOGIN_USER = 'LOGIN_USER';
 var SET_DATA_USER_LOGIN = 'SET_DATA_USER_LOGIN';
+var SET_DATA_USER_TOKEN = 'SET_DATA_USER_TOKEN';
 
 /***/ }),
 
@@ -41612,6 +41834,8 @@ var actions = {
     return new Promise(function (berhasil, gagal) {
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api/getDataPasienRegistrasiFromSanata').then(function (respon) {
         commit(_pasienTypeMutations__WEBPACK_IMPORTED_MODULE_1__["SET_DATA_PASIEN_REGISTRASI"], respon.data);
+      })["catch"](function (error) {
+        gagal(error.response.data.error);
       });
     });
   },
@@ -41624,8 +41848,8 @@ var actions = {
         if (respon.status == 200) {
           berhasil(respon.data.status);
         }
-      })["catch"](function (respon) {
-        gagal('Gagal! Data Sudah Pernah Tersimpan');
+      })["catch"](function (error) {
+        gagal(error.response.data.error);
       });
     });
   },
@@ -41636,6 +41860,8 @@ var actions = {
         commit(_pasienTypeMutations__WEBPACK_IMPORTED_MODULE_1__["SET_DATA_PASIEN_PULANG"], respon.data.dataPasien);
         commit(_pasienTypeMutations__WEBPACK_IMPORTED_MODULE_1__["SET_DATA_TOTAL_PASIEN_PULANG"], respon.data.totalDataPasien);
         berhasil('getDataPasienPulang berhasil');
+      })["catch"](function (error) {
+        gagal(error.response.data.error);
       });
     });
   },
@@ -41647,8 +41873,8 @@ var actions = {
           commit(_pasienTypeMutations__WEBPACK_IMPORTED_MODULE_1__["UPDATE_DATA_PASIEN_PULANG"], respon.data.dataPasien);
           berhasil(respon.data.status);
         }
-      })["catch"](function (respon) {
-        gagal(respon);
+      })["catch"](function (error) {
+        gagal(error.response.data.error);
       });
     });
   },
@@ -41660,8 +41886,8 @@ var actions = {
           commit(_pasienTypeMutations__WEBPACK_IMPORTED_MODULE_1__["DELETE_DATA_PASIEN_PULANG"], data);
           berhasil(respon.data.status);
         }
-      })["catch"](function (respon) {
-        gagal(respon);
+      })["catch"](function (error) {
+        gagal(error.response.data.error);
       });
     });
   },
@@ -41671,8 +41897,8 @@ var actions = {
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/api/getDataExportPasienPulang', data).then(function (respon) {
         commit(_pasienTypeMutations__WEBPACK_IMPORTED_MODULE_1__["EXPORT_DATA_TO_EXCEL"], respon.data.dataPasien);
         berhasil(respon.data.status);
-      })["catch"](function (respon) {
-        gagal("Data Eksport Gagal");
+      })["catch"](function (error) {
+        gagal(error.response.data.error);
       });
     });
   }
@@ -41867,6 +42093,8 @@ var actions = {
     return new Promise(function (berhasil, gagal) {
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/api/getDataPetugasFromSanata").then(function (respon) {
         commit(_petugasTypeMutations__WEBPACK_IMPORTED_MODULE_1__["SET_DATA_PETUGAS"], respon.data);
+      })["catch"](function (error) {
+        gagal(error.response.data.error);
       });
     });
   }
@@ -42028,6 +42256,8 @@ var actions = {
         commit(_userTypeMutations__WEBPACK_IMPORTED_MODULE_1__["SET_DATA_USER"], respon.data.users);
         commit(_userTypeMutations__WEBPACK_IMPORTED_MODULE_1__["SET_DATA_USER_TOTAL"], respon.data.totalUser);
         berhasil("hore berhasil");
+      })["catch"](function (error) {
+        gagal(error.response.data.error);
       });
     });
   },
@@ -42037,8 +42267,8 @@ var actions = {
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/api/saveDataUser', data).then(function (respon) {
         commit(_userTypeMutations__WEBPACK_IMPORTED_MODULE_1__["ADD_DATA_USER"], respon.data.user);
         berhasil(respon.data.status);
-      })["catch"](function (respon) {
-        gagal("Data User ".concat(data.namaUser, " Gagal Disimpan!"));
+      })["catch"](function (error) {
+        gagal(error.response.data.error);
       });
     });
   },
@@ -42048,8 +42278,8 @@ var actions = {
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/api/updateDataUser', data).then(function (respon) {
         commit(_userTypeMutations__WEBPACK_IMPORTED_MODULE_1__["UPDATE_DATA_USER"], respon.data.user);
         berhasil(respon.data.status);
-      })["catch"](function (respon) {
-        gagal("Data User ".concat(data.namaUser, " Gagal Disimpan!"));
+      })["catch"](function (error) {
+        gagal(error.response.data.error);
       });
     });
   },
@@ -42059,8 +42289,8 @@ var actions = {
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/api/deleteDataUser/".concat(data.idUser)).then(function (respon) {
         commit(_userTypeMutations__WEBPACK_IMPORTED_MODULE_1__["DELETE_DATA_USER"], data);
         berhasil(respon.data.status);
-      })["catch"](function (respon) {
-        gagal("Data User ".concat(data.namaUser, " Gagal Disimpan!"));
+      })["catch"](function (error) {
+        gagal(error.response.data.error);
       });
     });
   }
@@ -42200,8 +42430,8 @@ var SET_DATA_USER_TOTAL = 'SET_DATA_USER_TOTAL';
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\Develover\ongoing\pasienPulang\pasien\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! D:\Develover\ongoing\pasienPulang\pasien\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\DEVELOVER\pasienPulang\pasien\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\DEVELOVER\pasienPulang\pasien\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

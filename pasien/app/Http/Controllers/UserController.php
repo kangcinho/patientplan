@@ -22,6 +22,19 @@ class UserController extends Controller
     }
 
     public function saveDataUser(Request $request){
+        $user = User::where('username' , $request->username)->first();
+        if($user){
+            return response()->json([
+                'error' => 'Gagal! Username sudah terdapat pada DB'
+            ], 403);
+        }
+        $user = User::where('email' , $request->email)->first();
+        if($user){
+            return response()->json([
+                'error' => 'Gagal! Email sudah terdapat pada DB'
+            ], 403);
+        }
+        
         $user = new User;
         $user->idUser = $user->getIDUser();
         $user->namaUser = $request->namaUser;

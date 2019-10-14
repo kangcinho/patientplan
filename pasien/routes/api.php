@@ -21,19 +21,19 @@ Route::group(['middleware' => 'auth:api'], function(){
     //Section Pasien Pulang
     Route::get('getDataPasienRegistrasiFromSanata', 'PasienController@getDataPasienRegistrasiFromSanata');
     Route::get('getDataPetugasFromSanata', 'PasienController@getDataPetugasFromSanata');
-    Route::post('saveDataPasienPulang', 'PasienController@saveDataPasienPulang');
+    Route::post('saveDataPasienPulang', 'PasienController@saveDataPasienPulang')->middleware('canInsert');
     Route::post('getDataPasienPulang', 'PasienController@getDataPasienPulang');
-    Route::post('updateDataPasienPulang', 'PasienController@updateDataPasienPulang');
-    Route::get('deleteDataPasienPulang/{idPasien}', 'PasienController@deleteDataPasienPulang');
+    Route::post('updateDataPasienPulang', 'PasienController@updateDataPasienPulang')->middleware('canUpdate');
+    Route::get('deleteDataPasienPulang/{idPasien}', 'PasienController@deleteDataPasienPulang')->middleware('canDelete');
 
     //Section User
-    Route::post('getDataUser', 'UserController@getDataUser');
-    Route::post('saveDataUser', 'UserController@saveDataUser');
-    Route::post('updateDataUser', 'UserController@updateDataUser');
-    Route::get('deleteDataUser/{idUser}', 'UserController@deleteDataUser');
+    Route::post('getDataUser', 'UserController@getDataUser')->middleware('canAdmin');
+    Route::post('saveDataUser', 'UserController@saveDataUser')->middleware('canAdmin');
+    Route::post('updateDataUser', 'UserController@updateDataUser')->middleware('canAdmin');
+    Route::get('deleteDataUser/{idUser}', 'UserController@deleteDataUser')->middleware('canAdmin');
 
     //EXPORT DATA
-    Route::post('getDataExportPasienPulang', 'PasienController@getDataExportPasienPulang');
+    Route::post('getDataExportPasienPulang', 'PasienController@getDataExportPasienPulang')->middleware('canEkspor');
 });
 
 //Automatisasi Riwata Pasien Pulang with Cronjob

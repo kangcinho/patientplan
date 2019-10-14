@@ -5,27 +5,31 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\User;
+use JWTAuth;
 class UserAuthController extends Controller
 {
     public function login(Request $request){
         $credentials = $request->only('username', 'password');
 
-        if($token = $this->guard()->attempt($credentials)){
+        if($token = JWTAuth::attempt($credentials)){
             $user = User::find(Auth::user()->idUser);
             return response()->json([
                 'status'=>'Login Berhasil',
-                'uses'=> $user,
+                'user'=> $user,
                 'token' => $token
             ], 200)->header('Authorization', $token);
         }
         return response()->json([
-            'error' => 'Login Gagal'
+            'error' => 'Login Gagal! Username / Password Salah'
         ],401);
     }
 
     public function logout(){
         $this->guard()->logout();
-        return response()->json([],200);
+        return response()->json([
+            'user'=> [],
+            'token' => null
+        ], 200);
     }
 
     public function refresh(){
@@ -34,7 +38,7 @@ class UserAuthController extends Controller
                 'status' => 'refresh success'
             ], 200)->header('Authorization', $token);
         }
-        return response()->json(['error' => 'refresh_token_error'], 401);
+        return response()->json(['error' => 'Refresh Token error'], 401);
     }
 
     public function user(Request $request){
