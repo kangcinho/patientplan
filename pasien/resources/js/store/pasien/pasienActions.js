@@ -1,10 +1,19 @@
 import axios from 'axios'
 import * as type from './pasienTypeMutations'
 
+// axios.interceptors.response.use((respon) => {
+//   if(respon.data.error == "Unauthorized"){
+//     console.log('Intersepsion')
+//     commit('SET_DATA_USER_LOGIN', null, {root: true})
+//     commit('SET_DATA_USER_TOKEN', null, {root: true})
+//     delete axios.defaults.headers.common['Authorization']
+//   }
+//   return respon
+// })
 const actions = {
   getDataPasienRegistrasiFromSanata({commit}){
     return new Promise( (berhasil, gagal) => {
-      axios.get('/api/getDataPasienRegistrasiFromSanata', )
+      axios.get('/api/getDataPasienRegistrasiFromSanata' )
       .then( (respon) => {
         commit(type.SET_DATA_PASIEN_REGISTRASI, respon.data)
       })
@@ -74,7 +83,11 @@ const actions = {
       axios.post('/api/getDataExportPasienPulang', data)
       .then( (respon) => {
         commit(type.EXPORT_DATA_TO_EXCEL, respon.data.dataPasien)
-        berhasil(respon.data.status)
+        if(respon.data.dataPasien.length > 0){
+          berhasil(respon.data.status)
+        }else{
+          berhasil("Data Riwayat Pulang Kosong, Tidak Ada Data Di Import")
+        }
       })
       .catch( (error) => {
         gagal(error.response.data.error)

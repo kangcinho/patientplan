@@ -1,19 +1,24 @@
 <template>
   <div class="columns is-multiline">
     <div class="column">
-      <b-field>
+      <b-field >
         <b-datepicker
+          expanded
           icon-pack="fas"
           icon="calendar-alt"
           :date-formatter="(date) => $moment(date).format('DD MMM YYYY')"
           v-model="tanggalSearch"
           placeholder="Pilih Periode Pasien Pulang"
           rounded
-          editable
           @keyup.native.enter="searchNamaPasienToDB"
           @input="searchNamaPasienToDB"
           >
         </b-datepicker>
+        <b-button
+          @click="clearTanggal"
+          icon-pack="fas"
+          icon-left="times"
+          />
       </b-field>
     </div>
     <div class="column is-two-thirds">
@@ -345,6 +350,10 @@ export default {
     },
   },
   methods:{
+    clearTanggal(){
+      this.tanggalSearch = null
+      this.searchNamaPasienToDB()
+    },
     modalEksportData(){
       this.$buefy.modal.open({
         parent: this,

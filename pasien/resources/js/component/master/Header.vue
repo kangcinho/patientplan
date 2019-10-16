@@ -17,6 +17,11 @@
           Logout
         </b-navbar-item>
     </template>
+    <template slot="end">
+      <b-navbar-item v-if="getDataUser">
+        Tercinta, {{getDataUser.namaUser}}
+      </b-navbar-item>
+    </template>
   </b-navbar>
 </template>
 

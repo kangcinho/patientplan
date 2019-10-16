@@ -7,7 +7,7 @@
       <div class="columns is-multiline">
         <div class="column is-full">
           <b-field >
-            <b-input placeholder="Search..."
+            <b-input placeholder="Search Nama User.."
               autofocus 
               type="search"
               ref="search"
@@ -50,32 +50,38 @@
             <tbody>
               <tr v-if="isTambahData">
                 <td>
-                  <b-input 
-                    size="is-small"
-                    placeholder="Username"
-                    rounded
-                    v-model="dataUserNew.username"
-                    >
-                  </b-input>
+                  <b-field :type="errorDataUserNew.username?'is-danger':''">
+                    <b-input 
+                      size="is-small"
+                      placeholder="Username"
+                      rounded
+                      v-model="dataUserNew.username"
+                      >
+                    </b-input>
+                  </b-field>
                 </td>
                 <td>
-                  <b-input 
-                    size="is-small"
-                    placeholder="kangcinho@gmail.com"
-                    rounded
-                    type="email"
-                    v-model="dataUserNew.email"
-                    >
-                  </b-input>
+                  <b-field :type="errorDataUserNew.email?'is-danger':''">
+                    <b-input 
+                      size="is-small"
+                      placeholder="kangcinho@gmail.com"
+                      rounded
+                      type="email"
+                      v-model="dataUserNew.email"
+                      >
+                    </b-input>
+                  </b-field>
                 </td>
                 <td>
-                  <b-input 
-                    size="is-small"
-                    placeholder="Nama User"
-                    rounded
-                    v-model="dataUserNew.namaUser"
-                    >
-                  </b-input>
+                  <b-field :type="errorDataUserNew.namaUser?'is-danger':''"> 
+                    <b-input 
+                      size="is-small"
+                      placeholder="Nama User"
+                      rounded
+                      v-model="dataUserNew.namaUser"
+                      >
+                    </b-input>
+                  </b-field>
                 </td>
                 <td class="has-text-centered">
                   <b-switch type="is-info" v-model="dataUserNew.canAdmin"></b-switch>
@@ -105,38 +111,44 @@
               </tr>
               <tr v-for="user in dataUsers" :key="user.idUser">
                 <td>
-                  <b-input 
-                    size="is-small"
-                    placeholder="Username"
-                    rounded
-                    v-model="dataUserEdit.username"
-                    v-if="user.isEdit"
-                    >
-                  </b-input>
-                  <span v-else> {{ user.username }} </span>
+                  <b-field :type="errorDataUserEdit.username?'is-danger':''">
+                    <b-input 
+                      size="is-small"
+                      placeholder="Username"
+                      rounded
+                      v-model="dataUserEdit.username"
+                      v-if="user.isEdit"
+                      >
+                    </b-input>
+                    <span v-else> {{ user.username }} </span>
+                  </b-field>
                 </td>
                 <td>
-                  <b-input 
-                    size="is-small"
-                    placeholder="kangcinho@gmail.com"
-                    rounded
-                    type="email"
-                    v-model="dataUserEdit.email"
-                    v-if="user.isEdit"
-                    >
-                  </b-input>
-                  <span v-else> {{ user.email }} </span>
+                  <b-field :type="errorDataUserEdit.email?'is-danger':''">
+                    <b-input 
+                      size="is-small"
+                      placeholder="kangcinho@gmail.com"
+                      rounded
+                      type="email"
+                      v-model="dataUserEdit.email"
+                      v-if="user.isEdit"
+                      >
+                    </b-input>
+                    <span v-else> {{ user.email }} </span>
+                  </b-field>
                 </td>
                 <td>
-                  <b-input 
-                    size="is-small"
-                    placeholder="Nama User"
-                    rounded
-                    v-model="dataUserEdit.namaUser"
-                    v-if="user.isEdit"
-                    >
-                  </b-input>
-                  <span v-else> {{ user.namaUser }} </span>
+                  <b-field :type="errorDataUserEdit.namaUser?'is-danger':''">
+                    <b-input 
+                      size="is-small"
+                      placeholder="Nama User"
+                      rounded
+                      v-model="dataUserEdit.namaUser"
+                      v-if="user.isEdit"
+                      >
+                    </b-input>
+                    <span v-else> {{ user.namaUser }} </span>
+                  </b-field>
                 </td>
                 <td class="has-text-centered">
                   <b-switch type="is-info" v-model="dataUserEdit.canAdmin" v-if="user.isEdit"></b-switch>
@@ -226,6 +238,11 @@ export default {
   data(){
     return {
       isTambahData: false,
+      errorDataUserNew:{
+        username: false,
+        email: false,
+        namaUser: false
+      },
       dataUserNew:{
         username: null,
         email: null,
@@ -235,6 +252,11 @@ export default {
         canUpdate: false,
         canDelete: false,
         canEkspor: false
+      },
+      errorDataUserEdit:{
+        username: false,
+        email: false,
+        namaUser: false
       },
       dataUserEdit:{
         idUser: null,
@@ -301,47 +323,53 @@ export default {
   },
   methods:{
     saveDataUser(){
-      this.isLoading = true
-      this.$store.dispatch('saveDataUser', this.dataUserNew)
-      .then( (respon) => {
-        this.isLoading = false
-        this.isTambahData = false
-        this.hapusFieldAll()
-        this.$buefy.notification.open({
-          message: respon,
-          type: 'is-success'
+      if(this.validasiSaveData(this.dataUserNew, this.errorDataUserNew)){
+        this.isLoading = true
+        this.$store.dispatch('saveDataUser', this.dataUserNew)
+        .then( (respon) => {
+          this.isLoading = false
+          this.isTambahData = false
+          this.hapusFieldAll()
+          this.$buefy.notification.open({
+            message: respon,
+            type: 'is-success'
+          })
         })
-      })
-      .catch( (respon) => {
-        this.isLoading = false
-        this.$buefy.notification.open({
-          message: respon,
-          type: 'is-danger',
+        .catch( (respon) => {
+          this.isLoading = false
+          this.$buefy.notification.open({
+            message: respon,
+            type: 'is-danger',
+          })
         })
-      })
+      }
     },
     updateDataUser(userData){
       this.dataUserEdit.idUser = userData.idUser
-      userData.isEdit = false
-      this.isLoading = true
-      this.$store.dispatch('updateDataUser', this.dataUserEdit)
-      .then( (respon) => {
-        this.isLoading = false
-        this.isTambahData = false
-        this.disableEdit = false
-        // this.hapusFieldAll()
-        this.$buefy.notification.open({
-          message: respon,
-          type: 'is-success'
+      if(this.validasiSaveData(this.dataUserEdit, this.errorDataUserEdit)){
+        userData.isEdit = false
+        this.isLoading = true
+        this.$store.dispatch('updateDataUser', this.dataUserEdit)
+        .then( (respon) => {
+          this.isLoading = false
+          this.isTambahData = false
+          this.disableEdit = false
+          this.hapusFieldAll()
+          this.$buefy.notification.open({
+            message: respon,
+            type: 'is-success'
+          })
         })
-      })
-      .catch( (respon) => {
-        this.isLoading = false
-        this.$buefy.notification.open({
-          message: respon,
-          type: 'is-danger',
+        .catch( (respon) => {
+          this.isLoading = false
+          this.isTambahData = false
+          this.disableEdit = false
+          this.$buefy.notification.open({
+            message: respon,
+            type: 'is-danger',
+          })
         })
-      })
+      }
     },
     deleteDataUser(userData){
       const nama = userData.namaUser
@@ -356,6 +384,27 @@ export default {
           'method': 'deleteDataUser'
         }
       })
+    },
+    validasiSaveData(dataUser, errorDataUser){
+      if(dataUser.username == null || dataUser.username == ''){
+        errorDataUser.username = true
+        return false
+      }else{
+        errorDataUser.username = false
+      }
+      if(dataUser.email == null || dataUser.email == ''){
+        errorDataUser.email = true
+        return false
+      }else{
+        errorDataUser.email = false
+      }
+      if(dataUser.namaUser == null || dataUser.namaUser == ''){
+        errorDataUser.namaUser = true
+        return false
+      }else{
+        errorDataUser.namaUser = false
+      }
+      return true
     },
     changeToEditMode(userData, mode){
        //Can Edit Only One Field Live
@@ -377,7 +426,7 @@ export default {
     },
     hapusFieldAll(){
       this.dataUserNew.username = this.dataUserNew.email = this.dataUserNew.namaUser = this.dataUserEdit.username = this.dataUserEdit.email = this.dataUserEdit.namaUser = this.dataUserEdit.idUser = null 
-      this.dataUserNew.canAdmin = this.dataUserNew.canInsert = this.dataUserNew.canUpdate = this.dataUserNew.canDelete = this.dataUserNew.canEkspor = this.dataUserEdit.canAdmin = this.dataUserEdit.canInsert = this.dataUserEdit.canUpdate = this.dataUserEdit.canDelete = this.dataUserEdit.canEkspor = false    
+      this.dataUserNew.canAdmin = this.dataUserNew.canInsert = this.dataUserNew.canUpdate = this.dataUserNew.canDelete = this.dataUserNew.canEkspor = this.dataUserEdit.canAdmin = this.dataUserEdit.canInsert = this.dataUserEdit.canUpdate = this.dataUserEdit.canDelete = this.dataUserEdit.canEkspor = this.errorDataUserNew.username = this.errorDataUserNew.email = this.errorDataUserNew.namaUser = false    
     },
     fillData(userData){
       this.dataUserEdit.idUser = userData.idUser

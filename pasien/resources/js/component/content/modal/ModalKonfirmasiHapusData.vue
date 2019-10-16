@@ -35,6 +35,7 @@ export default {
         })
       })
       .catch( (respon) => {
+        this.$parent.close()
         this.$buefy.notification.open({
           message: respon,
           type: 'is-danger'

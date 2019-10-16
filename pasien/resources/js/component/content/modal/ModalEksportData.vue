@@ -111,9 +111,17 @@ export default {
           this.$refs.ekspor.click()
           this.hapusData()
           this.$parent.close()
+          this.$buefy.notification.open({
+            message: respon,
+            type: 'is-success'
+          })
         })
         .catch( (respon) => {
-
+          this.$parent.close()
+          this.$buefy.notification.open({
+            message: respon,
+            type: 'is-danger'
+          })
         })
       }
     },

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Pasien;
 use App\Http\Helper\RecordLog;
+use Illuminate\Support\Facades\Auth;
 use App\User;
 class PasienController extends Controller
 {
@@ -107,7 +108,7 @@ class PasienController extends Controller
     public function deleteDataPasienPulang($idPasien){
         $dataPasien = Pasien::where('idPasien', $idPasien)->first();
         $status = "Data Pasien $dataPasien->namaPasien Berhasil Dihapus!";
-        RecordLog::logRecord('DELETE', $dataPasien->idPasien, $dataPasien, null, null);
+        RecordLog::logRecord('DELETE', $dataPasien->idPasien, $dataPasien, null, Auth::user()->idUser);
         $dataPasien->delete();
        
         return response()->json([
@@ -165,7 +166,7 @@ class PasienController extends Controller
                 $dataPasien->petugasPerawat = $request->petugasPerawat;    
             }
             $dataPasien->save();
-            RecordLog::logRecord('INSERT', $dataPasien->idPasien, null, $dataPasien, null);
+            RecordLog::logRecord('INSERT', $dataPasien->idPasien, null, $dataPasien, Auth::user()->idUser);
             $status = "Data Pasien $dataPasien->namaPasien Berhasil Disimpan!";
             return response()->json([
                 'status' => $status,
@@ -197,7 +198,7 @@ class PasienController extends Controller
             $pasienPulang->petugasPerawat = $request->petugasPerawat;
             $pasienPulang->isTerencana = $request->isTerencana;
             $pasienPulang->save();
-            RecordLog::logRecord('UPDATE', $pasienPulang->idPasien, $pasienDataOld, $pasienPulang, null);
+            RecordLog::logRecord('UPDATE', $pasienPulang->idPasien, $pasienDataOld, $pasienPulang, Auth::user()->idUser);
             $status = "Data Pasien $pasienPulang->namaPasien Berhasil DiUpdate!";
             return response()->json([
                 'status' => $status,
@@ -324,7 +325,7 @@ class PasienController extends Controller
             ->where('tanggal', '<=', $tglAkhir)
             ->orderBy('created_at','asc')
             ->get();
-        RecordLog::logRecord('REPORT', null, $tglAwal, $tglAkhir, null);
+        RecordLog::logRecord('REPORT', null, $tglAwal, $tglAkhir, Auth::user()->idUser);
         $status = "Data Terkonversi ke Excel";
         return response()->json([
             'status' => $status,

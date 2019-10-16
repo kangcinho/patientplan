@@ -1869,6 +1869,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'LoginPage',
   data: function data() {
@@ -1876,6 +1881,12 @@ __webpack_require__.r(__webpack_exports__);
       login: {
         username: null,
         password: null
+      },
+      errorLogin: {
+        usernameError: false,
+        usernameMessage: null,
+        passwordError: false,
+        passwordMessage: null
       }
     };
   },
@@ -1883,21 +1894,50 @@ __webpack_require__.r(__webpack_exports__);
     loginUser: function loginUser() {
       var _this = this;
 
-      this.$store.dispatch('loginUser', this.login).then(function (respon) {
-        _this.$buefy.notification.open({
-          message: respon,
-          type: 'is-info'
-        });
+      if (this.validasiLogin()) {
+        this.$store.dispatch('loginUser', this.login).then(function (respon) {
+          _this.clearField();
 
-        _this.$router.push({
-          'name': 'PasienPage'
+          _this.$buefy.notification.open({
+            message: respon,
+            type: 'is-info'
+          });
+
+          _this.$router.push({
+            'name': 'PasienPage'
+          });
+        })["catch"](function (respon) {
+          _this.$buefy.notification.open({
+            message: respon,
+            type: 'is-danger'
+          });
         });
-      })["catch"](function (respon) {
-        _this.$buefy.notification.open({
-          message: respon,
-          type: 'is-danger'
-        });
-      });
+      }
+    },
+    validasiLogin: function validasiLogin() {
+      if (this.login.username == '' || this.login.username == null) {
+        this.errorLogin.usernameError = true;
+        this.errorLogin.usernameMessage = "Cukup Hatiku Sayang Kosong, Username jangan..";
+        return false;
+      } else {
+        this.errorLogin.usernameError = false;
+        this.errorLogin.usernameMessage = null;
+      }
+
+      if (this.login.password == '' || this.login.password == null) {
+        this.errorLogin.passwordError = true;
+        this.errorLogin.passwordMessage = "Berat Jika Hati ini Kosong, Begitu Juga Jika Password ini";
+        return false;
+      } else {
+        this.errorLogin.passwordError = false;
+        this.errorLogin.passwordMessage = null;
+      }
+
+      return true;
+    },
+    clearField: function clearField() {
+      this.errorLogin.passwordError = this.errorLogin.usernameError = false;
+      this.errorLogin.passwordMessage = this.errorLogin.usernameMessage = this.login.username = this.login.password = null;
     }
   }
 });
@@ -2028,7 +2068,19 @@ __webpack_require__.r(__webpack_exports__);
           _this.hapusData();
 
           _this.$parent.close();
-        })["catch"](function (respon) {});
+
+          _this.$buefy.notification.open({
+            message: respon,
+            type: 'is-success'
+          });
+        })["catch"](function (respon) {
+          _this.$parent.close();
+
+          _this.$buefy.notification.open({
+            message: respon,
+            type: 'is-danger'
+          });
+        });
       }
     },
     validasiData: function validasiData() {
@@ -2142,6 +2194,8 @@ __webpack_require__.r(__webpack_exports__);
           type: 'is-success'
         });
       })["catch"](function (respon) {
+        _this.$parent.close();
+
         _this.$buefy.notification.open({
           message: respon,
           type: 'is-danger'
@@ -2909,6 +2963,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2999,6 +3058,10 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
+    clearTanggal: function clearTanggal() {
+      this.tanggalSearch = null;
+      this.searchNamaPasienToDB();
+    },
     modalEksportData: function modalEksportData() {
       this.$buefy.modal.open({
         parent: this,
@@ -3413,6 +3476,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3423,6 +3498,11 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       isTambahData: false,
+      errorDataUserNew: {
+        username: false,
+        email: false,
+        namaUser: false
+      },
       dataUserNew: {
         username: null,
         email: null,
@@ -3432,6 +3512,11 @@ __webpack_require__.r(__webpack_exports__);
         canUpdate: false,
         canDelete: false,
         canEkspor: false
+      },
+      errorDataUserEdit: {
+        username: false,
+        email: false,
+        namaUser: false
       },
       dataUserEdit: {
         idUser: null,
@@ -3509,49 +3594,58 @@ __webpack_require__.r(__webpack_exports__);
     saveDataUser: function saveDataUser() {
       var _this3 = this;
 
-      this.isLoading = true;
-      this.$store.dispatch('saveDataUser', this.dataUserNew).then(function (respon) {
-        _this3.isLoading = false;
-        _this3.isTambahData = false;
+      if (this.validasiSaveData(this.dataUserNew, this.errorDataUserNew)) {
+        this.isLoading = true;
+        this.$store.dispatch('saveDataUser', this.dataUserNew).then(function (respon) {
+          _this3.isLoading = false;
+          _this3.isTambahData = false;
 
-        _this3.hapusFieldAll();
+          _this3.hapusFieldAll();
 
-        _this3.$buefy.notification.open({
-          message: respon,
-          type: 'is-success'
+          _this3.$buefy.notification.open({
+            message: respon,
+            type: 'is-success'
+          });
+        })["catch"](function (respon) {
+          _this3.isLoading = false;
+
+          _this3.$buefy.notification.open({
+            message: respon,
+            type: 'is-danger'
+          });
         });
-      })["catch"](function (respon) {
-        _this3.isLoading = false;
-
-        _this3.$buefy.notification.open({
-          message: respon,
-          type: 'is-danger'
-        });
-      });
+      }
     },
     updateDataUser: function updateDataUser(userData) {
       var _this4 = this;
 
       this.dataUserEdit.idUser = userData.idUser;
-      userData.isEdit = false;
-      this.isLoading = true;
-      this.$store.dispatch('updateDataUser', this.dataUserEdit).then(function (respon) {
-        _this4.isLoading = false;
-        _this4.isTambahData = false;
-        _this4.disableEdit = false; // this.hapusFieldAll()
 
-        _this4.$buefy.notification.open({
-          message: respon,
-          type: 'is-success'
-        });
-      })["catch"](function (respon) {
-        _this4.isLoading = false;
+      if (this.validasiSaveData(this.dataUserEdit, this.errorDataUserEdit)) {
+        userData.isEdit = false;
+        this.isLoading = true;
+        this.$store.dispatch('updateDataUser', this.dataUserEdit).then(function (respon) {
+          _this4.isLoading = false;
+          _this4.isTambahData = false;
+          _this4.disableEdit = false;
 
-        _this4.$buefy.notification.open({
-          message: respon,
-          type: 'is-danger'
+          _this4.hapusFieldAll();
+
+          _this4.$buefy.notification.open({
+            message: respon,
+            type: 'is-success'
+          });
+        })["catch"](function (respon) {
+          _this4.isLoading = false;
+          _this4.isTambahData = false;
+          _this4.disableEdit = false;
+
+          _this4.$buefy.notification.open({
+            message: respon,
+            type: 'is-danger'
+          });
         });
-      });
+      }
     },
     deleteDataUser: function deleteDataUser(userData) {
       var nama = userData.namaUser;
@@ -3566,6 +3660,30 @@ __webpack_require__.r(__webpack_exports__);
           'method': 'deleteDataUser'
         }
       });
+    },
+    validasiSaveData: function validasiSaveData(dataUser, errorDataUser) {
+      if (dataUser.username == null || dataUser.username == '') {
+        errorDataUser.username = true;
+        return false;
+      } else {
+        errorDataUser.username = false;
+      }
+
+      if (dataUser.email == null || dataUser.email == '') {
+        errorDataUser.email = true;
+        return false;
+      } else {
+        errorDataUser.email = false;
+      }
+
+      if (dataUser.namaUser == null || dataUser.namaUser == '') {
+        errorDataUser.namaUser = true;
+        return false;
+      } else {
+        errorDataUser.namaUser = false;
+      }
+
+      return true;
     },
     changeToEditMode: function changeToEditMode(userData, mode) {
       var _this5 = this;
@@ -3592,7 +3710,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     hapusFieldAll: function hapusFieldAll() {
       this.dataUserNew.username = this.dataUserNew.email = this.dataUserNew.namaUser = this.dataUserEdit.username = this.dataUserEdit.email = this.dataUserEdit.namaUser = this.dataUserEdit.idUser = null;
-      this.dataUserNew.canAdmin = this.dataUserNew.canInsert = this.dataUserNew.canUpdate = this.dataUserNew.canDelete = this.dataUserNew.canEkspor = this.dataUserEdit.canAdmin = this.dataUserEdit.canInsert = this.dataUserEdit.canUpdate = this.dataUserEdit.canDelete = this.dataUserEdit.canEkspor = false;
+      this.dataUserNew.canAdmin = this.dataUserNew.canInsert = this.dataUserNew.canUpdate = this.dataUserNew.canDelete = this.dataUserNew.canEkspor = this.dataUserEdit.canAdmin = this.dataUserEdit.canInsert = this.dataUserEdit.canUpdate = this.dataUserEdit.canDelete = this.dataUserEdit.canEkspor = this.errorDataUserNew.username = this.errorDataUserNew.email = this.errorDataUserNew.namaUser = false;
     },
     fillData: function fillData(userData) {
       this.dataUserEdit.idUser = userData.idUser;
@@ -3758,6 +3876,11 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
 //
 //
 //
@@ -17193,7 +17316,13 @@ var render = function() {
           [
             _c(
               "b-field",
-              { attrs: { label: "Username" } },
+              {
+                attrs: {
+                  label: "Username",
+                  type: _vm.errorLogin.usernameError ? "is-danger" : "",
+                  message: _vm.errorLogin.usernameMessage
+                }
+              },
               [
                 _c("b-input", {
                   model: {
@@ -17210,13 +17339,30 @@ var render = function() {
             _vm._v(" "),
             _c(
               "b-field",
-              { attrs: { label: "Password" } },
+              {
+                attrs: {
+                  label: "Password",
+                  type: _vm.errorLogin.passwordError ? "is-danger" : "",
+                  message: _vm.errorLogin.passwordMessage
+                }
+              },
               [
                 _c("b-input", {
                   attrs: {
                     type: "password",
                     "password-reveal": "",
                     "icon-pack": "fas"
+                  },
+                  nativeOn: {
+                    keyup: function($event) {
+                      if (
+                        !$event.type.indexOf("key") &&
+                        _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                      ) {
+                        return null
+                      }
+                      return _vm.loginUser($event)
+                    }
                   },
                   model: {
                     value: _vm.login.password,
@@ -18299,14 +18445,14 @@ var render = function() {
             [
               _c("b-datepicker", {
                 attrs: {
+                  expanded: "",
                   "icon-pack": "fas",
                   icon: "calendar-alt",
                   "date-formatter": function(date) {
                     return _vm.$moment(date).format("DD MMM YYYY")
                   },
                   placeholder: "Pilih Periode Pasien Pulang",
-                  rounded: "",
-                  editable: ""
+                  rounded: ""
                 },
                 on: { input: _vm.searchNamaPasienToDB },
                 nativeOn: {
@@ -18327,6 +18473,11 @@ var render = function() {
                   },
                   expression: "tanggalSearch"
                 }
+              }),
+              _vm._v(" "),
+              _c("b-button", {
+                attrs: { "icon-pack": "fas", "icon-left": "times" },
+                on: { click: _vm.clearTanggal }
               })
             ],
             1
@@ -19142,7 +19293,7 @@ var render = function() {
                   _c("b-input", {
                     ref: "search",
                     attrs: {
-                      placeholder: "Search...",
+                      placeholder: "Search Nama User..",
                       autofocus: "",
                       type: "search",
                       "icon-pack": "fas",
@@ -19227,20 +19378,37 @@ var render = function() {
                             _c(
                               "td",
                               [
-                                _c("b-input", {
-                                  attrs: {
-                                    size: "is-small",
-                                    placeholder: "Username",
-                                    rounded: ""
+                                _c(
+                                  "b-field",
+                                  {
+                                    attrs: {
+                                      type: _vm.errorDataUserNew.username
+                                        ? "is-danger"
+                                        : ""
+                                    }
                                   },
-                                  model: {
-                                    value: _vm.dataUserNew.username,
-                                    callback: function($$v) {
-                                      _vm.$set(_vm.dataUserNew, "username", $$v)
-                                    },
-                                    expression: "dataUserNew.username"
-                                  }
-                                })
+                                  [
+                                    _c("b-input", {
+                                      attrs: {
+                                        size: "is-small",
+                                        placeholder: "Username",
+                                        rounded: ""
+                                      },
+                                      model: {
+                                        value: _vm.dataUserNew.username,
+                                        callback: function($$v) {
+                                          _vm.$set(
+                                            _vm.dataUserNew,
+                                            "username",
+                                            $$v
+                                          )
+                                        },
+                                        expression: "dataUserNew.username"
+                                      }
+                                    })
+                                  ],
+                                  1
+                                )
                               ],
                               1
                             ),
@@ -19248,21 +19416,38 @@ var render = function() {
                             _c(
                               "td",
                               [
-                                _c("b-input", {
-                                  attrs: {
-                                    size: "is-small",
-                                    placeholder: "kangcinho@gmail.com",
-                                    rounded: "",
-                                    type: "email"
+                                _c(
+                                  "b-field",
+                                  {
+                                    attrs: {
+                                      type: _vm.errorDataUserNew.email
+                                        ? "is-danger"
+                                        : ""
+                                    }
                                   },
-                                  model: {
-                                    value: _vm.dataUserNew.email,
-                                    callback: function($$v) {
-                                      _vm.$set(_vm.dataUserNew, "email", $$v)
-                                    },
-                                    expression: "dataUserNew.email"
-                                  }
-                                })
+                                  [
+                                    _c("b-input", {
+                                      attrs: {
+                                        size: "is-small",
+                                        placeholder: "kangcinho@gmail.com",
+                                        rounded: "",
+                                        type: "email"
+                                      },
+                                      model: {
+                                        value: _vm.dataUserNew.email,
+                                        callback: function($$v) {
+                                          _vm.$set(
+                                            _vm.dataUserNew,
+                                            "email",
+                                            $$v
+                                          )
+                                        },
+                                        expression: "dataUserNew.email"
+                                      }
+                                    })
+                                  ],
+                                  1
+                                )
                               ],
                               1
                             ),
@@ -19270,20 +19455,37 @@ var render = function() {
                             _c(
                               "td",
                               [
-                                _c("b-input", {
-                                  attrs: {
-                                    size: "is-small",
-                                    placeholder: "Nama User",
-                                    rounded: ""
+                                _c(
+                                  "b-field",
+                                  {
+                                    attrs: {
+                                      type: _vm.errorDataUserNew.namaUser
+                                        ? "is-danger"
+                                        : ""
+                                    }
                                   },
-                                  model: {
-                                    value: _vm.dataUserNew.namaUser,
-                                    callback: function($$v) {
-                                      _vm.$set(_vm.dataUserNew, "namaUser", $$v)
-                                    },
-                                    expression: "dataUserNew.namaUser"
-                                  }
-                                })
+                                  [
+                                    _c("b-input", {
+                                      attrs: {
+                                        size: "is-small",
+                                        placeholder: "Nama User",
+                                        rounded: ""
+                                      },
+                                      model: {
+                                        value: _vm.dataUserNew.namaUser,
+                                        callback: function($$v) {
+                                          _vm.$set(
+                                            _vm.dataUserNew,
+                                            "namaUser",
+                                            $$v
+                                          )
+                                        },
+                                        expression: "dataUserNew.namaUser"
+                                      }
+                                    })
+                                  ],
+                                  1
+                                )
                               ],
                               1
                             ),
@@ -19418,28 +19620,43 @@ var render = function() {
                           _c(
                             "td",
                             [
-                              user.isEdit
-                                ? _c("b-input", {
-                                    attrs: {
-                                      size: "is-small",
-                                      placeholder: "Username",
-                                      rounded: ""
-                                    },
-                                    model: {
-                                      value: _vm.dataUserEdit.username,
-                                      callback: function($$v) {
-                                        _vm.$set(
-                                          _vm.dataUserEdit,
-                                          "username",
-                                          $$v
+                              _c(
+                                "b-field",
+                                {
+                                  attrs: {
+                                    type: _vm.errorDataUserEdit.username
+                                      ? "is-danger"
+                                      : ""
+                                  }
+                                },
+                                [
+                                  user.isEdit
+                                    ? _c("b-input", {
+                                        attrs: {
+                                          size: "is-small",
+                                          placeholder: "Username",
+                                          rounded: ""
+                                        },
+                                        model: {
+                                          value: _vm.dataUserEdit.username,
+                                          callback: function($$v) {
+                                            _vm.$set(
+                                              _vm.dataUserEdit,
+                                              "username",
+                                              $$v
+                                            )
+                                          },
+                                          expression: "dataUserEdit.username"
+                                        }
+                                      })
+                                    : _c("span", [
+                                        _vm._v(
+                                          " " + _vm._s(user.username) + " "
                                         )
-                                      },
-                                      expression: "dataUserEdit.username"
-                                    }
-                                  })
-                                : _c("span", [
-                                    _vm._v(" " + _vm._s(user.username) + " ")
-                                  ])
+                                      ])
+                                ],
+                                1
+                              )
                             ],
                             1
                           ),
@@ -19447,25 +19664,42 @@ var render = function() {
                           _c(
                             "td",
                             [
-                              user.isEdit
-                                ? _c("b-input", {
-                                    attrs: {
-                                      size: "is-small",
-                                      placeholder: "kangcinho@gmail.com",
-                                      rounded: "",
-                                      type: "email"
-                                    },
-                                    model: {
-                                      value: _vm.dataUserEdit.email,
-                                      callback: function($$v) {
-                                        _vm.$set(_vm.dataUserEdit, "email", $$v)
-                                      },
-                                      expression: "dataUserEdit.email"
-                                    }
-                                  })
-                                : _c("span", [
-                                    _vm._v(" " + _vm._s(user.email) + " ")
-                                  ])
+                              _c(
+                                "b-field",
+                                {
+                                  attrs: {
+                                    type: _vm.errorDataUserEdit.email
+                                      ? "is-danger"
+                                      : ""
+                                  }
+                                },
+                                [
+                                  user.isEdit
+                                    ? _c("b-input", {
+                                        attrs: {
+                                          size: "is-small",
+                                          placeholder: "kangcinho@gmail.com",
+                                          rounded: "",
+                                          type: "email"
+                                        },
+                                        model: {
+                                          value: _vm.dataUserEdit.email,
+                                          callback: function($$v) {
+                                            _vm.$set(
+                                              _vm.dataUserEdit,
+                                              "email",
+                                              $$v
+                                            )
+                                          },
+                                          expression: "dataUserEdit.email"
+                                        }
+                                      })
+                                    : _c("span", [
+                                        _vm._v(" " + _vm._s(user.email) + " ")
+                                      ])
+                                ],
+                                1
+                              )
                             ],
                             1
                           ),
@@ -19473,28 +19707,43 @@ var render = function() {
                           _c(
                             "td",
                             [
-                              user.isEdit
-                                ? _c("b-input", {
-                                    attrs: {
-                                      size: "is-small",
-                                      placeholder: "Nama User",
-                                      rounded: ""
-                                    },
-                                    model: {
-                                      value: _vm.dataUserEdit.namaUser,
-                                      callback: function($$v) {
-                                        _vm.$set(
-                                          _vm.dataUserEdit,
-                                          "namaUser",
-                                          $$v
+                              _c(
+                                "b-field",
+                                {
+                                  attrs: {
+                                    type: _vm.errorDataUserEdit.namaUser
+                                      ? "is-danger"
+                                      : ""
+                                  }
+                                },
+                                [
+                                  user.isEdit
+                                    ? _c("b-input", {
+                                        attrs: {
+                                          size: "is-small",
+                                          placeholder: "Nama User",
+                                          rounded: ""
+                                        },
+                                        model: {
+                                          value: _vm.dataUserEdit.namaUser,
+                                          callback: function($$v) {
+                                            _vm.$set(
+                                              _vm.dataUserEdit,
+                                              "namaUser",
+                                              $$v
+                                            )
+                                          },
+                                          expression: "dataUserEdit.namaUser"
+                                        }
+                                      })
+                                    : _c("span", [
+                                        _vm._v(
+                                          " " + _vm._s(user.namaUser) + " "
                                         )
-                                      },
-                                      expression: "dataUserEdit.namaUser"
-                                    }
-                                  })
-                                : _c("span", [
-                                    _vm._v(" " + _vm._s(user.namaUser) + " ")
-                                  ])
+                                      ])
+                                ],
+                                1
+                              )
                             ],
                             1
                           ),
@@ -19997,6 +20246,23 @@ var render = function() {
                 },
                 [_vm._v("\n        Logout\n      ")]
               )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "template",
+        { slot: "end" },
+        [
+          _vm.getDataUser
+            ? _c("b-navbar-item", [
+                _vm._v(
+                  "\n      Tercinta, " +
+                    _vm._s(_vm.getDataUser.namaUser) +
+                    "\n    "
+                )
+              ])
+            : _vm._e()
         ],
         1
       )
@@ -41829,6 +42095,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _pasienTypeMutations__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./pasienTypeMutations */ "./resources/js/store/pasien/pasienTypeMutations.js");
 
+ // axios.interceptors.response.use((respon) => {
+//   if(respon.data.error == "Unauthorized"){
+//     console.log('Intersepsion')
+//     commit('SET_DATA_USER_LOGIN', null, {root: true})
+//     commit('SET_DATA_USER_TOKEN', null, {root: true})
+//     delete axios.defaults.headers.common['Authorization']
+//   }
+//   return respon
+// })
 
 var actions = {
   getDataPasienRegistrasiFromSanata: function getDataPasienRegistrasiFromSanata(_ref) {
@@ -41898,7 +42173,12 @@ var actions = {
     return new Promise(function (berhasil, gagal) {
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/api/getDataExportPasienPulang', data).then(function (respon) {
         commit(_pasienTypeMutations__WEBPACK_IMPORTED_MODULE_1__["EXPORT_DATA_TO_EXCEL"], respon.data.dataPasien);
-        berhasil(respon.data.status);
+
+        if (respon.data.dataPasien.length > 0) {
+          berhasil(respon.data.status);
+        } else {
+          berhasil("Data Riwayat Pulang Kosong, Tidak Ada Data Di Import");
+        }
       })["catch"](function (error) {
         gagal(error.response.data.error);
       });
@@ -42432,8 +42712,8 @@ var SET_DATA_USER_TOTAL = 'SET_DATA_USER_TOTAL';
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\Develover\ongoing\pasienPulang\pasien\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! D:\Develover\ongoing\pasienPulang\pasien\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\DEVELOVER\pasienPulang\pasien\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\DEVELOVER\pasienPulang\pasien\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
