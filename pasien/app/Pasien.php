@@ -16,7 +16,7 @@ class Pasien extends Model
     public function getIDPasien(){
         $tanggal = Date('ymd');
         $time = microtime(true) * 1000;
-        $time = substr($time, -8,6);
+        // $time = substr($time, -8,6);
         return  $tanggal.'PSN-'.$time;
     }
 }

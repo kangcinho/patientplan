@@ -14,7 +14,7 @@ class Log extends Model
     public function getIDLog(){
         $tanggal = Date('ymd');
         $time = microtime(true) * 1000;
-        $time = substr($time, -8,6);
+        // $time = substr($time, -8,6);
         return  $tanggal.'LOG-'.$time;
     }
 }

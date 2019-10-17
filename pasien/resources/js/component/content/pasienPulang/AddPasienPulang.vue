@@ -226,7 +226,8 @@ export default {
         keterangan:'',
         isWaktu: false,
         isTerencana: false,
-        noKartu: null
+        noKartu: null,
+        namaDokter: null
       },
       errorValidasi:{
         tanggal: null,
@@ -266,11 +267,12 @@ export default {
       this.dataPasienPulang.kamar = data.kamar
       this.dataPasienPulang.keterangan = data.keterangan
       this.dataPasienPulang.noKartu = data.noKartu
+      this.dataPasienPulang.namaDokter = data.namaDokter
       this.isComponentModal = false
     },
     hapusFieldAll(){
       this.dataPasienPulang.tanggal= null
-      this.dataPasienPulang.noKartu = this.dataPasienPulang.noReg = this.dataPasienPulang.nrm = this.dataPasienPulang.namaPasien = this.dataPasienPulang.kamar = this.dataPasienPulang.petugasFO = this.dataPasienPulang.petugasPerawat = this.dataPasienPulang.keterangan = ''
+      this.dataPasienPulang.noKartu = this.dataPasienPulang.noReg = this.dataPasienPulang.nrm = this.dataPasienPulang.namaPasien = this.dataPasienPulang.kamar = this.dataPasienPulang.petugasFO = this.dataPasienPulang.petugasPerawat = this.dataPasienPulang.keterangan = this.dataPasienPulang.namaDokter = ''
       this.dataPasienPulang.waktuVerif = this.dataPasienPulang.waktuIKS = this.dataPasienPulang.waktuSelesai = this.dataPasienPulang.waktuPasien = this.dataPasienPulang.waktuLunas = null
       this.dataPasienPulang.isTerencana = this.dataPasienPulang.isWaktu = this.isComponentModal = false
     },

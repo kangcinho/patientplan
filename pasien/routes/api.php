@@ -39,7 +39,6 @@ Route::group(['middleware' => 'auth:api'], function(){
 //Automatisasi Riwata Pasien Pulang with Cronjob
 Route::get('autoGetPasien', 'PasienController@autoGetPasien');
 
-
 //AUTH
 Route::post('login','UserAuthController@login');
 Route::get('logout', 'UserAuthController@logout');

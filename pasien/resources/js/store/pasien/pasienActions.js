@@ -1,15 +1,19 @@
 import axios from 'axios'
 import * as type from './pasienTypeMutations'
+import store from '../store'
+import router from '../../router'
 
-// axios.interceptors.response.use((respon) => {
-//   if(respon.data.error == "Unauthorized"){
-//     console.log('Intersepsion')
-//     commit('SET_DATA_USER_LOGIN', null, {root: true})
-//     commit('SET_DATA_USER_TOKEN', null, {root: true})
-//     delete axios.defaults.headers.common['Authorization']
-//   }
-//   return respon
-// })
+axios.interceptors.response.use((respon) => {
+  if(respon.data.error == "Unauthorized"){
+    console.log('Intersepsion')
+    store.dispatch('tokenExpr')
+    delete axios.defaults.headers.common['Authorization']
+    router.push({'name': 'LoginPageSecond'})
+    return
+  }
+  return respon
+})
+
 const actions = {
   getDataPasienRegistrasiFromSanata({commit}){
     return new Promise( (berhasil, gagal) => {
@@ -27,6 +31,7 @@ const actions = {
       axios.post('/api/saveDataPasienPulang', data)
       .then( (respon) => {
         commit(type.ADD_DATA_PASIEN_PULANG, respon.data.dataPasien)
+        commit(type.SET_DATA_JUMLAH_TOTAL_PASIEN, 1)
         if(respon.status == 200){
           berhasil(respon.data.status)
         }
@@ -70,6 +75,7 @@ const actions = {
       .then( (respon) => {
         if(respon.status == 200){
           commit(type.DELETE_DATA_PASIEN_PULANG, data)
+          commit(type.SET_DATA_JUMLAH_TOTAL_PASIEN, -1)
           berhasil(respon.data.status)
         }
       })

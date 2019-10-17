@@ -33,16 +33,16 @@
       </b-input>
     </div>
     <div class="column is-full">
-      <div >
+      <span>Total Pasien Pulang: <strong> {{totalPasien}} </strong></span>
       <table class="table is-bordered is-striped is-narrow is-fullwidth" style="font-size:0.6em;">
         <thead>
           <tr>
             <th rowspan="2" class="has-text-centered sizeKeterangan">Tgl Pulang</th>
             <th rowspan="2" class="has-text-centered sizeKamar">Kmr</th>
             <th rowspan="2" class="has-text-centered sizeKeterangan">Nama Pasien</th>
+            <th rowspan="2" class="has-text-centered sizeKeterangan">Keterangan</th>
             <th colspan="5" class="has-text-centered">Waktu Konfirmasi</th>
             <th colspan="2" class="has-text-centered">Petugas Jaga</th>
-            <th rowspan="2" class="has-text-centered sizeKeterangan">Keterangan</th>
             <th rowspan="2" class="has-text-centered sizeKeterangan">Action</th>
           </tr>
         <tr>
@@ -74,6 +74,7 @@
               </td>
             <td class="has-text-centered wrapWord sizeKamar">{{ pasien.kamar }}</td>
             <td class="has-text-centered wrapWord sizeKeterangan">{{ pasien.namaPasien }}</td>
+            <td class="has-text-centered wrapWord sizeKeterangan">{{ pasien.keterangan }} <br/> {{ pasien.noKartu }} </td>
             <td class="has-text-centered sizeWaktu">
               <span v-if="!pasien.isEdit">{{ pasien.waktuVerif | showOnlyTime }}</span>
               <span v-else>
@@ -174,7 +175,6 @@
                 </b-autocomplete>
               </span>
             </td>
-            <td class="has-text-centered wrapWord sizeKeterangan">{{ pasien.keterangan }} <br/> {{ pasien.noKartu }} </td>
             <td class="has-text-centered wrapWord sizeKeterangan">
               <b-button 
                 type="is-info"
@@ -229,7 +229,6 @@
           </tr>
         </tbody>
       </table>
-      </div>
       <br/>
       <b-pagination
         icon-pack="fas"
@@ -303,10 +302,13 @@ export default {
       isModalKonfirmasiHapusData: false,
       isAllPeriode: false,
       tanggalSearch: new Date(),
-      isLoading: false
+      isLoading: false,
     }
   },
   computed:{
+    totalPasien(){
+      return this.$store.getters.getTotalPasienPulang
+    },
     getPasienPulang(){
       return this.$store.getters.getPasienPulang
     },
