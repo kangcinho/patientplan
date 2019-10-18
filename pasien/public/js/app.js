@@ -2592,7 +2592,8 @@ __webpack_require__.r(__webpack_exports__);
         isWaktu: false,
         isTerencana: false,
         noKartu: null,
-        namaDokter: null
+        namaDokter: null,
+        kodeKelas: null
       },
       errorValidasi: {
         tanggal: null,
@@ -2631,11 +2632,12 @@ __webpack_require__.r(__webpack_exports__);
       this.dataPasienPulang.keterangan = data.keterangan;
       this.dataPasienPulang.noKartu = data.noKartu;
       this.dataPasienPulang.namaDokter = data.namaDokter;
+      this.dataPasienPulang.kodeKelas = data.kodeKelas;
       this.isComponentModal = false;
     },
     hapusFieldAll: function hapusFieldAll() {
       this.dataPasienPulang.tanggal = null;
-      this.dataPasienPulang.noKartu = this.dataPasienPulang.noReg = this.dataPasienPulang.nrm = this.dataPasienPulang.namaPasien = this.dataPasienPulang.kamar = this.dataPasienPulang.petugasFO = this.dataPasienPulang.petugasPerawat = this.dataPasienPulang.keterangan = this.dataPasienPulang.namaDokter = '';
+      this.dataPasienPulang.noKartu = this.dataPasienPulang.noReg = this.dataPasienPulang.nrm = this.dataPasienPulang.namaPasien = this.dataPasienPulang.kamar = this.dataPasienPulang.petugasFO = this.dataPasienPulang.petugasPerawat = this.dataPasienPulang.keterangan = this.dataPasienPulang.namaDokter = this.dataPasienPulang.kodeKelas = '';
       this.dataPasienPulang.waktuVerif = this.dataPasienPulang.waktuIKS = this.dataPasienPulang.waktuSelesai = this.dataPasienPulang.waktuPasien = this.dataPasienPulang.waktuLunas = null;
       this.dataPasienPulang.isTerencana = this.dataPasienPulang.isWaktu = this.isComponentModal = false;
     },
@@ -2970,6 +2972,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3014,6 +3026,9 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   computed: {
+    totalKamarDibersihkan: function totalKamarDibersihkan() {
+      return this.$store.getters.getTotalKamarPasienPulang;
+    },
     totalPasien: function totalPasien() {
       return this.$store.getters.getTotalPasienPulang;
     },
@@ -18443,7 +18458,38 @@ var render = function() {
     [
       _c(
         "div",
-        { staticClass: "column" },
+        { staticClass: "column is-full" },
+        [
+          _c("b-field", { attrs: { grouped: "", "group-multiline": "" } }, [
+            _c(
+              "div",
+              { staticClass: "control" },
+              [
+                _c(
+                  "b-taglist",
+                  { attrs: { attached: "" } },
+                  [
+                    _c("b-tag", { attrs: { type: "is-dark" } }, [
+                      _vm._v("Kamar")
+                    ]),
+                    _vm._v(" "),
+                    _c("b-tag", { attrs: { type: "is-info" } }, [
+                      _vm._v(_vm._s(_vm.totalKamarDibersihkan))
+                    ])
+                  ],
+                  1
+                )
+              ],
+              1
+            )
+          ])
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "column " },
         [
           _c(
             "b-field",
@@ -18529,11 +18575,6 @@ var render = function() {
         "div",
         { staticClass: "column is-full" },
         [
-          _c("span", [
-            _vm._v("Total Pasien Pulang: "),
-            _c("strong", [_vm._v(" " + _vm._s(_vm.totalPasien) + " ")])
-          ]),
-          _vm._v(" "),
           _c(
             "table",
             {
@@ -19080,11 +19121,15 @@ var render = function() {
                         ])
                       ])
                     ])
-                  ])
+                  ]),
+              _vm._v(" "),
+              _c("span", [
+                _vm._v("Total Data: "),
+                _c("strong", [_vm._v(" " + _vm._s(_vm.totalPasien) + " ")]),
+                _vm._v(" Data")
+              ])
             ]
           ),
-          _vm._v(" "),
-          _c("br"),
           _vm._v(" "),
           _c("b-pagination", {
             attrs: {
@@ -42159,6 +42204,7 @@ var actions = {
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post("/api/getDataPasienPulang", data).then(function (respon) {
         commit(_pasienTypeMutations__WEBPACK_IMPORTED_MODULE_1__["SET_DATA_PASIEN_PULANG"], respon.data.dataPasien);
         commit(_pasienTypeMutations__WEBPACK_IMPORTED_MODULE_1__["SET_DATA_TOTAL_PASIEN_PULANG"], respon.data.totalDataPasien);
+        commit(_pasienTypeMutations__WEBPACK_IMPORTED_MODULE_1__["SET_TOTAL_KAMAR_DIBERSIHKAN"], respon.data.totalKamarPasienPulang);
         berhasil('getDataPasienPulang berhasil');
       })["catch"](function (error) {
         gagal(error.response.data.error);
@@ -42242,6 +42288,9 @@ var getters = {
   },
   getExportPasienPulang: function getExportPasienPulang(state) {
     return state.dataExportPasienPulang;
+  },
+  getTotalKamarPasienPulang: function getTotalKamarPasienPulang(state) {
+    return state.totalKamarDibersihkan;
   }
 };
 /* harmony default export */ __webpack_exports__["default"] = (getters);
@@ -42269,6 +42318,8 @@ var mutations = (_mutations = {}, _defineProperty(_mutations, _pasienTypeMutatio
   state.dataPasienPulang = payload;
 }), _defineProperty(_mutations, _pasienTypeMutations__WEBPACK_IMPORTED_MODULE_0__["SET_DATA_JUMLAH_TOTAL_PASIEN"], function (state, payload) {
   state.totalPasienPulang += payload;
+}), _defineProperty(_mutations, _pasienTypeMutations__WEBPACK_IMPORTED_MODULE_0__["SET_TOTAL_KAMAR_DIBERSIHKAN"], function (state, payload) {
+  state.totalKamarDibersihkan = payload;
 }), _defineProperty(_mutations, _pasienTypeMutations__WEBPACK_IMPORTED_MODULE_0__["ADD_DATA_PASIEN_PULANG"], function (state, payload) {
   state.dataPasienPulang.push(payload);
   state.dataPasienRegistrasi.map(function (data) {
@@ -42322,7 +42373,8 @@ var state = {
   dataPasienRegistrasi: [],
   dataPasienPulang: [],
   totalPasienPulang: 0,
-  dataExportPasienPulang: []
+  dataExportPasienPulang: [],
+  totalKamarDibersihkan: 0
 };
 /* harmony default export */ __webpack_exports__["default"] = (state);
 
@@ -42332,7 +42384,7 @@ var state = {
 /*!**********************************************************!*\
   !*** ./resources/js/store/pasien/pasienTypeMutations.js ***!
   \**********************************************************/
-/*! exports provided: SET_DATA_PASIEN_REGISTRASI, SET_DATA_PASIEN_PULANG, ADD_DATA_PASIEN_PULANG, UPDATE_DATA_PASIEN_PULANG, SET_DATA_TOTAL_PASIEN_PULANG, DELETE_DATA_PASIEN_PULANG, EXPORT_DATA_TO_EXCEL, SET_DATA_JUMLAH_TOTAL_PASIEN */
+/*! exports provided: SET_DATA_PASIEN_REGISTRASI, SET_DATA_PASIEN_PULANG, ADD_DATA_PASIEN_PULANG, UPDATE_DATA_PASIEN_PULANG, SET_DATA_TOTAL_PASIEN_PULANG, DELETE_DATA_PASIEN_PULANG, EXPORT_DATA_TO_EXCEL, SET_DATA_JUMLAH_TOTAL_PASIEN, SET_TOTAL_KAMAR_DIBERSIHKAN */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -42345,6 +42397,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DELETE_DATA_PASIEN_PULANG", function() { return DELETE_DATA_PASIEN_PULANG; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EXPORT_DATA_TO_EXCEL", function() { return EXPORT_DATA_TO_EXCEL; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_DATA_JUMLAH_TOTAL_PASIEN", function() { return SET_DATA_JUMLAH_TOTAL_PASIEN; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_TOTAL_KAMAR_DIBERSIHKAN", function() { return SET_TOTAL_KAMAR_DIBERSIHKAN; });
 var SET_DATA_PASIEN_REGISTRASI = 'SET_DATA_PASIEN_REGISTRASI';
 var SET_DATA_PASIEN_PULANG = 'SET_DATA_PASIEN_PULANG';
 var ADD_DATA_PASIEN_PULANG = 'ADD_DATA_PASIEN_PULANG';
@@ -42353,6 +42406,7 @@ var SET_DATA_TOTAL_PASIEN_PULANG = 'SET_DATA_TOTAL_PASIEN_PULANG';
 var DELETE_DATA_PASIEN_PULANG = 'DELETE_DATA_PASIEN_PULANG';
 var EXPORT_DATA_TO_EXCEL = 'EXPORT_DATA_TO_EXCEL';
 var SET_DATA_JUMLAH_TOTAL_PASIEN = 'SET_DATA_JUMLAH_TOTAL_PASIEN';
+var SET_TOTAL_KAMAR_DIBERSIHKAN = 'SET_TOTAL_KAMAR_DIBERSIHKAN';
 
 /***/ }),
 

@@ -48,6 +48,7 @@ const actions = {
       .then( (respon) => {
         commit(type.SET_DATA_PASIEN_PULANG, respon.data.dataPasien)
         commit(type.SET_DATA_TOTAL_PASIEN_PULANG, respon.data.totalDataPasien)
+        commit(type.SET_TOTAL_KAMAR_DIBERSIHKAN, respon.data.totalKamarPasienPulang)
         berhasil('getDataPasienPulang berhasil')
       })
       .catch( (error) => {

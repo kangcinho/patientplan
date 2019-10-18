@@ -2,7 +2,8 @@ const state = {
   dataPasienRegistrasi: [],
   dataPasienPulang: [],
   totalPasienPulang: 0,
-  dataExportPasienPulang: []
+  dataExportPasienPulang: [],
+  totalKamarDibersihkan: 0,
 }
 
 export default state

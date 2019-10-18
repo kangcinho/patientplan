@@ -1,6 +1,16 @@
 <template>
   <div class="columns is-multiline">
-    <div class="column">
+    <div class="column is-full">
+      <b-field grouped group-multiline>
+        <div class="control">
+          <b-taglist attached>
+            <b-tag type="is-dark">Kamar</b-tag>
+            <b-tag type="is-info">{{ totalKamarDibersihkan }}</b-tag>
+          </b-taglist>
+        </div>
+      </b-field>
+    </div>      
+    <div class="column ">
       <b-field >
         <b-datepicker
           expanded
@@ -33,7 +43,6 @@
       </b-input>
     </div>
     <div class="column is-full">
-      <span>Total Pasien Pulang: <strong> {{totalPasien}} </strong></span>
       <table class="table is-bordered is-striped is-narrow is-fullwidth" style="font-size:0.6em;">
         <thead>
           <tr>
@@ -228,8 +237,9 @@
             </td>
           </tr>
         </tbody>
+        <span>Total Data: <strong> {{totalPasien}} </strong> Data</span>
       </table>
-      <br/>
+      
       <b-pagination
         icon-pack="fas"
         :total="pagging.total"
@@ -306,6 +316,9 @@ export default {
     }
   },
   computed:{
+    totalKamarDibersihkan(){
+      return this.$store.getters.getTotalKamarPasienPulang
+    },
     totalPasien(){
       return this.$store.getters.getTotalPasienPulang
     },

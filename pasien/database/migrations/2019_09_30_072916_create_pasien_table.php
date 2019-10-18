@@ -22,6 +22,7 @@ class CreatePasienTable extends Migration
             $table->string('namaPasien');
             $table->string('kamar');
             $table->string('namaDokter');
+            $table->string('kodeKelas');
             $table->datetime('waktuVerif')->nullable();
             $table->datetime('waktuIKS')->nullable();
             $table->datetime('waktuSelesai')->nullable();

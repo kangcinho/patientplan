@@ -11,7 +11,8 @@ const getters = {
     })
   },
   getTotalPasienPulang: (state) => state.totalPasienPulang,
-  getExportPasienPulang: (state) => state.dataExportPasienPulang
+  getExportPasienPulang: (state) => state.dataExportPasienPulang,
+  getTotalKamarPasienPulang: (state) => state.totalKamarDibersihkan,
 }
 
 export default getters

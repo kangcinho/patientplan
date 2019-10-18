@@ -9,6 +9,9 @@ const mutations = {
   [type.SET_DATA_JUMLAH_TOTAL_PASIEN](state, payload){
     state.totalPasienPulang += payload
   },
+  [type.SET_TOTAL_KAMAR_DIBERSIHKAN](state,payload){
+    state.totalKamarDibersihkan = payload
+  },
   [type.ADD_DATA_PASIEN_PULANG](state, payload){
     state.dataPasienPulang.push(payload)
     state.dataPasienRegistrasi.map( (data) => {

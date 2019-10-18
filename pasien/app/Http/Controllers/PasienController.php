@@ -15,7 +15,7 @@ class PasienController extends Controller
         
         $sanataRegistrasi = \DB::connection('sqlsrv')
             ->table('SIMtrRegistrasi')
-            ->selectRaw('SIMtrRegistrasi.NoReg as noReg, NRM as nrm, NamaPasien_Reg as namaPasien, SIMtrRegistrasi.NoAnggota as noKartu, NoKamar as kamar, SIMmJenisKerjasama.JenisKerjasama as jenisKerjasama, BPJSMurni, SilverPlus as silverPlus, NaikKelas as naikKelas, mCustomer.Nama_Customer as namaPerusahaan, mSupplier.Nama_Supplier as namaDokter')
+            ->selectRaw('SIMtrRegistrasi.NoReg as noReg, NRM as nrm, NamaPasien_Reg as namaPasien, SIMtrRegistrasi.NoAnggota as noKartu, NoKamar as kamar, SIMmJenisKerjasama.JenisKerjasama as jenisKerjasama, BPJSMurni, SilverPlus as silverPlus, NaikKelas as naikKelas, mCustomer.Nama_Customer as namaPerusahaan, mSupplier.Nama_Supplier as namaDokter, SIMtrRegistrasi.KdKelas as kodeKelas')
             ->join('SIMmJenisKerjasama', 'SIMmJenisKerjasama.JenisKerjasamaID', 'SIMtrRegistrasi.JenisKerjasamaID')
             ->join('SIMtrRegistrasiTujuan', 'SIMtrRegistrasi.NoReg', 'SIMtrRegistrasiTujuan.NoReg')
             ->join('mSupplier', 'mSupplier.Kode_Supplier', 'SIMtrRegistrasiTujuan.DokterID')
@@ -28,7 +28,7 @@ class PasienController extends Controller
 
         $sanataKasir = \DB::connection('sqlsrv')
                     ->table('SIMtrKasir')
-                    ->selectRaw('SIMtrRegistrasi.NoReg as noReg, SIMtrRegistrasi.NRM as nrm, SIMtrRegistrasi.NamaPasien_Reg as namaPasien, SIMtrRegistrasi.NoKamar as kamar, SIMtrRegistrasi.NoAnggota as noKartu, SIMmJenisKerjasama.JenisKerjasama as jenisKerjasama, SIMtrRegistrasi.BPJSMurni as BPJSMurni, SIMtrRegistrasi.SilverPlus as silverPlus, SIMtrRegistrasi.NaikKelas as naikKelas, mCustomer.Nama_Customer as namaPerusahaan, mSupplier.Nama_Supplier as namaDokter')
+                    ->selectRaw('SIMtrRegistrasi.NoReg as noReg, SIMtrRegistrasi.NRM as nrm, SIMtrRegistrasi.NamaPasien_Reg as namaPasien, SIMtrRegistrasi.NoKamar as kamar, SIMtrRegistrasi.NoAnggota as noKartu, SIMmJenisKerjasama.JenisKerjasama as jenisKerjasama, SIMtrRegistrasi.BPJSMurni as BPJSMurni, SIMtrRegistrasi.SilverPlus as silverPlus, SIMtrRegistrasi.NaikKelas as naikKelas, mCustomer.Nama_Customer as namaPerusahaan, mSupplier.Nama_Supplier as namaDokter, SIMtrRegistrasi.KdKelas as kodeKelas')
                     ->join('SIMtrRegistrasi', 'SIMtrRegistrasi.NoReg', 'SIMtrKasir.NoReg')
                     ->join('SIMmJenisKerjasama', 'SIMmJenisKerjasama.JenisKerjasamaID', 'SIMtrRegistrasi.JenisKerjasamaID')
                     ->join('SIMtrRegistrasiTujuan', 'SIMtrRegistrasi.NoReg', 'SIMtrRegistrasiTujuan.NoReg')
@@ -83,6 +83,7 @@ class PasienController extends Controller
     public function getDataPasienPulang(Request $request){
         $dataPasien = null;
         $totalDataPasien = null;
+        $dataPasienPulangFilter = null;
         if($request->tanggalSearch != null OR $request->tanggalSearch != ''){
             $tglSearch = explode(' ',$this->convertDate($request->tanggalSearch))[0];
             $dataPasien = Pasien::orderBy('tanggal', 'desc')
@@ -94,6 +95,10 @@ class PasienController extends Controller
             $totalDataPasien = Pasien::where('namaPasien','like',"%$request->searchNamaPasien%")
             ->where('tanggal', $tglSearch)
             ->count();
+            $dataPasienPulangFilter = Pasien::orderBy('tanggal', 'desc')
+            ->where('namaPasien','like',"%$request->searchNamaPasien%")
+            ->where('tanggal', $tglSearch)
+            ->get()->toArray();
         }else{
             $dataPasien = Pasien::orderBy('tanggal', 'desc')
             ->skip($request->firstPage)
@@ -101,11 +106,32 @@ class PasienController extends Controller
             ->where('namaPasien','like',"%$request->searchNamaPasien%")
             ->get();
             $totalDataPasien = Pasien::where('namaPasien','like',"%$request->searchNamaPasien%")->count();
+            $dataPasienPulangFilter = Pasien::orderBy('tanggal', 'desc')
+            ->where('namaPasien','like',"%$request->searchNamaPasien%")
+            ->get()->toArray();
         }
+        // $dataIni = [];
+        // $dataPasienPulangFilterReplika = $dataPasienPulangFilter;
         
+        // if(stripos($dataReplika['kamar'], $dataPasien['kamar']) !== false){
+        //     $dataIni[] = $dataReplika['kamar'];
+        // }
+        // $result = array_unique($dataIni);
+        // foreach($result as $data){
+        //     echo $data.'<br/>';
+        // }
+        // if(stripos('201.3.B2', '201.3') !== false){
+        //     echo 'masuk';
+        // }
+        // foreach($dataPasienPulangFilter as $dataReplika){
+        //     echo $dataReplika['kamar'].'<br/>';
+        // }
+        $dataPasienPulangFilter = count($dataPasienPulangFilter);
+        // dd($dataPasienPulangFilter);
         return response()->json([
             'dataPasien' => $dataPasien,
-            'totalDataPasien' => $totalDataPasien
+            'totalDataPasien' => $totalDataPasien,
+            'totalKamarPasienPulang' => $dataPasienPulangFilter
         ], 200);
     }
 
@@ -141,6 +167,7 @@ class PasienController extends Controller
             $dataPasien->noKartu = $request->noKartu;
             $dataPasien->keterangan = $request->keterangan;
             $dataPasien->namaDokter = $request->namaDokter;
+            $dataPasien->kodeKelas = $request->kodeKelas;
             $dataPasien->idUser = null;
             $dataPasien->waktuVerif = null;
             $dataPasien->waktuIKS = null;
@@ -257,7 +284,7 @@ class PasienController extends Controller
         foreach($dataNoRegIbu as $data){
             $sanataRegistrasi = \DB::connection('sqlsrv')
             ->table('SIMtrRegistrasi')
-            ->selectRaw('SIMtrRegistrasi.NoReg as noReg, NRM as nrm, NamaPasien_Reg as namaPasien, SIMtrRegistrasi.NoAnggota as noKartu, NoKamar as kamar, SIMmJenisKerjasama.JenisKerjasama as jenisKerjasama, BPJSMurni, SilverPlus as silverPlus, NaikKelas as naikKelas, mCustomer.Nama_Customer as namaPerusahaan, mSupplier.Nama_Supplier as namaDokter')
+            ->selectRaw('SIMtrRegistrasi.NoReg as noReg, NRM as nrm, NamaPasien_Reg as namaPasien, SIMtrRegistrasi.NoAnggota as noKartu, NoKamar as kamar, SIMmJenisKerjasama.JenisKerjasama as jenisKerjasama, BPJSMurni, SilverPlus as silverPlus, NaikKelas as naikKelas, mCustomer.Nama_Customer as namaPerusahaan, mSupplier.Nama_Supplier as namaDokter, SIMtrRegistrasi.KdKelas as kodeKelas')
             ->join('SIMmJenisKerjasama', 'SIMmJenisKerjasama.JenisKerjasamaID', 'SIMtrRegistrasi.JenisKerjasamaID')
             ->join('SIMtrRegistrasiTujuan', 'SIMtrRegistrasi.NoReg', 'SIMtrRegistrasiTujuan.NoReg')
             ->join('mSupplier', 'mSupplier.Kode_Supplier', 'SIMtrRegistrasiTujuan.DokterID')
@@ -280,7 +307,7 @@ class PasienController extends Controller
     public function autoGetPasienFromRegistrasi($jasaID){
         $sanataRegistrasi = \DB::connection('sqlsrv')
             ->table('SIMtrRJ')
-            ->selectRaw('SIMtrRJ.RegNo as noReg, SIMtrRJ.Tanggal as tanggal, SIMtrRegistrasi.NRM as nrm, SIMtrRegistrasi.NamaPasien_Reg as namaPasien, SIMtrRegistrasi.NoKamar as kamar, SIMtrRegistrasi.NoAnggota as noKartu, SIMmJenisKerjasama.JenisKerjasama as jenisKerjasama, SIMtrRegistrasi.BPJSMurni as BPJSMurni, SIMtrRegistrasi.SilverPlus as silverPlus, SIMtrRegistrasi.NaikKelas as naikKelas, mCustomer.Nama_Customer as namaPerusahaan, mSupplier.Nama_Supplier as namaDokter')
+            ->selectRaw('SIMtrRJ.RegNo as noReg, SIMtrRJ.Tanggal as tanggal, SIMtrRegistrasi.NRM as nrm, SIMtrRegistrasi.NamaPasien_Reg as namaPasien, SIMtrRegistrasi.NoKamar as kamar, SIMtrRegistrasi.NoAnggota as noKartu, SIMmJenisKerjasama.JenisKerjasama as jenisKerjasama, SIMtrRegistrasi.BPJSMurni as BPJSMurni, SIMtrRegistrasi.SilverPlus as silverPlus, SIMtrRegistrasi.NaikKelas as naikKelas, mCustomer.Nama_Customer as namaPerusahaan, mSupplier.Nama_Supplier as namaDokter, SIMtrRegistrasi.KdKelas as kodeKelas')
             ->join('SIMtrRJTransaksi', 'SIMtrRJ.NoBukti', 'SIMtrRJTransaksi.NoBukti')
             ->join('SIMtrRegistrasi', 'SIMtrRJ.RegNo', 'SIMtrRegistrasi.NoReg')
             ->join('SIMmJenisKerjasama', 'SIMmJenisKerjasama.JenisKerjasamaID', 'SIMtrRegistrasi.JenisKerjasamaID')
@@ -300,7 +327,7 @@ class PasienController extends Controller
         $tanggalKemarin = \Carbon\Carbon::now()->subDays(1)->toDateString();
         $sanataKasir = \DB::connection('sqlsrv')
             ->table('SIMtrRJ')
-            ->selectRaw('SIMtrRJ.RegNo as noReg, SIMtrRJ.Tanggal as tanggal, SIMtrRegistrasi.NRM as nrm, SIMtrRegistrasi.NamaPasien_Reg as namaPasien, SIMtrRegistrasi.NoKamar as kamar, SIMtrRegistrasi.NoAnggota as noKartu, SIMmJenisKerjasama.JenisKerjasama as jenisKerjasama, SIMtrRegistrasi.BPJSMurni as BPJSMurni, SIMtrRegistrasi.SilverPlus as silverPlus, SIMtrRegistrasi.NaikKelas as naikKelas, mCustomer.Nama_Customer as namaPerusahaan, mSupplier.Nama_Supplier as namaDokter')
+            ->selectRaw('SIMtrRJ.RegNo as noReg, SIMtrRJ.Tanggal as tanggal, SIMtrRegistrasi.NRM as nrm, SIMtrRegistrasi.NamaPasien_Reg as namaPasien, SIMtrRegistrasi.NoKamar as kamar, SIMtrRegistrasi.NoAnggota as noKartu, SIMmJenisKerjasama.JenisKerjasama as jenisKerjasama, SIMtrRegistrasi.BPJSMurni as BPJSMurni, SIMtrRegistrasi.SilverPlus as silverPlus, SIMtrRegistrasi.NaikKelas as naikKelas, mCustomer.Nama_Customer as namaPerusahaan, mSupplier.Nama_Supplier as namaDokter, SIMtrRegistrasi.KdKelas as kodeKelas')
             ->join('SIMtrRJTransaksi', 'SIMtrRJ.NoBukti', 'SIMtrRJTransaksi.NoBukti')
             ->join('SIMtrRegistrasi', 'SIMtrRJ.RegNo', 'SIMtrRegistrasi.NoReg')
             ->join('SIMmJenisKerjasama', 'SIMmJenisKerjasama.JenisKerjasamaID', 'SIMtrRegistrasi.JenisKerjasamaID')
@@ -352,6 +379,7 @@ class PasienController extends Controller
             $pasien->namaDokter = $dataPasien->namaDokter;
             $pasien->isTerencana = true;
             $pasien->noKartu = $dataPasien->noKartu;
+            $pasien->kodeKelas = $dataPasien->kodeKelas;
             $pasien->idUser = 'SYSTEM';
             $pasien->waktuVerif = null;
             $pasien->waktuIKS = null;
