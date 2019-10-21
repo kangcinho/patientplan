@@ -95,7 +95,7 @@ class PasienController extends Controller
             $totalDataPasien = Pasien::where('namaPasien','like',"%$request->searchNamaPasien%")
             ->where('tanggal', $tglSearch)
             ->count();
-            $dataPasienPulangFilter = Pasien::orderBy('tanggal', 'desc')
+            $dataPasienPulangFilter = Pasien::orderBy('tanggal', 'desc')->select('namaPasien','kamar', 'kodeKelas')
             ->where('namaPasien','like',"%$request->searchNamaPasien%")
             ->where('tanggal', $tglSearch)
             ->get()->toArray();
@@ -106,33 +106,53 @@ class PasienController extends Controller
             ->where('namaPasien','like',"%$request->searchNamaPasien%")
             ->get();
             $totalDataPasien = Pasien::where('namaPasien','like',"%$request->searchNamaPasien%")->count();
-            $dataPasienPulangFilter = Pasien::orderBy('tanggal', 'desc')
+            $dataPasienPulangFilter = Pasien::orderBy('tanggal', 'desc')->select('namaPasien','kamar','kodeKelas')
             ->where('namaPasien','like',"%$request->searchNamaPasien%")
             ->get()->toArray();
         }
-        // $dataIni = [];
-        // $dataPasienPulangFilterReplika = $dataPasienPulangFilter;
-        
-        // if(stripos($dataReplika['kamar'], $dataPasien['kamar']) !== false){
-        //     $dataIni[] = $dataReplika['kamar'];
-        // }
-        // $result = array_unique($dataIni);
-        // foreach($result as $data){
-        //     echo $data.'<br/>';
-        // }
-        // if(stripos('201.3.B2', '201.3') !== false){
-        //     echo 'masuk';
-        // }
-        // foreach($dataPasienPulangFilter as $dataReplika){
-        //     echo $dataReplika['kamar'].'<br/>';
-        // }
-        $dataPasienPulangFilter = count($dataPasienPulangFilter);
+        $dataPasienPulangFilter = count($this->cekKamar($dataPasienPulangFilter));
         // dd($dataPasienPulangFilter);
         return response()->json([
             'dataPasien' => $dataPasien,
             'totalDataPasien' => $totalDataPasien,
             'totalKamarPasienPulang' => $dataPasienPulangFilter
         ], 200);
+    }
+
+    public function cekKamar($arrayKamars){
+        $dataHasilFilter = [];
+        foreach($arrayKamars as $dataKamar) {
+            if(stripos($dataKamar['kamar'], 'R-BAYI') !== false){
+                if($dataKamar['kodeKelas'] == 15){
+                    if($this->cekKamarExist($dataHasilFilter, $dataKamar)){
+                        $dataHasilFilter[] = $dataKamar;
+                    }
+                }
+            }else{
+                if($this->cekKamarExist($dataHasilFilter, $dataKamar)){
+                    $dataHasilFilter[] = $dataKamar;
+                }
+            }
+        }
+        return $dataHasilFilter;
+    }
+
+    public function cekKamarExist($dataHasilFilter, $dataKamar){
+        $status = true;
+        if(count($dataHasilFilter) == 0){
+            return $status;
+        }
+        
+        if(stripos($dataKamar['kamar'], 'R-BAYI') !== false && $dataKamar['kodeKelas'] == 15){
+            return $status;
+        }
+
+        foreach($dataHasilFilter as $dataFilter){
+            if(stripos($dataKamar['namaPasien'], $dataFilter['namaPasien']) !== false){
+                $status = false;
+            }
+        }
+        return $status;
     }
 
     public function deleteDataPasienPulang($idPasien){
@@ -347,9 +367,19 @@ class PasienController extends Controller
     }
     public function autoSaveDataPasien($dataPasienCollection, $jumlahHari){
         foreach($dataPasienCollection as $dataPasien){
+            $status = "UPDATE";
             $pasien = Pasien::where('noReg', $dataPasien->noReg)->first();
-            if($pasien){
-                continue;
+            if(!$pasien){
+                $status = "INSERT";
+                $pasien = new Pasien;
+                $pasien->idPasien = $pasien->getIDPasien();
+                $pasien->waktuVerif = null;
+                $pasien->waktuIKS = null;
+                $pasien->waktuSelesai = null;
+                $pasien->waktuPasien = null;
+                $pasien->waktuLunas = null;
+                $pasien->petugasFO = null;
+                $pasien->petugasPerawat = null;
             }
 
             if($dataPasien->jenisKerjasama == "UMUM"){
@@ -368,8 +398,6 @@ class PasienController extends Controller
                 $dataPasien->keterangan = "IKS - ".$dataPasien->namaPerusahaan;
             }
 
-            $pasien = new Pasien;
-            $pasien->idPasien = $pasien->getIDPasien();
             $pasien->noReg = $dataPasien->noReg;
             $pasien->tanggal = \Carbon\Carbon::parse($dataPasien->tanggal)->addDays($jumlahHari);
             $pasien->nrm = $dataPasien->nrm;
@@ -381,16 +409,9 @@ class PasienController extends Controller
             $pasien->noKartu = $dataPasien->noKartu;
             $pasien->kodeKelas = $dataPasien->kodeKelas;
             $pasien->idUser = 'SYSTEM';
-            $pasien->waktuVerif = null;
-            $pasien->waktuIKS = null;
-            $pasien->waktuSelesai = null;
-            $pasien->waktuPasien = null;
-            $pasien->waktuLunas = null;
-            $pasien->petugasFO = null;
-            $pasien->petugasPerawat = null;
             $pasien->isEdit = false;
             $pasien->save();
-            RecordLog::logRecord('INSERT', $pasien->idPasien, null, $pasien, 'SYSTEM');
+            RecordLog::logRecord($status, $pasien->idPasien, null, $pasien, 'SYSTEM');
         }
     }
 

@@ -23,7 +23,7 @@
 import EventBus from '../../../eventBus'
 export default {
   name:"ModalKonfirmasiHapusData",
-  props:['nama','data', 'method'],
+  props:['nama','data', 'method', 'tanggal'],
   methods:{
     deleteData(){
       this.$store.dispatch(this.method, this.data)

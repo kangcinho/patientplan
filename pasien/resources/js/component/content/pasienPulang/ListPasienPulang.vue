@@ -4,7 +4,7 @@
       <b-field grouped group-multiline>
         <div class="control">
           <b-taglist attached>
-            <b-tag type="is-dark">Kamar</b-tag>
+            <b-tag type="is-dark">Clean Kamar</b-tag>
             <b-tag type="is-info">{{ totalKamarDibersihkan }}</b-tag>
           </b-taglist>
         </div>
@@ -256,16 +256,28 @@
         aria-current-label="Current page">
       </b-pagination>
     </div>
-    <b-button
-      type="is-primary"
-      size="is-small"
-      icon-pack="fas"
-      icon-left="download"
-      v-if="getDataUser.canEkspor"
-      @click="modalEksportData"
-      >
-      Export
-    </b-button>
+    <div class="buttons">
+      <b-button
+        type="is-primary"
+        size="is-small"
+        icon-pack="fas"
+        icon-left="download"
+        v-if="getDataUser.canEkspor"
+        @click="modalEksportData"
+        >
+        Export
+      </b-button>
+      <!-- <b-button
+        type="is-primary"
+        size="is-small"
+        icon-pack="fas"
+        icon-left="print"
+        v-if="getDataUser.canEkspor"
+        @click="modalEksportData"
+        >
+        Print
+      </b-button> -->
+    </div>
     <b-loading is-full-page :active.sync="isLoading" :can-cancel="false"></b-loading>
 
   </div>
@@ -497,7 +509,7 @@ export default {
         props:{
           'nama': dataPasien.namaPasien,
           'data': dataPasien,
-          'method': 'deleteDataPasienPulang'
+          'method': 'deleteDataPasienPulang',
         }
       })
     }
@@ -523,7 +535,35 @@ export default {
     .catch( (respon) => {
       this.isLoading = false
     })
-  }
+  },
+  onIdle() {
+    this.isLoading = true
+    let firstPage,lastPage
+    firstPage = (this.pagging.current - 1) * this.pagging.perPage
+    lastPage = this.pagging.perPage
+    this.$store.dispatch('getDataPasienPulang', {firstPage,lastPage, searchNamaPasien: this.searchNamaPasien, tanggalSearch: this.tanggalSearch})
+    .then( (respon) => {
+      this.isLoading = false
+      this.pagging.total =  this.$store.getters.getTotalPasienPulang
+    })
+    .catch( (respon) => {
+      this.isLoading = false
+    })
+  },
+  onActive() {
+    this.isLoading = true
+    let firstPage,lastPage
+    firstPage = (this.pagging.current - 1) * this.pagging.perPage
+    lastPage = this.pagging.perPage
+    this.$store.dispatch('getDataPasienPulang', {firstPage,lastPage, searchNamaPasien: this.searchNamaPasien, tanggalSearch: this.tanggalSearch})
+    .then( (respon) => {
+      this.isLoading = false
+      this.pagging.total =  this.$store.getters.getTotalPasienPulang
+    })
+    .catch( (respon) => {
+      this.isLoading = false
+    })
+  },
 }
 </script>
 

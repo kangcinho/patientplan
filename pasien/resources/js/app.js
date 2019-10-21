@@ -5,6 +5,15 @@ import Buefy from 'buefy'
 import store from './store/store'
 import router from './router'
 import excel from 'vue-excel-export'
+import IdleVue from 'idle-vue'
+
+const eventsHub = new Vue()
+
+Vue.use(IdleVue, {
+  eventEmitter: eventsHub,
+  idleTime: 30000,
+  keepTracking: true,
+})
 
 Vue.use(require('vue-moment'))
 Vue.use(Buefy)
