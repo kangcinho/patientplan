@@ -1,6 +1,6 @@
 <template>
   <b-navbar type="is-primary">
-    <template slot="start">
+    <template slot="start" v-if="getDataUser != null">
         <b-navbar-item v-if="isAuth && getDataUser.canAdmin" tag="router-link" :to="{ name: 'UserPage' }" >
           <b-icon 
             pack="fas"
@@ -18,7 +18,7 @@
         </b-navbar-item>
     </template>
     <template slot="end">
-      <b-navbar-item v-if="getDataUser">
+      <b-navbar-item v-if="getDataUser != null">
         Tercinta, {{getDataUser.namaUser}}
       </b-navbar-item>
     </template>

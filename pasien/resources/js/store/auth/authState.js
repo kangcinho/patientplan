@@ -1,5 +1,5 @@
 const state = {
-  dataUserLogin: JSON.parse(localStorage.getItem('userData')),
+  dataUserLogin: null,
   token: localStorage.getItem('token')
 }
 

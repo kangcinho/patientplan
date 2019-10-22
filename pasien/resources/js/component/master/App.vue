@@ -7,14 +7,10 @@
 
 <script>
 import Header from './Header'
-import Content from './Content'
-import ListUser from '../content/user/ListUser'
 export default {
   name: 'AppComponent',
   components:{
     Header,
-    Content,
-    ListUser
   },
   computed:{
     isAuth(){
@@ -22,9 +18,13 @@ export default {
     }
   },
   created(){
-    // if(this.isAuth){
-      // this.$router.push({ 'name': PasienPage})
-    // }
+    this.$store.dispatch('getUserLogin')
+    .then( (respon) => {
+      
+    })
+    .catch( (respon) => {
+
+    })
   }
 }
 </script>

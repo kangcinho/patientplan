@@ -49,4 +49,16 @@ class UserAuthController extends Controller
     private function guard(){
         return Auth::guard();
     }
+
+    public function getUserLogin(){
+        if($user = JWTAuth::parseToken()->authenticate()){
+            return response()->json([
+                'user' => $user
+            ],200);
+        }
+
+        return response()->json([
+            'error' => 'Anda Tidak Memiliki Akses'
+        ],401);
+    }
 }

@@ -7,6 +7,7 @@ use App\Pasien;
 use App\Http\Helper\RecordLog;
 use Illuminate\Support\Facades\Auth;
 use App\User;
+use JWTAuth;
 class PasienController extends Controller
 {
     public function getDataPasienRegistrasiFromSanata(){
@@ -91,6 +92,7 @@ class PasienController extends Controller
             ->take($request->lastPage)
             ->where('namaPasien','like',"%$request->searchNamaPasien%")
             ->where('tanggal', $tglSearch)
+            ->orderBy('created_at','desc')
             ->get();
             $totalDataPasien = Pasien::where('namaPasien','like',"%$request->searchNamaPasien%")
             ->where('tanggal', $tglSearch)
@@ -104,6 +106,7 @@ class PasienController extends Controller
             ->skip($request->firstPage)
             ->take($request->lastPage)
             ->where('namaPasien','like',"%$request->searchNamaPasien%")
+            ->orderBy('created_at','desc')
             ->get();
             $totalDataPasien = Pasien::where('namaPasien','like',"%$request->searchNamaPasien%")->count();
             $dataPasienPulangFilter = Pasien::orderBy('tanggal', 'desc')->select('namaPasien','kamar','kodeKelas')

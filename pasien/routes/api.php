@@ -25,12 +25,13 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::post('getDataPasienPulang', 'PasienController@getDataPasienPulang');
     Route::post('updateDataPasienPulang', 'PasienController@updateDataPasienPulang')->middleware('canUpdate');
     Route::get('deleteDataPasienPulang/{idPasien}', 'PasienController@deleteDataPasienPulang')->middleware('canDelete');
-
+    
     //Section User
     Route::post('getDataUser', 'UserController@getDataUser')->middleware('canAdmin');
     Route::post('saveDataUser', 'UserController@saveDataUser')->middleware('canAdmin');
     Route::post('updateDataUser', 'UserController@updateDataUser')->middleware('canAdmin');
     Route::get('deleteDataUser/{idUser}', 'UserController@deleteDataUser')->middleware('canAdmin');
+    
 
     //EXPORT DATA
     Route::post('getDataExportPasienPulang', 'PasienController@getDataExportPasienPulang')->middleware('canEkspor');
@@ -43,3 +44,4 @@ Route::get('autoGetPasien', 'PasienController@autoGetPasien');
 Route::post('login','UserAuthController@login');
 Route::get('logout', 'UserAuthController@logout');
 Route::get('refresh', 'UserAuthController@refresh');
+Route::get('getUserLogin', 'UserAuthController@getUserLogin');

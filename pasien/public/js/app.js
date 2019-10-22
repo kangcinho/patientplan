@@ -3089,6 +3089,9 @@ __webpack_require__.r(__webpack_exports__);
       });
     }
   },
+  created: function created() {
+    console.log("LIST PASIEN PULANG CREATED");
+  },
   methods: {
     clearTanggal: function clearTanggal() {
       this.tanggalSearch = null;
@@ -3832,8 +3835,6 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Header__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Header */ "./resources/js/component/master/Header.vue");
-/* harmony import */ var _Content__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Content */ "./resources/js/component/master/Content.vue");
-/* harmony import */ var _content_user_ListUser__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../content/user/ListUser */ "./resources/js/component/content/user/ListUser.vue");
 //
 //
 //
@@ -3841,24 +3842,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-
-
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'AppComponent',
   components: {
-    Header: _Header__WEBPACK_IMPORTED_MODULE_0__["default"],
-    Content: _Content__WEBPACK_IMPORTED_MODULE_1__["default"],
-    ListUser: _content_user_ListUser__WEBPACK_IMPORTED_MODULE_2__["default"]
+    Header: _Header__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
   computed: {
     isAuth: function isAuth() {
       return this.$store.getters.getAuth;
     }
   },
-  created: function created() {// if(this.isAuth){
-    // this.$router.push({ 'name': PasienPage})
-    // }
+  created: function created() {
+    this.$store.dispatch('getUserLogin').then(function (respon) {})["catch"](function (respon) {});
   }
 });
 
@@ -19072,82 +19068,92 @@ var render = function() {
                           ]
                         ),
                         _vm._v(" "),
-                        _c(
-                          "td",
-                          {
-                            staticClass:
-                              "has-text-centered wrapWord sizeKeterangan"
-                          },
-                          [
-                            !pasien.isEdit && _vm.getDataUser.canUpdate
-                              ? _c("b-button", {
-                                  attrs: {
-                                    type: "is-info",
-                                    size: "is-small",
-                                    "icon-pack": "fas",
-                                    "icon-right": "edit",
-                                    title: "Edit Data Pasien"
-                                  },
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.changeToEditMode(pasien, true)
-                                    }
-                                  }
-                                })
-                              : _vm._e(),
-                            _vm._v(" "),
-                            pasien.isEdit && _vm.getDataUser.canUpdate
-                              ? _c("b-button", {
-                                  attrs: {
-                                    type: "is-info",
-                                    size: "is-small",
-                                    "icon-pack": "fas",
-                                    "icon-right": "save",
-                                    title: "Save Data Pasien"
-                                  },
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.updateDataPasien(pasien)
-                                    }
-                                  }
-                                })
-                              : _vm._e(),
-                            _vm._v(" "),
-                            pasien.isEdit && _vm.getDataUser.canUpdate
-                              ? _c("b-button", {
-                                  attrs: {
-                                    type: "is-warning",
-                                    size: "is-small",
-                                    "icon-pack": "fas",
-                                    "icon-right": "ban",
-                                    title: "Batal Edit Data Pasien"
-                                  },
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.changeToEditMode(pasien, false)
-                                    }
-                                  }
-                                })
-                              : _vm._e(),
-                            _vm._v(" "),
-                            _vm.getDataUser.canDelete
-                              ? _c("b-button", {
-                                  attrs: {
-                                    type: "is-danger",
-                                    size: "is-small",
-                                    "icon-pack": "fas",
-                                    "icon-right": "trash-alt"
-                                  },
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.deleteDataPasienPulang(pasien)
-                                    }
-                                  }
-                                })
-                              : _vm._e()
-                          ],
-                          1
-                        )
+                        _vm.getDataUser != null
+                          ? _c(
+                              "td",
+                              {
+                                staticClass:
+                                  "has-text-centered wrapWord sizeKeterangan"
+                              },
+                              [
+                                !pasien.isEdit && _vm.getDataUser.canUpdate
+                                  ? _c("b-button", {
+                                      attrs: {
+                                        type: "is-info",
+                                        size: "is-small",
+                                        "icon-pack": "fas",
+                                        "icon-right": "edit",
+                                        title: "Edit Data Pasien"
+                                      },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.changeToEditMode(
+                                            pasien,
+                                            true
+                                          )
+                                        }
+                                      }
+                                    })
+                                  : _vm._e(),
+                                _vm._v(" "),
+                                pasien.isEdit && _vm.getDataUser.canUpdate
+                                  ? _c("b-button", {
+                                      attrs: {
+                                        type: "is-info",
+                                        size: "is-small",
+                                        "icon-pack": "fas",
+                                        "icon-right": "save",
+                                        title: "Save Data Pasien"
+                                      },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.updateDataPasien(pasien)
+                                        }
+                                      }
+                                    })
+                                  : _vm._e(),
+                                _vm._v(" "),
+                                pasien.isEdit && _vm.getDataUser.canUpdate
+                                  ? _c("b-button", {
+                                      attrs: {
+                                        type: "is-warning",
+                                        size: "is-small",
+                                        "icon-pack": "fas",
+                                        "icon-right": "ban",
+                                        title: "Batal Edit Data Pasien"
+                                      },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.changeToEditMode(
+                                            pasien,
+                                            false
+                                          )
+                                        }
+                                      }
+                                    })
+                                  : _vm._e(),
+                                _vm._v(" "),
+                                _vm.getDataUser.canDelete
+                                  ? _c("b-button", {
+                                      attrs: {
+                                        type: "is-danger",
+                                        size: "is-small",
+                                        "icon-pack": "fas",
+                                        "icon-right": "trash-alt"
+                                      },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.deleteDataPasienPulang(
+                                            pasien
+                                          )
+                                        }
+                                      }
+                                    })
+                                  : _vm._e()
+                              ],
+                              1
+                            )
+                          : _vm._e()
                       ])
                     }),
                     0
@@ -20218,68 +20224,70 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "card" }, [
-    _vm.getDataUser.canInsert
-      ? _c("div", { staticClass: "card-header" }, [
-          _c(
-            "div",
-            { staticClass: "card-header-title is-centered " },
-            [
+  return _vm.getDataUser != null
+    ? _c("div", { staticClass: "card" }, [
+        _vm.getDataUser.canInsert
+          ? _c("div", { staticClass: "card-header" }, [
               _c(
-                "b-collapse",
-                {
-                  staticClass: "panel",
-                  staticStyle: { width: "100%" },
-                  attrs: { open: _vm.isOpenFormTambahRiwayatPasienPulang },
-                  on: {
-                    "update:open": function($event) {
-                      _vm.isOpenFormTambahRiwayatPasienPulang = $event
-                    }
-                  }
-                },
+                "div",
+                { staticClass: "card-header-title is-centered " },
                 [
                   _c(
-                    "div",
+                    "b-collapse",
                     {
-                      staticClass: "panel-heading",
-                      attrs: { slot: "trigger", role: "button" },
-                      slot: "trigger"
+                      staticClass: "panel",
+                      staticStyle: { width: "100%" },
+                      attrs: { open: _vm.isOpenFormTambahRiwayatPasienPulang },
+                      on: {
+                        "update:open": function($event) {
+                          _vm.isOpenFormTambahRiwayatPasienPulang = $event
+                        }
+                      }
                     },
                     [
                       _c(
-                        "strong",
+                        "div",
+                        {
+                          staticClass: "panel-heading",
+                          attrs: { slot: "trigger", role: "button" },
+                          slot: "trigger"
+                        },
                         [
-                          _c("b-icon", {
-                            attrs: { pack: "fas", icon: "plus" }
-                          }),
-                          _vm._v(
-                            "\n            Daftar Riwayat Pasien Pulang\n          "
+                          _c(
+                            "strong",
+                            [
+                              _c("b-icon", {
+                                attrs: { pack: "fas", icon: "plus" }
+                              }),
+                              _vm._v(
+                                "\n            Daftar Riwayat Pasien Pulang\n          "
+                              )
+                            ],
+                            1
                           )
-                        ],
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          staticClass: "panel-tab",
+                          staticStyle: { "margin-top": "10px" }
+                        },
+                        [_c("AddPasienPulang")],
                         1
                       )
                     ]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      staticClass: "panel-tab",
-                      staticStyle: { "margin-top": "10px" }
-                    },
-                    [_c("AddPasienPulang")],
-                    1
                   )
-                ]
+                ],
+                1
               )
-            ],
-            1
-          )
-        ])
-      : _vm._e(),
-    _vm._v(" "),
-    _c("div", { staticClass: "card-content" }, [_c("ListPasienPulang")], 1)
-  ])
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _c("div", { staticClass: "card-content" }, [_c("ListPasienPulang")], 1)
+      ])
+    : _vm._e()
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -20307,55 +20315,62 @@ var render = function() {
     "b-navbar",
     { attrs: { type: "is-primary" } },
     [
-      _c(
-        "template",
-        { slot: "start" },
-        [
-          _vm.isAuth && _vm.getDataUser.canAdmin
-            ? _c(
-                "b-navbar-item",
-                { attrs: { tag: "router-link", to: { name: "UserPage" } } },
-                [_c("b-icon", { attrs: { pack: "fas", icon: "users" } })],
-                1
-              )
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.isAuth
-            ? _c(
-                "b-navbar-item",
-                { attrs: { tag: "router-link", to: { name: "PasienPage" } } },
-                [_vm._v("\n        Pasien\n      ")]
-              )
-            : _vm._e(),
-          _vm._v(" "),
-          !_vm.isAuth
-            ? _c(
-                "b-navbar-item",
-                {
-                  attrs: { tag: "router-link", to: { name: "LoginPageSecond" } }
-                },
-                [_vm._v("\n        Login\n      ")]
-              )
-            : _c(
-                "b-navbar-item",
-                {
-                  nativeOn: {
-                    click: function($event) {
-                      return _vm.logout($event)
-                    }
-                  }
-                },
-                [_vm._v("\n        Logout\n      ")]
-              )
-        ],
-        1
-      ),
+      _vm.getDataUser != null
+        ? _c(
+            "template",
+            { slot: "start" },
+            [
+              _vm.isAuth && _vm.getDataUser.canAdmin
+                ? _c(
+                    "b-navbar-item",
+                    { attrs: { tag: "router-link", to: { name: "UserPage" } } },
+                    [_c("b-icon", { attrs: { pack: "fas", icon: "users" } })],
+                    1
+                  )
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.isAuth
+                ? _c(
+                    "b-navbar-item",
+                    {
+                      attrs: { tag: "router-link", to: { name: "PasienPage" } }
+                    },
+                    [_vm._v("\n        Pasien\n      ")]
+                  )
+                : _vm._e(),
+              _vm._v(" "),
+              !_vm.isAuth
+                ? _c(
+                    "b-navbar-item",
+                    {
+                      attrs: {
+                        tag: "router-link",
+                        to: { name: "LoginPageSecond" }
+                      }
+                    },
+                    [_vm._v("\n        Login\n      ")]
+                  )
+                : _c(
+                    "b-navbar-item",
+                    {
+                      nativeOn: {
+                        click: function($event) {
+                          return _vm.logout($event)
+                        }
+                      }
+                    },
+                    [_vm._v("\n        Logout\n      ")]
+                  )
+            ],
+            1
+          )
+        : _vm._e(),
       _vm._v(" "),
       _c(
         "template",
         { slot: "end" },
         [
-          _vm.getDataUser
+          _vm.getDataUser != null
             ? _c("b-navbar-item", [
                 _vm._v(
                   "\n      Tercinta, " +
@@ -42087,21 +42102,27 @@ var actions = {
   },
   tokenExpr: function tokenExpr(_ref2) {
     var commit = _ref2.commit;
-    // return new Promise( (berhasil, gagal) => {
-    // axios.get('/api/logout')
-    // .then( (respon) => {
     commit(_authTypeMutations__WEBPACK_IMPORTED_MODULE_1__["SET_DATA_USER_LOGIN"], null);
-    commit(_authTypeMutations__WEBPACK_IMPORTED_MODULE_1__["SET_DATA_USER_TOKEN"], null); // berhasil('Login User Sudah Mencapai Batas, Login Lagi Ya..')
-    // })
-    // })
+    commit(_authTypeMutations__WEBPACK_IMPORTED_MODULE_1__["SET_DATA_USER_TOKEN"], null);
   },
   logoutUser: function logoutUser(_ref3) {
     var commit = _ref3.commit;
     return new Promise(function (berhasil, gagal) {
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api/logout').then(function (respon) {
-        commit(_authTypeMutations__WEBPACK_IMPORTED_MODULE_1__["SET_DATA_USER_LOGIN"], respon.data.user);
-        commit(_authTypeMutations__WEBPACK_IMPORTED_MODULE_1__["SET_DATA_USER_TOKEN"], respon.data.token);
+        commit(_authTypeMutations__WEBPACK_IMPORTED_MODULE_1__["SET_DATA_USER_LOGIN"], null);
+        commit(_authTypeMutations__WEBPACK_IMPORTED_MODULE_1__["SET_DATA_USER_TOKEN"], null);
         berhasil('User LogOut');
+      });
+    });
+  },
+  getUserLogin: function getUserLogin(_ref4) {
+    var commit = _ref4.commit;
+    return new Promise(function (berhasil, gagal) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api/getUserLogin').then(function (respon) {
+        commit(_authTypeMutations__WEBPACK_IMPORTED_MODULE_1__["SET_DATA_USER_LOGIN"], respon.data.user);
+        berhasil('User Login');
+      })["catch"](function (error) {
+        gagal(error.response.data.error);
       });
     });
   }
@@ -42147,8 +42168,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 var mutations = (_mutations = {}, _defineProperty(_mutations, _authTypeMutations__WEBPACK_IMPORTED_MODULE_0__["SET_DATA_USER_LOGIN"], function (state, payload) {
-  state.dataUserLogin = payload;
-  localStorage.setItem('userData', JSON.stringify(payload));
+  state.dataUserLogin = payload; // localStorage.setItem('userData', JSON.stringify(payload))
 }), _defineProperty(_mutations, _authTypeMutations__WEBPACK_IMPORTED_MODULE_0__["SET_DATA_USER_TOKEN"], function (state, payload) {
   state.token = payload;
   localStorage.setItem('token', payload);
@@ -42167,7 +42187,7 @@ var mutations = (_mutations = {}, _defineProperty(_mutations, _authTypeMutations
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 var state = {
-  dataUserLogin: JSON.parse(localStorage.getItem('userData')),
+  dataUserLogin: null,
   token: localStorage.getItem('token')
 };
 /* harmony default export */ __webpack_exports__["default"] = (state);
@@ -42399,7 +42419,7 @@ var mutations = (_mutations = {}, _defineProperty(_mutations, _pasienTypeMutatio
 }), _defineProperty(_mutations, _pasienTypeMutations__WEBPACK_IMPORTED_MODULE_0__["SET_TOTAL_KAMAR_DIBERSIHKAN"], function (state, payload) {
   state.totalKamarDibersihkan = payload;
 }), _defineProperty(_mutations, _pasienTypeMutations__WEBPACK_IMPORTED_MODULE_0__["ADD_DATA_PASIEN_PULANG"], function (state, payload) {
-  state.dataPasienPulang.push(payload);
+  state.dataPasienPulang.unshift(payload);
   state.dataPasienRegistrasi.map(function (data) {
     if (data.noReg == payload.noReg) {
       data.isDone = true;

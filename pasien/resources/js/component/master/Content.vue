@@ -1,5 +1,5 @@
 <template>
-  <div class="card">
+  <div class="card" v-if="getDataUser != null">
     <div class="card-header" v-if="getDataUser.canInsert">
       <div class="card-header-title is-centered ">
         <b-collapse

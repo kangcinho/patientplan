@@ -9,7 +9,7 @@
           </b-taglist>
         </div>
       </b-field>
-    </div>      
+    </div>
     <div class="column ">
       <b-field >
         <b-datepicker
@@ -184,7 +184,7 @@
                 </b-autocomplete>
               </span>
             </td>
-            <td class="has-text-centered wrapWord sizeKeterangan">
+            <td class="has-text-centered wrapWord sizeKeterangan" v-if="getDataUser != null">
               <b-button 
                 type="is-info"
                 size="is-small"
@@ -210,7 +210,7 @@
                 title="Batal Edit Data Pasien"
                 @click="changeToEditMode(pasien, false)"/>
               <b-button
-                type="is-danger" 
+                type="is-danger"
                 size="is-small"
                 icon-pack="fas"
                 icon-right="trash-alt" 
@@ -375,6 +375,9 @@ export default {
         this.isLoading = false
       })
     },
+  },
+  created(){
+    console.log("LIST PASIEN PULANG CREATED")
   },
   methods:{
     clearTanggal(){
