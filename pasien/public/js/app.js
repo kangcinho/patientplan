@@ -2024,6 +2024,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ModalEksportData",
   data: function data() {
@@ -2140,8 +2141,17 @@ __webpack_require__.r(__webpack_exports__);
       });
       return dataExportPasienPulang;
     },
+    getJumlahKamarDibersihkan: function getJumlahKamarDibersihkan() {
+      return this.$store.getters.getTotalKamarDibersihkanExport;
+    },
     filename: function filename() {
-      return "Riwayat Pasien Pulang Periode ".concat(this.tanggal.awal, " - ").concat(this.tanggal.akhir, ".xls");
+      return "Riwayat Pasien Pulang Periode ".concat(this.$moment(this.tanggal.awal).format("DD MMM YYYY"), " - ").concat(this.$moment(this.tanggal.akhir).format("DD MMM YYYY"), ".xls");
+    },
+    title: function title() {
+      return "Riwayat Pasien Pulang Periode ".concat(this.$moment(this.tanggal.awal).format("DD MMM YYYY"), " - ").concat(this.$moment(this.tanggal.akhir).format("DD MMM YYYY"));
+    },
+    cleanKamar: function cleanKamar() {
+      return "Jumlah Kamar Yang Dibersihkan: ".concat(this.getJumlahKamarDibersihkan, " ");
     }
   }
 });
@@ -2709,6 +2719,7 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modal_ModalKonfirmasiHapusData__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../modal/ModalKonfirmasiHapusData */ "./resources/js/component/content/modal/ModalKonfirmasiHapusData.vue");
 /* harmony import */ var _modal_ModalEksportData__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../modal/ModalEksportData */ "./resources/js/component/content/modal/ModalEksportData.vue");
+/* harmony import */ var _TablePrintPasienPulang__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./TablePrintPasienPulang */ "./resources/js/component/content/pasienPulang/TablePrintPasienPulang.vue");
 //
 //
 //
@@ -2994,13 +3005,23 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ListPasienPulang",
   components: {
     ModalKonfirmasiHapusData: _modal_ModalKonfirmasiHapusData__WEBPACK_IMPORTED_MODULE_0__["default"],
-    ModalEksportData: _modal_ModalEksportData__WEBPACK_IMPORTED_MODULE_1__["default"]
+    ModalEksportData: _modal_ModalEksportData__WEBPACK_IMPORTED_MODULE_1__["default"],
+    TablePrintPasienPulang: _TablePrintPasienPulang__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
   data: function data() {
     return {
@@ -3038,6 +3059,35 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   computed: {
+    getExportPasienPulang: function getExportPasienPulang() {
+      var _this = this;
+
+      var dataExportPasienPulang = this.$store.getters.getExportPasienPulang;
+      dataExportPasienPulang.map(function (dataPasien) {
+        dataPasien.tanggal = _this.$moment(dataPasien.tanggal).format("DD MMM YYYY");
+
+        if (dataPasien.waktuVerif != null) {
+          dataPasien.waktuVerif = _this.$moment(dataPasien.waktuVerif).format("H:mm:ss");
+        }
+
+        if (dataPasien.waktuSelesai != null) {
+          dataPasien.waktuSelesai = _this.$moment(dataPasien.waktuSelesai).format("H:mm:ss");
+        }
+
+        if (dataPasien.waktuIKS != null) {
+          dataPasien.waktuIKS = _this.$moment(dataPasien.waktuIKS).format("H:mm:ss");
+        }
+
+        if (dataPasien.waktuPasien != null) {
+          dataPasien.waktuPasien = _this.$moment(dataPasien.waktuPasien).format("H:mm:ss");
+        }
+
+        if (dataPasien.waktuLunas != null) {
+          dataPasien.waktuLunas = _this.$moment(dataPasien.waktuLunas).format("H:mm:ss");
+        }
+      });
+      return dataExportPasienPulang;
+    },
     totalKamarDibersihkan: function totalKamarDibersihkan() {
       return this.$store.getters.getTotalKamarPasienPulang;
     },
@@ -3051,17 +3101,17 @@ __webpack_require__.r(__webpack_exports__);
       return this.$store.getters.getDataPetugas;
     },
     filterDataPetugasFO: function filterDataPetugasFO() {
-      var _this = this;
-
-      return this.dataPetugas.filter(function (petugas) {
-        return petugas.namaCustomer.toString().toLowerCase().indexOf(_this.dataPasienPulang.petugasFO.toLowerCase()) >= 0;
-      });
-    },
-    filterDataPetugasPerawat: function filterDataPetugasPerawat() {
       var _this2 = this;
 
       return this.dataPetugas.filter(function (petugas) {
-        return petugas.namaCustomer.toString().toLowerCase().indexOf(_this2.dataPasienPulang.petugasPerawat.toLowerCase()) >= 0;
+        return petugas.namaCustomer.toString().toLowerCase().indexOf(_this2.dataPasienPulang.petugasFO.toLowerCase()) >= 0;
+      });
+    },
+    filterDataPetugasPerawat: function filterDataPetugasPerawat() {
+      var _this3 = this;
+
+      return this.dataPetugas.filter(function (petugas) {
+        return petugas.namaCustomer.toString().toLowerCase().indexOf(_this3.dataPasienPulang.petugasPerawat.toLowerCase()) >= 0;
       });
     },
     getDataUser: function getDataUser() {
@@ -3070,7 +3120,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   watch: {
     'pagging.current': function paggingCurrent(newVal, oldVal) {
-      var _this3 = this;
+      var _this4 = this;
 
       var firstPage, lastPage;
       firstPage = (this.pagging.current - 1) * this.pagging.perPage;
@@ -3082,15 +3132,14 @@ __webpack_require__.r(__webpack_exports__);
         searchNamaPasien: this.searchNamaPasien,
         tanggalSearch: this.tanggalSearch
       }).then(function (respon) {
-        _this3.isLoading = false;
-        _this3.pagging.total = _this3.$store.getters.getTotalPasienPulang;
+        _this4.isLoading = false;
+        _this4.pagging.total = _this4.$store.getters.getTotalPasienPulang;
       })["catch"](function (respon) {
-        _this3.isLoading = false;
+        _this4.isLoading = false;
       });
     }
   },
-  created: function created() {
-    console.log("LIST PASIEN PULANG CREATED");
+  created: function created() {// console.log("LIST PASIEN PULANG CREATED")
   },
   methods: {
     clearTanggal: function clearTanggal() {
@@ -3106,7 +3155,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     changeToEditMode: function changeToEditMode(dataPasien, mode) {
-      var _this4 = this;
+      var _this5 = this;
 
       //Can Edit Only One Field Live
       if (mode) {
@@ -3123,16 +3172,16 @@ __webpack_require__.r(__webpack_exports__);
             pasien.isEdit = mode;
 
             if (mode) {
-              _this4.disableEdit = true;
+              _this5.disableEdit = true;
 
-              _this4.fillData(dataPasien);
+              _this5.fillData(dataPasien);
             }
           }
         });
       }
     },
     updateDataPasien: function updateDataPasien(dataPasien) {
-      var _this5 = this;
+      var _this6 = this;
 
       dataPasien.isEdit = false;
       this.disableEdit = false;
@@ -3140,18 +3189,18 @@ __webpack_require__.r(__webpack_exports__);
       this.dataPasienPulang.idPasien = dataPasien.idPasien;
       this.isLoading = true;
       this.$store.dispatch('updateDataPasienPulang', this.dataPasienPulang).then(function (respon) {
-        _this5.isLoading = false;
+        _this6.isLoading = false;
 
-        _this5.hapusFieldAll();
+        _this6.hapusFieldAll();
 
-        _this5.$buefy.notification.open({
+        _this6.$buefy.notification.open({
           message: respon,
           type: 'is-success'
         });
       })["catch"](function (respon) {
-        _this5.isLoading = false;
+        _this6.isLoading = false;
 
-        _this5.$buefy.notification.open({
+        _this6.$buefy.notification.open({
           message: respon,
           type: 'is-danger'
         });
@@ -3213,7 +3262,7 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     searchNamaPasienToDB: function searchNamaPasienToDB() {
-      var _this6 = this;
+      var _this7 = this;
 
       var firstPage, lastPage;
       firstPage = 0;
@@ -3225,13 +3274,13 @@ __webpack_require__.r(__webpack_exports__);
         searchNamaPasien: this.searchNamaPasien,
         tanggalSearch: this.tanggalSearch
       }).then(function (respon) {
-        _this6.isLoading = false;
-        _this6.pagging.total = _this6.$store.getters.getTotalPasienPulang;
-        _this6.pagging.current = 1;
+        _this7.isLoading = false;
+        _this7.pagging.total = _this7.$store.getters.getTotalPasienPulang;
+        _this7.pagging.current = 1;
       })["catch"](function (respon) {
-        _this6.isLoading = false;
+        _this7.isLoading = false;
 
-        _this6.$buefy.notification.open({
+        _this7.$buefy.notification.open({
           message: respon,
           type: 'is-danger'
         });
@@ -3249,6 +3298,38 @@ __webpack_require__.r(__webpack_exports__);
           'method': 'deleteDataPasienPulang'
         }
       });
+    },
+    printDataPasienPulang: function printDataPasienPulang() {
+      var _this8 = this;
+
+      var tanggal = null;
+
+      if (this.tanggalSearch != null) {
+        tanggal = {
+          awal: this.tanggalSearch,
+          akhir: this.tanggalSearch
+        };
+      } else {
+        tanggal = {
+          awal: new Date(),
+          akhir: new Date()
+        };
+      } // console.log(tanggal)
+
+
+      this.$store.dispatch('getDataExportPasienPulang', tanggal).then(function (respon) {
+        _this8.$htmlToPaper('printDataPasien');
+
+        _this8.$buefy.notification.open({
+          message: "Data Siap Dicetak",
+          type: 'is-success'
+        });
+      })["catch"](function (respon) {
+        _this8.$buefy.notification.open({
+          message: "Error",
+          type: 'is-danger'
+        });
+      });
     }
   },
   filters: {
@@ -3261,44 +3342,6 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   mounted: function mounted() {
-    var _this7 = this;
-
-    this.isLoading = true;
-    var firstPage, lastPage;
-    firstPage = (this.pagging.current - 1) * this.pagging.perPage;
-    lastPage = this.pagging.perPage;
-    this.$store.dispatch('getDataPasienPulang', {
-      firstPage: firstPage,
-      lastPage: lastPage,
-      searchNamaPasien: this.searchNamaPasien,
-      tanggalSearch: this.tanggalSearch
-    }).then(function (respon) {
-      _this7.isLoading = false;
-      _this7.pagging.total = _this7.$store.getters.getTotalPasienPulang;
-    })["catch"](function (respon) {
-      _this7.isLoading = false;
-    });
-  },
-  onIdle: function onIdle() {
-    var _this8 = this;
-
-    this.isLoading = true;
-    var firstPage, lastPage;
-    firstPage = (this.pagging.current - 1) * this.pagging.perPage;
-    lastPage = this.pagging.perPage;
-    this.$store.dispatch('getDataPasienPulang', {
-      firstPage: firstPage,
-      lastPage: lastPage,
-      searchNamaPasien: this.searchNamaPasien,
-      tanggalSearch: this.tanggalSearch
-    }).then(function (respon) {
-      _this8.isLoading = false;
-      _this8.pagging.total = _this8.$store.getters.getTotalPasienPulang;
-    })["catch"](function (respon) {
-      _this8.isLoading = false;
-    });
-  },
-  onActive: function onActive() {
     var _this9 = this;
 
     this.isLoading = true;
@@ -3316,6 +3359,158 @@ __webpack_require__.r(__webpack_exports__);
     })["catch"](function (respon) {
       _this9.isLoading = false;
     });
+  },
+  onIdle: function onIdle() {
+    var _this10 = this;
+
+    this.isLoading = true;
+    var firstPage, lastPage;
+    firstPage = (this.pagging.current - 1) * this.pagging.perPage;
+    lastPage = this.pagging.perPage;
+    this.$store.dispatch('getDataPasienPulang', {
+      firstPage: firstPage,
+      lastPage: lastPage,
+      searchNamaPasien: this.searchNamaPasien,
+      tanggalSearch: this.tanggalSearch
+    }).then(function (respon) {
+      _this10.isLoading = false;
+      _this10.pagging.total = _this10.$store.getters.getTotalPasienPulang;
+    })["catch"](function (respon) {
+      _this10.isLoading = false;
+    });
+  },
+  onActive: function onActive() {
+    var _this11 = this;
+
+    this.isLoading = true;
+    var firstPage, lastPage;
+    firstPage = (this.pagging.current - 1) * this.pagging.perPage;
+    lastPage = this.pagging.perPage;
+    this.$store.dispatch('getDataPasienPulang', {
+      firstPage: firstPage,
+      lastPage: lastPage,
+      searchNamaPasien: this.searchNamaPasien,
+      tanggalSearch: this.tanggalSearch
+    }).then(function (respon) {
+      _this11.isLoading = false;
+      _this11.pagging.total = _this11.$store.getters.getTotalPasienPulang;
+    })["catch"](function (respon) {
+      _this11.isLoading = false;
+    });
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/component/content/pasienPulang/TablePrintPasienPulang.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/component/content/pasienPulang/TablePrintPasienPulang.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'TablePrintPasienPulang',
+  props: ['getPasienPulang', 'tanggalSearch', 'totalKamarDibersihkan', 'totalPasien'],
+  filters: {
+    showOnlyTime: function showOnlyTime(datetime) {
+      if (datetime != null) {
+        return datetime.split(' ')[1];
+      }
+
+      return datetime;
+    }
   }
 });
 
@@ -16988,6 +17183,29 @@ if (typeof window !== 'undefined' && window.Vue) {
 
 /***/ }),
 
+/***/ "./node_modules/vue-html-to-paper/dist/index.js":
+/*!******************************************************!*\
+  !*** ./node_modules/vue-html-to-paper/dist/index.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports=function(e){function t(r){if(n[r])return n[r].exports;var o=n[r]={i:r,l:!1,exports:{}};return e[r].call(o.exports,o,o.exports,t),o.l=!0,o.exports}var n={};return t.m=e,t.c=n,t.d=function(e,n,r){t.o(e,n)||Object.defineProperty(e,n,{configurable:!1,enumerable:!0,get:r})},t.n=function(e){var n=e&&e.__esModule?function(){return e.default}:function(){return e};return t.d(n,"a",n),n},t.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},t.p="",t(t.s=0)}([function(e,t,n){"use strict";function r(e,t){t.forEach(function(t){var n=e.document.createElement("link");n.setAttribute("rel","stylesheet"),n.setAttribute("type","text/css"),n.setAttribute("href",t),e.document.getElementsByTagName("head")[0].appendChild(n)})}Object.defineProperty(t,"__esModule",{value:!0}),t.default={install:function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{};e.mixin({methods:{$htmlToPaper:function(e){var n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:function(){return!0},o=t.name,i=void 0===o?"_blank":o,u=t.specs,l=void 0===u?["fullscreen=yes","titlebar=yes","scrollbars=yes"]:u,c=t.replace,s=void 0===c||c,a=t.styles,d=void 0===a?[]:a;l=l.length?l.join(","):"";var f=document.getElementById(e);if(!f)return void alert("Element to print #"+e+" not found!");var m=window.open("",i,l,s);return m.document.write("\n            <html>\n              <head>\n                <title>"+document.title+"</title>\n              </head>\n              <body>\n                "+f.innerHTML+"\n              </body>\n            </html>\n          "),r(m,d),setTimeout(function(){m.document.close(),m.focus(),m.print(),m.close(),n()},1e3),!0}}})}}}]);
+
+/***/ }),
+
+/***/ "./node_modules/vue-html-to-paper/index.js":
+/*!*************************************************!*\
+  !*** ./node_modules/vue-html-to-paper/index.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(/*! ./dist */ "./node_modules/vue-html-to-paper/dist/index.js");
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/index.js?!./node_modules/vue-excel-export/VueComment.vue?vue&type=script&lang=js&":
 /*!*********************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-excel-export/VueComment.vue?vue&type=script&lang=js& ***!
@@ -17627,6 +17845,7 @@ var render = function() {
             attrs: {
               data: _vm.getExportPasienPulang,
               fields: _vm.fields,
+              title: [_vm.title, _vm.cleanKamar],
               worksheet: "Riwayat Pasien Pulang",
               name: _vm.filename
             }
@@ -18738,9 +18957,13 @@ var render = function() {
                               "has-text-centered wrapWord sizeKeterangan"
                           },
                           [
-                            _vm._v(_vm._s(pasien.keterangan) + " "),
+                            _vm._v(_vm._s(pasien.keterangan) + "  "),
                             _c("br"),
-                            _vm._v(" " + _vm._s(pasien.noKartu) + " ")
+                            _vm._v(" "),
+                            _c("strong", [_vm._v(_vm._s(pasien.namaDokter))]),
+                            _vm._v(" "),
+                            _c("br"),
+                            _vm._v(" " + _vm._s(pasien.noKartu))
                           ]
                         ),
                         _vm._v(" "),
@@ -19243,10 +19466,54 @@ var render = function() {
                 },
                 [_vm._v("\n      Export\n    ")]
               )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.getDataUser.canEkspor
+            ? _c(
+                "b-button",
+                {
+                  attrs: {
+                    type: "is-primary",
+                    size: "is-small",
+                    "icon-pack": "fas",
+                    "icon-left": "print"
+                  },
+                  on: { click: _vm.printDataPasienPulang }
+                },
+                [_vm._v("\n      Print\n    ")]
+              )
             : _vm._e()
         ],
         1
       ),
+      _vm._v(" "),
+      _vm.getExportPasienPulang.length > 0
+        ? _c(
+            "div",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: false,
+                  expression: "false"
+                }
+              ],
+              attrs: { id: "printDataPasien" }
+            },
+            [
+              _c("TablePrintPasienPulang", {
+                attrs: {
+                  getPasienPulang: _vm.getExportPasienPulang,
+                  tanggalSearch: _vm.tanggalSearch,
+                  totalKamarDibersihkan: _vm.totalKamarDibersihkan,
+                  totalPasien: _vm.totalPasien
+                }
+              })
+            ],
+            1
+          )
+        : _vm._e(),
       _vm._v(" "),
       _c("b-loading", {
         attrs: {
@@ -19326,6 +19593,279 @@ var staticRenderFns = [
             attrs: { rowspan: "2" }
           },
           [_vm._v("Action")]
+        )
+      ]),
+      _vm._v(" "),
+      _c("tr", [
+        _c("th", { staticClass: "has-text-centered sizeWaktu" }, [
+          _vm._v("Verif")
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "has-text-centered sizeWaktu" }, [
+          _vm._v("IKS")
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "has-text-centered sizeWaktu" }, [
+          _vm._v("Selesai")
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "has-text-centered sizeWaktu" }, [
+          _vm._v("Pasien")
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "has-text-centered sizeWaktu" }, [
+          _vm._v("Lunas")
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "has-text-centered sizePetugas" }, [
+          _vm._v("FO")
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "has-text-centered sizePetugas" }, [
+          _vm._v("Perawat")
+        ])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/component/content/pasienPulang/TablePrintPasienPulang.vue?vue&type=template&id=09f1a998&":
+/*!*********************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/component/content/pasienPulang/TablePrintPasienPulang.vue?vue&type=template&id=09f1a998& ***!
+  \*********************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "column is-full" }, [
+    _c("div", { staticClass: "has-text-centered" }, [
+      _c("h3", { staticClass: "is-size-5 has-text-weight-bold" }, [
+        _vm._v(
+          "Riwayat Pasien Pulang Tanggal " +
+            _vm._s(_vm._f("moment")(_vm.tanggalSearch, "DD MMM YYYY"))
+        )
+      ])
+    ]),
+    _vm._v(" "),
+    _c("span", { staticClass: "is-size-7 has-text-weight-bold" }, [
+      _vm._v("Clean Kamar: "),
+      _c("strong", [_vm._v(_vm._s(_vm.totalKamarDibersihkan))])
+    ]),
+    _vm._v(" "),
+    _c(
+      "table",
+      {
+        staticClass: "table is-bordered is-striped is-narrow is-fullwidth",
+        staticStyle: { "font-size": "0.6em" }
+      },
+      [
+        _vm._m(0),
+        _vm._v(" "),
+        _vm.getPasienPulang.length > 0
+          ? _c(
+              "tbody",
+              _vm._l(_vm.getPasienPulang, function(pasien) {
+                return _c("tr", { key: pasien.idPasien }, [
+                  _c(
+                    "td",
+                    {
+                      staticClass: "has-text-centered wrapWord sizeKeterangan"
+                    },
+                    [
+                      _vm._v(
+                        "\n            " +
+                          _vm._s(
+                            _vm._f("moment")(pasien.tanggal, "DD MMM YYYY")
+                          ) +
+                          "\n            "
+                      ),
+                      _c("br"),
+                      _vm._v(" "),
+                      pasien.isTerencana
+                        ? _c(
+                            "span",
+                            { staticStyle: { "font-size": "10px" } },
+                            [
+                              _c("b-icon", {
+                                attrs: {
+                                  size: "is-small",
+                                  icon: "check-double",
+                                  pack: "fas"
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        : _vm._e()
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "td",
+                    { staticClass: "has-text-centered wrapWord sizeKamar" },
+                    [_vm._v(_vm._s(pasien.kamar))]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "td",
+                    {
+                      staticClass: "has-text-centered wrapWord sizeKeterangan"
+                    },
+                    [_vm._v(_vm._s(pasien.namaPasien))]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "td",
+                    {
+                      staticClass: "has-text-centered wrapWord sizeKeterangan"
+                    },
+                    [
+                      _vm._v(_vm._s(pasien.keterangan) + "  "),
+                      _c("br"),
+                      _vm._v(" "),
+                      _c("strong", [_vm._v(_vm._s(pasien.namaDokter))]),
+                      _vm._v(" "),
+                      _c("br"),
+                      _vm._v(" " + _vm._s(pasien.noKartu))
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c("td", { staticClass: "has-text-centered sizeWaktu" }, [
+                    _c("span", [_vm._v(_vm._s(pasien.waktuVerif))])
+                  ]),
+                  _vm._v(" "),
+                  _c("td", { staticClass: "has-text-centered sizeWaktu" }, [
+                    _c("span", [_vm._v(_vm._s(pasien.waktuIKS))])
+                  ]),
+                  _vm._v(" "),
+                  _c("td", { staticClass: "has-text-centered sizeWaktu" }, [
+                    _c("span", [_vm._v(_vm._s(pasien.waktuSelesai))])
+                  ]),
+                  _vm._v(" "),
+                  _c("td", { staticClass: "has-text-centered sizeWaktu" }, [
+                    _c("span", [_vm._v(_vm._s(pasien.waktuPasien))])
+                  ]),
+                  _vm._v(" "),
+                  _c("td", { staticClass: "has-text-centered sizeWaktu" }, [
+                    _c("span", [_vm._v(_vm._s(pasien.waktuLunas))])
+                  ]),
+                  _vm._v(" "),
+                  _c("td", { staticClass: "has-text-centered sizePetugas" }, [
+                    _c("span", [_vm._v(_vm._s(pasien.petugasFO))])
+                  ]),
+                  _vm._v(" "),
+                  _c("td", { staticClass: "has-text-centered sizePetugas" }, [
+                    _c("span", [_vm._v(_vm._s(pasien.petugasPerawat))])
+                  ])
+                ])
+              }),
+              0
+            )
+          : _c("tbody", [
+              _c("tr", [
+                _c("td", { attrs: { colspan: "11" } }, [
+                  _c("section", { staticClass: "section" }, [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "content has-text-grey has-text-centered"
+                      },
+                      [
+                        _c(
+                          "p",
+                          [
+                            _c("b-icon", {
+                              attrs: {
+                                pack: "fas",
+                                icon: "sad-cry",
+                                size: "is-large"
+                              }
+                            })
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c("p", [_vm._v("Tidak Ada Data Pasien")])
+                      ]
+                    )
+                  ])
+                ])
+              ])
+            ])
+      ]
+    ),
+    _vm._v(" "),
+    _c("span", { staticClass: "is-size-7 has-text-weight-bold" }, [
+      _vm._v("Total Data: "),
+      _c("strong", [_vm._v(_vm._s(_vm.totalPasien))])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c(
+          "th",
+          {
+            staticClass: "has-text-centered sizeKeterangan",
+            attrs: { rowspan: "2" }
+          },
+          [_vm._v("Tgl Pulang")]
+        ),
+        _vm._v(" "),
+        _c(
+          "th",
+          {
+            staticClass: "has-text-centered sizeKamar",
+            attrs: { rowspan: "2" }
+          },
+          [_vm._v("Kmr")]
+        ),
+        _vm._v(" "),
+        _c(
+          "th",
+          {
+            staticClass: "has-text-centered sizeKeterangan",
+            attrs: { rowspan: "2" }
+          },
+          [_vm._v("Nama Pasien")]
+        ),
+        _vm._v(" "),
+        _c(
+          "th",
+          {
+            staticClass: "has-text-centered sizeKeterangan",
+            attrs: { rowspan: "2" }
+          },
+          [_vm._v("Keterangan")]
+        ),
+        _vm._v(" "),
+        _c(
+          "th",
+          { staticClass: "has-text-centered", attrs: { colspan: "5" } },
+          [_vm._v("Waktu Konfirmasi")]
+        ),
+        _vm._v(" "),
+        _c(
+          "th",
+          { staticClass: "has-text-centered", attrs: { colspan: "2" } },
+          [_vm._v("Petugas Jaga")]
         )
       ]),
       _vm._v(" "),
@@ -41155,6 +41695,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_excel_export__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vue-excel-export */ "./node_modules/vue-excel-export/index.js");
 /* harmony import */ var idle_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! idle-vue */ "./node_modules/idle-vue/dist/build.js");
 /* harmony import */ var idle_vue__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(idle_vue__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var vue_html_to_paper__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vue-html-to-paper */ "./node_modules/vue-html-to-paper/index.js");
+/* harmony import */ var vue_html_to_paper__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(vue_html_to_paper__WEBPACK_IMPORTED_MODULE_7__);
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 
@@ -41164,7 +41706,14 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 
 
+
 var eventsHub = new vue__WEBPACK_IMPORTED_MODULE_0___default.a();
+var options = {
+  name: '_blank',
+  specs: ['fullscreen=yes', 'titlebar=yes', 'scrollbars=yes'],
+  styles: ['../css/app.css']
+};
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_html_to_paper__WEBPACK_IMPORTED_MODULE_7___default.a, options);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(idle_vue__WEBPACK_IMPORTED_MODULE_6___default.a, {
   eventEmitter: eventsHub,
   idleTime: 30000,
@@ -41629,6 +42178,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ListPasienPulang_vue_vue_type_template_id_183f2337___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ListPasienPulang_vue_vue_type_template_id_183f2337___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/component/content/pasienPulang/TablePrintPasienPulang.vue":
+/*!********************************************************************************!*\
+  !*** ./resources/js/component/content/pasienPulang/TablePrintPasienPulang.vue ***!
+  \********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _TablePrintPasienPulang_vue_vue_type_template_id_09f1a998___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TablePrintPasienPulang.vue?vue&type=template&id=09f1a998& */ "./resources/js/component/content/pasienPulang/TablePrintPasienPulang.vue?vue&type=template&id=09f1a998&");
+/* harmony import */ var _TablePrintPasienPulang_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TablePrintPasienPulang.vue?vue&type=script&lang=js& */ "./resources/js/component/content/pasienPulang/TablePrintPasienPulang.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _TablePrintPasienPulang_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _TablePrintPasienPulang_vue_vue_type_template_id_09f1a998___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _TablePrintPasienPulang_vue_vue_type_template_id_09f1a998___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/component/content/pasienPulang/TablePrintPasienPulang.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/component/content/pasienPulang/TablePrintPasienPulang.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************************!*\
+  !*** ./resources/js/component/content/pasienPulang/TablePrintPasienPulang.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TablePrintPasienPulang_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./TablePrintPasienPulang.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/component/content/pasienPulang/TablePrintPasienPulang.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TablePrintPasienPulang_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/component/content/pasienPulang/TablePrintPasienPulang.vue?vue&type=template&id=09f1a998&":
+/*!***************************************************************************************************************!*\
+  !*** ./resources/js/component/content/pasienPulang/TablePrintPasienPulang.vue?vue&type=template&id=09f1a998& ***!
+  \***************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TablePrintPasienPulang_vue_vue_type_template_id_09f1a998___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./TablePrintPasienPulang.vue?vue&type=template&id=09f1a998& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/component/content/pasienPulang/TablePrintPasienPulang.vue?vue&type=template&id=09f1a998&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TablePrintPasienPulang_vue_vue_type_template_id_09f1a998___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TablePrintPasienPulang_vue_vue_type_template_id_09f1a998___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -42341,6 +42959,7 @@ var actions = {
     return new Promise(function (berhasil, gagal) {
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/api/getDataExportPasienPulang', data).then(function (respon) {
         commit(_pasienTypeMutations__WEBPACK_IMPORTED_MODULE_1__["EXPORT_DATA_TO_EXCEL"], respon.data.dataPasien);
+        commit(_pasienTypeMutations__WEBPACK_IMPORTED_MODULE_1__["EXPORT_DATA_CLEAN_KAMAR_TO_EXCEL"], respon.data.dataPasienPulangFilter);
 
         if (respon.data.dataPasien.length > 0) {
           berhasil(respon.data.status);
@@ -42389,6 +43008,9 @@ var getters = {
   },
   getTotalKamarPasienPulang: function getTotalKamarPasienPulang(state) {
     return state.totalKamarDibersihkan;
+  },
+  getTotalKamarDibersihkanExport: function getTotalKamarDibersihkanExport(state) {
+    return state.totalKamarDibersihkanExport;
   }
 };
 /* harmony default export */ __webpack_exports__["default"] = (getters);
@@ -42453,6 +43075,8 @@ var mutations = (_mutations = {}, _defineProperty(_mutations, _pasienTypeMutatio
   });
 }), _defineProperty(_mutations, _pasienTypeMutations__WEBPACK_IMPORTED_MODULE_0__["EXPORT_DATA_TO_EXCEL"], function (state, payload) {
   state.dataExportPasienPulang = payload;
+}), _defineProperty(_mutations, _pasienTypeMutations__WEBPACK_IMPORTED_MODULE_0__["EXPORT_DATA_CLEAN_KAMAR_TO_EXCEL"], function (state, payload) {
+  state.totalKamarDibersihkanExport = payload;
 }), _mutations);
 /* harmony default export */ __webpack_exports__["default"] = (mutations);
 
@@ -42472,7 +43096,8 @@ var state = {
   dataPasienPulang: [],
   totalPasienPulang: 0,
   dataExportPasienPulang: [],
-  totalKamarDibersihkan: 0
+  totalKamarDibersihkan: 0,
+  totalKamarDibersihkanExport: 0
 };
 /* harmony default export */ __webpack_exports__["default"] = (state);
 
@@ -42482,7 +43107,7 @@ var state = {
 /*!**********************************************************!*\
   !*** ./resources/js/store/pasien/pasienTypeMutations.js ***!
   \**********************************************************/
-/*! exports provided: SET_DATA_PASIEN_REGISTRASI, SET_DATA_PASIEN_PULANG, ADD_DATA_PASIEN_PULANG, UPDATE_DATA_PASIEN_PULANG, SET_DATA_TOTAL_PASIEN_PULANG, DELETE_DATA_PASIEN_PULANG, EXPORT_DATA_TO_EXCEL, SET_DATA_JUMLAH_TOTAL_PASIEN, SET_TOTAL_KAMAR_DIBERSIHKAN */
+/*! exports provided: SET_DATA_PASIEN_REGISTRASI, SET_DATA_PASIEN_PULANG, ADD_DATA_PASIEN_PULANG, UPDATE_DATA_PASIEN_PULANG, SET_DATA_TOTAL_PASIEN_PULANG, DELETE_DATA_PASIEN_PULANG, EXPORT_DATA_TO_EXCEL, SET_DATA_JUMLAH_TOTAL_PASIEN, SET_TOTAL_KAMAR_DIBERSIHKAN, EXPORT_DATA_CLEAN_KAMAR_TO_EXCEL */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -42496,6 +43121,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EXPORT_DATA_TO_EXCEL", function() { return EXPORT_DATA_TO_EXCEL; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_DATA_JUMLAH_TOTAL_PASIEN", function() { return SET_DATA_JUMLAH_TOTAL_PASIEN; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_TOTAL_KAMAR_DIBERSIHKAN", function() { return SET_TOTAL_KAMAR_DIBERSIHKAN; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EXPORT_DATA_CLEAN_KAMAR_TO_EXCEL", function() { return EXPORT_DATA_CLEAN_KAMAR_TO_EXCEL; });
 var SET_DATA_PASIEN_REGISTRASI = 'SET_DATA_PASIEN_REGISTRASI';
 var SET_DATA_PASIEN_PULANG = 'SET_DATA_PASIEN_PULANG';
 var ADD_DATA_PASIEN_PULANG = 'ADD_DATA_PASIEN_PULANG';
@@ -42505,6 +43131,7 @@ var DELETE_DATA_PASIEN_PULANG = 'DELETE_DATA_PASIEN_PULANG';
 var EXPORT_DATA_TO_EXCEL = 'EXPORT_DATA_TO_EXCEL';
 var SET_DATA_JUMLAH_TOTAL_PASIEN = 'SET_DATA_JUMLAH_TOTAL_PASIEN';
 var SET_TOTAL_KAMAR_DIBERSIHKAN = 'SET_TOTAL_KAMAR_DIBERSIHKAN';
+var EXPORT_DATA_CLEAN_KAMAR_TO_EXCEL = 'EXPORT_DATA_CLEAN_KAMAR_TO_EXCEL';
 
 /***/ }),
 

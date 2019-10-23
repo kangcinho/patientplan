@@ -51,6 +51,9 @@ const mutations = {
   },
   [type.EXPORT_DATA_TO_EXCEL](state, payload){
     state.dataExportPasienPulang = payload
+  },
+  [type.EXPORT_DATA_CLEAN_KAMAR_TO_EXCEL](state, payload){
+    state.totalKamarDibersihkanExport = payload
   }
 }
 

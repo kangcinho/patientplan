@@ -83,7 +83,7 @@
               </td>
             <td class="has-text-centered wrapWord sizeKamar">{{ pasien.kamar }}</td>
             <td class="has-text-centered wrapWord sizeKeterangan">{{ pasien.namaPasien }}</td>
-            <td class="has-text-centered wrapWord sizeKeterangan">{{ pasien.keterangan }} <br/> {{ pasien.noKartu }} </td>
+            <td class="has-text-centered wrapWord sizeKeterangan">{{ pasien.keterangan }}  <br/> <strong>{{ pasien.namaDokter }}</strong> <br/> {{ pasien.noKartu }}</td>
             <td class="has-text-centered sizeWaktu">
               <span v-if="!pasien.isEdit">{{ pasien.waktuVerif | showOnlyTime }}</span>
               <span v-else>
@@ -267,30 +267,41 @@
         >
         Export
       </b-button>
-      <!-- <b-button
+      <b-button
         type="is-primary"
         size="is-small"
         icon-pack="fas"
         icon-left="print"
         v-if="getDataUser.canEkspor"
-        @click="modalEksportData"
+        @click="printDataPasienPulang"
         >
         Print
-      </b-button> -->
+      </b-button>
+    </div>
+    <div id="printDataPasien" v-show=false v-if="getExportPasienPulang.length > 0">
+      <TablePrintPasienPulang 
+        :getPasienPulang="getExportPasienPulang" 
+        :tanggalSearch="tanggalSearch"
+        :totalKamarDibersihkan="totalKamarDibersihkan"
+        :totalPasien="totalPasien"
+        />
     </div>
     <b-loading is-full-page :active.sync="isLoading" :can-cancel="false"></b-loading>
-
+    
   </div>
 </template>
 
 <script>
 import ModalKonfirmasiHapusData from '../modal/ModalKonfirmasiHapusData'
 import ModalEksportData from '../modal/ModalEksportData'
+import TablePrintPasienPulang from './TablePrintPasienPulang'
+
 export default {
   name: "ListPasienPulang",
   components:{
     ModalKonfirmasiHapusData,
-    ModalEksportData
+    ModalEksportData,
+    TablePrintPasienPulang
   },
   data(){
     return {      
@@ -328,6 +339,28 @@ export default {
     }
   },
   computed:{
+    getExportPasienPulang(){
+      const dataExportPasienPulang =  this.$store.getters.getExportPasienPulang
+      dataExportPasienPulang.map( (dataPasien) => {
+        dataPasien.tanggal = this.$moment(dataPasien.tanggal).format("DD MMM YYYY")
+        if(dataPasien.waktuVerif != null){
+          dataPasien.waktuVerif = this.$moment(dataPasien.waktuVerif).format("H:mm:ss")
+        }
+        if(dataPasien.waktuSelesai != null){
+          dataPasien.waktuSelesai = this.$moment(dataPasien.waktuSelesai).format("H:mm:ss")
+        }
+        if(dataPasien.waktuIKS != null){
+          dataPasien.waktuIKS = this.$moment(dataPasien.waktuIKS).format("H:mm:ss")
+        }
+        if(dataPasien.waktuPasien != null){
+          dataPasien.waktuPasien = this.$moment(dataPasien.waktuPasien).format("H:mm:ss")
+        }
+        if(dataPasien.waktuLunas != null){
+          dataPasien.waktuLunas = this.$moment(dataPasien.waktuLunas).format("H:mm:ss")
+        }
+      })
+      return dataExportPasienPulang
+    },
     totalKamarDibersihkan(){
       return this.$store.getters.getTotalKamarPasienPulang
     },
@@ -377,7 +410,7 @@ export default {
     },
   },
   created(){
-    console.log("LIST PASIEN PULANG CREATED")
+    // console.log("LIST PASIEN PULANG CREATED")
   },
   methods:{
     clearTanggal(){
@@ -514,6 +547,35 @@ export default {
           'data': dataPasien,
           'method': 'deleteDataPasienPulang',
         }
+      })
+    },
+    printDataPasienPulang(){
+      let tanggal = null
+      if(this.tanggalSearch != null){
+        tanggal = {
+          awal : this.tanggalSearch,
+          akhir: this.tanggalSearch
+        }
+      }else{
+        tanggal = {
+          awal : new Date(),
+          akhir: new Date()
+        }
+      }
+      // console.log(tanggal)
+      this.$store.dispatch('getDataExportPasienPulang', tanggal)
+      .then( (respon) => {
+        this.$htmlToPaper('printDataPasien');
+        this.$buefy.notification.open({
+          message: "Data Siap Dicetak",
+          type: 'is-success'
+        })
+      })
+      .catch( (respon) => {
+        this.$buefy.notification.open({
+          message: "Error",
+          type: 'is-danger'
+        })
       })
     }
   },

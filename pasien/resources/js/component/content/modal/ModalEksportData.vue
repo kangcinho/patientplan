@@ -57,11 +57,12 @@
       </div>
 
       <export-excel
-        class="button is-primary is-hidden"
+        class = "button is-primary is-hidden"
         :data = "getExportPasienPulang"
         :fields = "fields"
+        :title = "[title,cleanKamar]"
         worksheet = "Riwayat Pasien Pulang"
-        :name = filename
+        :name = "filename"
         >
         <span ref="ekspor">Download!</span>
       </export-excel>
@@ -100,7 +101,7 @@ export default {
         'Waktu Pasien': 'waktuPasien',
         'Waktu Lunas': 'waktuLunas',
         'Petugas FO': 'petugasFO',
-        'Petugas Perawat': 'petugasPerawat',      
+        'Petugas Perawat': 'petugasPerawat',
       },
     }
   },
@@ -172,11 +173,19 @@ export default {
           dataPasien.waktuLunas = this.$moment(dataPasien.waktuLunas).format("H:mm:ss")
         }
       })
-
       return dataExportPasienPulang
     },
+    getJumlahKamarDibersihkan(){
+      return this.$store.getters.getTotalKamarDibersihkanExport
+    },
     filename(){
-      return `Riwayat Pasien Pulang Periode ${this.tanggal.awal} - ${this.tanggal.akhir}.xls`
+      return `Riwayat Pasien Pulang Periode ${this.$moment(this.tanggal.awal).format("DD MMM YYYY")} - ${this.$moment(this.tanggal.akhir).format("DD MMM YYYY")}.xls`
+    },
+    title(){
+      return `Riwayat Pasien Pulang Periode ${this.$moment(this.tanggal.awal).format("DD MMM YYYY")} - ${this.$moment(this.tanggal.akhir).format("DD MMM YYYY")}`
+    },
+    cleanKamar(){
+      return `Jumlah Kamar Yang Dibersihkan: ${this.getJumlahKamarDibersihkan} `
     }
   }
 }

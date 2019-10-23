@@ -90,6 +90,7 @@ const actions = {
       axios.post('/api/getDataExportPasienPulang', data)
       .then( (respon) => {
         commit(type.EXPORT_DATA_TO_EXCEL, respon.data.dataPasien)
+        commit(type.EXPORT_DATA_CLEAN_KAMAR_TO_EXCEL, respon.data.dataPasienPulangFilter)
         if(respon.data.dataPasien.length > 0){
           berhasil(respon.data.status)
         }else{
@@ -100,7 +101,7 @@ const actions = {
         gagal(error.response.data.error)
       })
     })
-  }
+  },
 }
 
 export default actions

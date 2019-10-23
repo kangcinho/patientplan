@@ -281,10 +281,12 @@ class PasienController extends Controller
         
         $listRegistrasiSCFromRegistrasi = $this->autoGetPasienFromRegistrasi($jasaSC);
         $listRegistrasiNormalFromRegistrasi = $this->autoGetPasienFromRegistrasi($jasaNormal);
-        
+    
         $listRegistrasiSCFromKasir = $this->autoGetPasienFromKasir($jasaSC);
         $listRegistrasiNormalSCFromKasir = $this->autoGetPasienFromKasir($jasaNormal);
         
+        $listPasienCheckOut = $this->autoGetPasienFromKasirNonTerencana();
+
         $dataNoRegPasienSCs = collect();
         $dataNoRegPasienSCs = $dataNoRegPasienSCs->concat($listRegistrasiSCFromRegistrasi)->concat($listRegistrasiSCFromKasir);
         $dataNoRegPasienSCs = $this->autoGetPasienBayiFromNoRegIbu($dataNoRegPasienSCs);
@@ -300,6 +302,7 @@ class PasienController extends Controller
         $this->autoSaveDataPasien($dataNoRegPasienSCs,2);
         $this->autoSaveDataPasien($dataNoRegPasienNormals,1);
         $this->autoUpdateDataPasien($dataNoRegPasienTambahanSCs,3);
+        $this->autoSaveDataPasienCheckout($listPasienCheckOut);
     }
     
     public function autoGetPasienBayiFromNoRegIbu($dataNoRegIbu){
@@ -368,6 +371,23 @@ class PasienController extends Controller
             ->get();
         return $sanataKasir;
     }
+
+    public function autoGetPasienFromKasirNonTerencana(){
+        $tanggalSekarang = \Carbon\Carbon::now()->toDateString();
+        $sanataKasir = \DB::connection('sqlsrv')
+            ->table('SIMtrKasir')
+            ->selectRaw('SIMtrKasir.NoReg as noReg, SIMtrKasir.Tanggal as tanggal, SIMtrRegistrasi.NRM as nrm, SIMtrRegistrasi.NamaPasien_Reg as namaPasien, SIMtrRegistrasi.NoKamar as kamar, SIMtrRegistrasi.NoAnggota as noKartu, SIMmJenisKerjasama.JenisKerjasama as jenisKerjasama, SIMtrRegistrasi.BPJSMurni as BPJSMurni, SIMtrRegistrasi.SilverPlus as silverPlus, SIMtrRegistrasi.NaikKelas as naikKelas, mCustomer.Nama_Customer as namaPerusahaan, mSupplier.Nama_Supplier as namaDokter, SIMtrRegistrasi.KdKelas as kodeKelas')
+            ->join('SIMtrRegistrasi', 'SIMtrKasir.NoReg', 'SIMtrRegistrasi.NoReg')
+            ->join('SIMmJenisKerjasama', 'SIMmJenisKerjasama.JenisKerjasamaID', 'SIMtrRegistrasi.JenisKerjasamaID')
+            ->join('SIMtrRegistrasiTujuan', 'SIMtrRegistrasi.NoReg', 'SIMtrRegistrasiTujuan.NoReg')
+            ->join('mSupplier', 'mSupplier.Kode_Supplier', 'SIMtrRegistrasiTujuan.DokterID')
+            ->leftjoin('mCustomer', 'mCustomer.Kode_Customer', 'SIMtrRegistrasi.KodePerusahaan')
+            ->where('SIMtrKasir.Tanggal', $tanggalSekarang)
+            ->where('SIMtrKasir.RJ', 'RI')
+            ->where('SIMtrKasir.Batal', 0)
+            ->get();
+        return $sanataKasir;
+    }
     public function autoSaveDataPasien($dataPasienCollection, $jumlahHari){
         foreach($dataPasienCollection as $dataPasien){
             $status = "UPDATE";
@@ -429,18 +449,75 @@ class PasienController extends Controller
         }
     }
 
+    public function autoSaveDataPasienCheckout($dataPasienCollection){
+        foreach($dataPasienCollection as $dataPasien){
+            $status = "UPDATE";
+            $pasien = Pasien::where('noReg', $dataPasien->noReg)->first();
+            if(!$pasien){
+                $status = "INSERT";
+                $pasien = new Pasien;
+                $pasien->idPasien = $pasien->getIDPasien();
+                $pasien->waktuVerif = null;
+                $pasien->waktuIKS = null;
+                $pasien->waktuSelesai = null;
+                $pasien->waktuPasien = null;
+                $pasien->waktuLunas = null;
+                $pasien->petugasFO = null;
+                $pasien->petugasPerawat = null;
+            }
+
+            if($dataPasien->jenisKerjasama == "UMUM"){
+                $dataPasien->keterangan = "Umum";
+            }else if($dataPasien->jenisKerjasama == "BPJS"){
+                if($dataPasien->BPJSMurni){
+                    $dataPasien->keterangan = "BPJS - BPJS Murni";
+                }else if($dataPasien->silverPlus){
+                    $dataPasien->keterangan = "BPJS - Silver Plus";
+                }else if($dataPasien->naikKelas){
+                    $dataPasien->keterangan = "BPJS - Silver Top Up";
+                }else{
+                    $dataPasien->keterangan = "BPJS";
+                }
+            }else{
+                $dataPasien->keterangan = "IKS - ".$dataPasien->namaPerusahaan;
+            }
+
+            $pasien->noReg = $dataPasien->noReg;
+            $pasien->tanggal = $dataPasien->tanggal;
+            $pasien->nrm = $dataPasien->nrm;
+            $pasien->namaPasien = $dataPasien->namaPasien;
+            $pasien->kamar = $dataPasien->kamar;
+            $pasien->keterangan = $dataPasien->keterangan;
+            $pasien->namaDokter = $dataPasien->namaDokter;
+            $pasien->isTerencana = false;
+            $pasien->noKartu = $dataPasien->noKartu;
+            $pasien->kodeKelas = $dataPasien->kodeKelas;
+            $pasien->idUser = 'SYSTEM';
+            $pasien->isEdit = false;
+            $pasien->save();
+            RecordLog::logRecord($status, $pasien->idPasien, null, $pasien, 'SYSTEM');
+        }
+    }
+
     public function getDataExportPasienPulang(Request $request){
-        $tglAwal = $this->convertDate($request->awal);
-        $tglAkhir = $this->convertDate($request->akhir);
+        $tglAwal = explode(' ',$this->convertDate($request->awal))[0];
+        $tglAkhir = explode(' ',$this->convertDate($request->akhir))[0];
         $dataPasien = Pasien::where('tanggal', '>=', $tglAwal)
             ->where('tanggal', '<=', $tglAkhir)
             ->orderBy('created_at','asc')
             ->get();
+        
+        $dataPasienPulangFilter = Pasien::orderBy('tanggal', 'desc')->select('namaPasien','kamar', 'kodeKelas')
+        ->where('tanggal', '>=', $tglAwal)
+        ->where('tanggal', '<=', $tglAkhir)
+        ->get()->toArray();
         RecordLog::logRecord('REPORT', null, $tglAwal, $tglAkhir, Auth::user()->idUser);
+        $dataPasienPulangFilter = count($this->cekKamar($dataPasienPulangFilter));
         $status = "Data Terkonversi ke Excel";
         return response()->json([
             'status' => $status,
-            'dataPasien' => $dataPasien
+            'dataPasien' => $dataPasien,
+            'dataPasienPulangFilter' => $dataPasienPulangFilter
         ], 200);
     }
 }

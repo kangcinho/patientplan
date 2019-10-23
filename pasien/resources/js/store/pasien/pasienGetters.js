@@ -13,6 +13,7 @@ const getters = {
   getTotalPasienPulang: (state) => state.totalPasienPulang,
   getExportPasienPulang: (state) => state.dataExportPasienPulang,
   getTotalKamarPasienPulang: (state) => state.totalKamarDibersihkan,
+  getTotalKamarDibersihkanExport: (state) => state.totalKamarDibersihkanExport,
 }
 
 export default getters

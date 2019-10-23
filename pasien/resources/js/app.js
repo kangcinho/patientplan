@@ -6,8 +6,22 @@ import store from './store/store'
 import router from './router'
 import excel from 'vue-excel-export'
 import IdleVue from 'idle-vue'
+import VueHtmlToPaper from 'vue-html-to-paper'
 
 const eventsHub = new Vue()
+const options = {
+  name: '_blank',
+  specs: [
+    'fullscreen=yes',
+    'titlebar=yes',
+    'scrollbars=yes'
+  ],
+  styles: [
+    '../css/app.css'
+  ]
+}
+
+Vue.use(VueHtmlToPaper, options)
 
 Vue.use(IdleVue, {
   eventEmitter: eventsHub,
