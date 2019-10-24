@@ -25,7 +25,7 @@ Vue.use(VueHtmlToPaper, options)
 
 Vue.use(IdleVue, {
   eventEmitter: eventsHub,
-  idleTime: 30000,
+  idleTime: 300000,
   keepTracking: true,
 })
 
@@ -38,5 +38,3 @@ new Vue({
   router,
   render: (h) => h(App)
 })
-
-
