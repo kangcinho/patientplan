@@ -437,6 +437,7 @@ export default {
           type: 'is-success'
         })
         this.searchNamaPasienToDB()
+        this.$store.dispatch('getDataPasienRegistrasiFromSanata')
       })
       .catch( (respon) => {
         this.isLoading = false
@@ -567,6 +568,8 @@ export default {
     },
     deleteDataPasienPulang(dataPasien){
       const nama = dataPasien.namaPasien
+      this.disableEdit = false
+      dataPasien.isEdit = false
       this.$buefy.modal.open({
         parent: this,
         component: ModalKonfirmasiHapusData,

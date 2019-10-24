@@ -1,7 +1,8 @@
 <template>
   <div class="column is-full">
       <div class="has-text-centered">
-        <h3 class="is-size-5 has-text-weight-bold">Riwayat Pasien Pulang Tanggal {{ tanggalSearch | moment("DD MMM YYYY") }}</h3>
+        <h3 class="is-size-5 has-text-weight-bold" v-if="tanggalSearch != null">Riwayat Pasien Pulang Tanggal {{ tanggalSearch | moment("DD MMM YYYY") }}</h3>
+        <h3 class="is-size-5 has-text-weight-bold" v-else >Riwayat Pasien Pulang Tanggal {{ tgl | moment("DD MMM YYYY") }}</h3>
       </div>
       <span class="is-size-7 has-text-weight-bold">Clean Kamar: <strong>{{ totalKamarDibersihkan }}</strong></span>
       <table class="table is-bordered is-striped is-narrow is-fullwidth" style="font-size:0.6em;">
@@ -95,6 +96,11 @@
 export default {
   name: 'TablePrintPasienPulang',
   props: ['getPasienPulang', 'tanggalSearch', 'totalKamarDibersihkan', 'totalPasien'],
+  data(){
+    return {
+      tgl: new Date()
+    }
+  },
   filters:{
     showOnlyTime: (datetime) => {
       if(datetime != null){

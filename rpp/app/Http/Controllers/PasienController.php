@@ -160,13 +160,17 @@ class PasienController extends Controller
 
     public function deleteDataPasienPulang($idPasien){
         $dataPasien = Pasien::where('idPasien', $idPasien)->first();
-        $status = "Data Pasien $dataPasien->namaPasien Berhasil Dihapus!";
-        RecordLog::logRecord('DELETE', $dataPasien->idPasien, $dataPasien, null, Auth::user()->idUser);
-        $dataPasien->delete();
-       
+        if($dataPasien){
+            $status = "Data Pasien $dataPasien->namaPasien Berhasil Dihapus!";
+            RecordLog::logRecord('DELETE', $dataPasien->idPasien, $dataPasien, null, Auth::user()->idUser);
+            $dataPasien->delete();
+            return response()->json([
+                'status' => $status
+            ], 200);
+        }
         return response()->json([
-            'status' => $status
-        ], 200);
+            'error' => "Data Sudah Dihapus Oleh User Lain"
+        ],403);
     }
 
     public function saveDataPasienPulang(Request $request){

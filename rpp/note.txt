@@ -11,3 +11,6 @@ Run Laravel + Vue without Php artisan Serve or change DocumentRoot
 
 3. app.css
    change all url what you need to change.
+
+4. app.js
+   change style to ../public/css/app.css
