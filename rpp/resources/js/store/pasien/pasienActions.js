@@ -102,6 +102,17 @@ const actions = {
       })
     })
   },
+  getDataPasienPulangFromKasir({commit}){
+    return new Promise( (berhasil, gagal) => {
+      axios.get('/api/getDataPasienPulangFromKasir')
+      .then( (respon) => {
+        berhasil(respon.data.status)
+      })
+      .catch( (error) => {
+        gagal(error.response.data.error)
+      })
+    })
+  }
 }
 
 export default actions

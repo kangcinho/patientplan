@@ -87,6 +87,7 @@ export default {
       },
       fields: {
         'Terencana Pulang': 'isTerencana',
+        'Kode Kelas': 'kodeKelas',
         'No Reg': 'noReg',
         'Tanggal': 'tanggal',
         'NRM': 'nrm',

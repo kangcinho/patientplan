@@ -32,7 +32,8 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::post('updateDataUser', 'UserController@updateDataUser')->middleware('canAdmin');
     Route::get('deleteDataUser/{idUser}', 'UserController@deleteDataUser')->middleware('canAdmin');
     
-
+    //SYNC DATA
+    Route::get('getDataPasienPulangFromKasir', 'PasienController@getDataPasienPulangFromKasir')->middleware('canInsert');
     //EXPORT DATA
     Route::post('getDataExportPasienPulang', 'PasienController@getDataExportPasienPulang')->middleware('canEkspor');
 });

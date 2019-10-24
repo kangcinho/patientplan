@@ -1,6 +1,6 @@
 <template>
   <div class="columns is-multiline">
-    <div class="column is-full">
+    <div class="column is-4">
       <b-field grouped group-multiline>
         <div class="control">
           <b-taglist attached>
@@ -9,6 +9,17 @@
           </b-taglist>
         </div>
       </b-field>
+    </div>
+    <div class="column is-4 is-offset-4">
+      <b-button class="is-pulled-right"
+        type="is-success"
+        icon-pack="fas"
+        icon-left="sync-alt"
+        size="is-small"
+        v-if="getDataUser.canInsert"
+        @click="getPasienPulangFromKasir">
+        Pasien Pulang
+      </b-button>
     </div>
     <div class="column ">
       <b-field >
@@ -81,7 +92,11 @@
                 <b-checkbox v-model="dataPasienPulang.isTerencana">Terencana</b-checkbox>
               </span>
               </td>
-            <td class="has-text-centered wrapWord sizeKamar">{{ pasien.kamar }}</td>
+            <td class="has-text-centered wrapWord sizeKamar">
+              {{ pasien.kamar }}
+              <br/>
+              <span v-if="pasien.kodeKelas == '15'"><strong> Transisi </strong></span>
+            </td>
             <td class="has-text-centered wrapWord sizeKeterangan">{{ pasien.namaPasien }}</td>
             <td class="has-text-centered wrapWord sizeKeterangan">{{ pasien.keterangan }}  <br/> <strong>{{ pasien.namaDokter }}</strong> <br/> {{ pasien.noKartu }}</td>
             <td class="has-text-centered sizeWaktu">
@@ -413,6 +428,20 @@ export default {
     // console.log("LIST PASIEN PULANG CREATED")
   },
   methods:{
+    getPasienPulangFromKasir(){
+      this.isLoading = true
+      this.$store.dispatch('getDataPasienPulangFromKasir')
+      .then( (respon) =>{
+        this.$buefy.notification.open({
+          message: respon,
+          type: 'is-success'
+        })
+        this.searchNamaPasienToDB()
+      })
+      .catch( (respon) => {
+        this.isLoading = false
+      })
+    },
     clearTanggal(){
       this.tanggalSearch = null
       this.searchNamaPasienToDB()

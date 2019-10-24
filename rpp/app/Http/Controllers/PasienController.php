@@ -390,6 +390,9 @@ class PasienController extends Controller
     }
     public function autoSaveDataPasien($dataPasienCollection, $jumlahHari){
         foreach($dataPasienCollection as $dataPasien){
+            if($dataPasien->kamar == null || $dataPasien->kamar == '' || $dataPasien->kamar == 'null'){
+                continue;
+            }
             $status = "UPDATE";
             $pasien = Pasien::where('noReg', $dataPasien->noReg)->first();
             if(!$pasien){
@@ -451,6 +454,9 @@ class PasienController extends Controller
 
     public function autoSaveDataPasienCheckout($dataPasienCollection){
         foreach($dataPasienCollection as $dataPasien){
+            if($dataPasien->kamar == null || $dataPasien->kamar == '' || $dataPasien->kamar == 'null'){
+                continue;
+            }
             $status = "UPDATE";
             $pasien = Pasien::where('noReg', $dataPasien->noReg)->first();
             if(!$pasien){
@@ -518,6 +524,14 @@ class PasienController extends Controller
             'status' => $status,
             'dataPasien' => $dataPasien,
             'dataPasienPulangFilter' => $dataPasienPulangFilter
+        ], 200);
+    }
+
+    public function getDataPasienPulangFromKasir(){
+        $dataPasien = $this->autoGetPasienFromKasirNonTerencana();
+        $this->autoSaveDataPasienCheckout($dataPasien);
+        return response()->json([
+            'status' => 'Data Pasien Berhasil Ditarik'
         ], 200);
     }
 }

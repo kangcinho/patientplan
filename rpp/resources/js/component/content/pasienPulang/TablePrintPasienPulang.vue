@@ -38,7 +38,11 @@
                 </b-icon>
               </span>
             </td>
-            <td class="has-text-centered wrapWord sizeKamar">{{ pasien.kamar }}</td>
+            <td class="has-text-centered wrapWord sizeKamar">
+              {{ pasien.kamar }} 
+              <br/>
+              <span v-if="pasien.kodeKelas == '15'"><strong> Transisi </strong></span>
+            </td>
             <td class="has-text-centered wrapWord sizeKeterangan">{{ pasien.namaPasien }}</td>
             <td class="has-text-centered wrapWord sizeKeterangan">{{ pasien.keterangan }}  <br/> <strong>{{ pasien.namaDokter }}</strong> <br/> {{ pasien.noKartu }}</td>
             <td class="has-text-centered sizeWaktu">
