@@ -33,7 +33,9 @@
               placeholder="Periode Akhir"
               icon-pack="fas"
               icon="calendar-check"
+              :min-date="tanggal.awal"
               :date-formatter="(date) => $moment(date).format('DD MMM YYYY')"
+              :disabled="tanggal.awal == null"
               >
             </b-datepicker>
           </b-field>

@@ -7,7 +7,7 @@
       Apa Anda Yakin Menghapus Data {{ nama }} ?
     </section>
       <footer class="modal-card-foot">
-          <button class="button" type="button" @click="$parent.close()">Batal</button>
+          <button class="button" type="button" @click="closeModal()">Batal</button>
           <b-button 
             type="is-danger"
             icon-left="trash"
@@ -25,7 +25,12 @@ export default {
   name:"ModalKonfirmasiHapusData",
   props:['nama','data', 'method', 'tanggal'],
   methods:{
+    closeModal(){
+      // EventBus.$emit('changeDisableEdit')
+      this.$parent.close()
+    },
     deleteData(){
+      EventBus.$emit('changeDisableEdit', this.data)
       this.$store.dispatch(this.method, this.data)
       .then( (respon) => {
         this.$parent.close()

@@ -2025,6 +2025,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ModalEksportData",
   data: function data() {
@@ -2195,9 +2197,14 @@ __webpack_require__.r(__webpack_exports__);
   name: "ModalKonfirmasiHapusData",
   props: ['nama', 'data', 'method', 'tanggal'],
   methods: {
+    closeModal: function closeModal() {
+      // EventBus.$emit('changeDisableEdit')
+      this.$parent.close();
+    },
     deleteData: function deleteData() {
       var _this = this;
 
+      _eventBus__WEBPACK_IMPORTED_MODULE_0__["default"].$emit('changeDisableEdit', this.data);
       this.$store.dispatch(this.method, this.data).then(function (respon) {
         _this.$parent.close();
 
@@ -2721,6 +2728,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modal_ModalKonfirmasiHapusData__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../modal/ModalKonfirmasiHapusData */ "./resources/js/component/content/modal/ModalKonfirmasiHapusData.vue");
 /* harmony import */ var _modal_ModalEksportData__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../modal/ModalEksportData */ "./resources/js/component/content/modal/ModalEksportData.vue");
 /* harmony import */ var _TablePrintPasienPulang__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./TablePrintPasienPulang */ "./resources/js/component/content/pasienPulang/TablePrintPasienPulang.vue");
+/* harmony import */ var _eventBus__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../eventBus */ "./resources/js/eventBus.js");
 //
 //
 //
@@ -3029,6 +3037,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 
 
 
@@ -3107,6 +3116,9 @@ __webpack_require__.r(__webpack_exports__);
     totalKamarDibersihkan: function totalKamarDibersihkan() {
       return this.$store.getters.getTotalKamarPasienPulang;
     },
+    totalKamarDibersihkanExport: function totalKamarDibersihkanExport() {
+      return this.$store.getters.getTotalKamarDibersihkanExport;
+    },
     totalPasien: function totalPasien() {
       return this.$store.getters.getTotalPasienPulang;
     },
@@ -3138,6 +3150,7 @@ __webpack_require__.r(__webpack_exports__);
     'pagging.current': function paggingCurrent(newVal, oldVal) {
       var _this4 = this;
 
+      this.disableEdit = false;
       var firstPage, lastPage;
       firstPage = (this.pagging.current - 1) * this.pagging.perPage;
       lastPage = this.pagging.perPage;
@@ -3180,6 +3193,7 @@ __webpack_require__.r(__webpack_exports__);
       this.searchNamaPasienToDB();
     },
     modalEksportData: function modalEksportData() {
+      this.disableEdit = false;
       this.$buefy.modal.open({
         parent: this,
         component: _modal_ModalEksportData__WEBPACK_IMPORTED_MODULE_1__["default"],
@@ -3297,6 +3311,7 @@ __webpack_require__.r(__webpack_exports__);
     searchNamaPasienToDB: function searchNamaPasienToDB() {
       var _this8 = this;
 
+      this.disableEdit = false;
       var firstPage, lastPage;
       firstPage = 0;
       lastPage = this.pagging.perPage;
@@ -3320,9 +3335,8 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     deleteDataPasienPulang: function deleteDataPasienPulang(dataPasien) {
-      var nama = dataPasien.namaPasien;
-      this.disableEdit = false;
-      dataPasien.isEdit = false;
+      var nama = dataPasien.namaPasien; // dataPasien.isEdit = false
+
       this.$buefy.modal.open({
         parent: this,
         component: _modal_ModalKonfirmasiHapusData__WEBPACK_IMPORTED_MODULE_0__["default"],
@@ -3337,6 +3351,7 @@ __webpack_require__.r(__webpack_exports__);
     printDataPasienPulang: function printDataPasienPulang() {
       var _this9 = this;
 
+      this.disableEdit = false;
       var tanggal = null;
 
       if (this.tanggalSearch != null) {
@@ -3393,6 +3408,13 @@ __webpack_require__.r(__webpack_exports__);
       _this10.pagging.total = _this10.$store.getters.getTotalPasienPulang;
     })["catch"](function (respon) {
       _this10.isLoading = false;
+    });
+    _eventBus__WEBPACK_IMPORTED_MODULE_3__["default"].$on('changeDisableEdit', function (data) {
+      if (data.isEdit) {
+        _this10.disableEdit = false;
+
+        _this10.hapusFieldAll();
+      }
     });
   },
   onIdle: function onIdle() {
@@ -17831,9 +17853,11 @@ var render = function() {
                         placeholder: "Periode Akhir",
                         "icon-pack": "fas",
                         icon: "calendar-check",
+                        "min-date": _vm.tanggal.awal,
                         "date-formatter": function(date) {
                           return _vm.$moment(date).format("DD MMM YYYY")
-                        }
+                        },
+                        disabled: _vm.tanggal.awal == null
                       },
                       model: {
                         value: _vm.tanggal.akhir,
@@ -17958,7 +17982,7 @@ var render = function() {
               attrs: { type: "button" },
               on: {
                 click: function($event) {
-                  return _vm.$parent.close()
+                  return _vm.closeModal()
                 }
               }
             },
@@ -19588,8 +19612,8 @@ var render = function() {
                 attrs: {
                   getPasienPulang: _vm.getExportPasienPulang,
                   tanggalSearch: _vm.tanggalSearch,
-                  totalKamarDibersihkan: _vm.totalKamarDibersihkan,
-                  totalPasien: _vm.totalPasien
+                  totalKamarDibersihkan: _vm.totalKamarDibersihkanExport,
+                  totalPasien: _vm.getExportPasienPulang.length
                 }
               })
             ],

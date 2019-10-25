@@ -297,8 +297,8 @@
       <TablePrintPasienPulang 
         :getPasienPulang="getExportPasienPulang" 
         :tanggalSearch="tanggalSearch"
-        :totalKamarDibersihkan="totalKamarDibersihkan"
-        :totalPasien="totalPasien"
+        :totalKamarDibersihkan="totalKamarDibersihkanExport"
+        :totalPasien="getExportPasienPulang.length"
         />
     </div>
     <b-loading is-full-page :active.sync="isLoading" :can-cancel="false"></b-loading>
@@ -310,6 +310,7 @@
 import ModalKonfirmasiHapusData from '../modal/ModalKonfirmasiHapusData'
 import ModalEksportData from '../modal/ModalEksportData'
 import TablePrintPasienPulang from './TablePrintPasienPulang'
+import EventBus from '../../../eventBus'
 
 export default {
   name: "ListPasienPulang",
@@ -379,6 +380,9 @@ export default {
     totalKamarDibersihkan(){
       return this.$store.getters.getTotalKamarPasienPulang
     },
+    totalKamarDibersihkanExport(){
+      return this.$store.getters.getTotalKamarDibersihkanExport
+    },
     totalPasien(){
       return this.$store.getters.getTotalPasienPulang
     },
@@ -410,6 +414,7 @@ export default {
   },
   watch:{
     'pagging.current'(newVal, oldVal){
+      this.disableEdit = false
       let firstPage,lastPage      
       firstPage = (this.pagging.current - 1) * this.pagging.perPage
       lastPage = this.pagging.perPage
@@ -426,6 +431,7 @@ export default {
   },
   created(){
     // console.log("LIST PASIEN PULANG CREATED")
+    
   },
   methods:{
     getPasienPulangFromKasir(){
@@ -448,6 +454,7 @@ export default {
       this.searchNamaPasienToDB()
     },
     modalEksportData(){
+      this.disableEdit = false
       this.$buefy.modal.open({
         parent: this,
         component: ModalEksportData,
@@ -548,6 +555,7 @@ export default {
         
     },
     searchNamaPasienToDB(){
+      this.disableEdit = false
       let firstPage,lastPage
       firstPage = 0
       lastPage = this.pagging.perPage
@@ -568,8 +576,7 @@ export default {
     },
     deleteDataPasienPulang(dataPasien){
       const nama = dataPasien.namaPasien
-      this.disableEdit = false
-      dataPasien.isEdit = false
+      // dataPasien.isEdit = false
       this.$buefy.modal.open({
         parent: this,
         component: ModalKonfirmasiHapusData,
@@ -582,6 +589,7 @@ export default {
       })
     },
     printDataPasienPulang(){
+      this.disableEdit = false
       let tanggal = null
       if(this.tanggalSearch != null){
         tanggal = {
@@ -631,6 +639,13 @@ export default {
     })
     .catch( (respon) => {
       this.isLoading = false
+    })
+
+    EventBus.$on('changeDisableEdit', (data) => {
+      if(data.isEdit){
+        this.disableEdit = false
+        this.hapusFieldAll()
+      }
     })
   },
   onIdle() {
