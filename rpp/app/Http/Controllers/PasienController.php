@@ -8,6 +8,7 @@ use App\Http\Helper\RecordLog;
 use Illuminate\Support\Facades\Auth;
 use App\User;
 use JWTAuth;
+use DateTime;
 class PasienController extends Controller
 {
     public function getDataPasienRegistrasiFromSanata(){
@@ -208,19 +209,34 @@ class PasienController extends Controller
             if($request->isWaktu){
                 if($request->waktuVerif != null){
                     $dataPasien->waktuVerif = $this->convertDate($request->waktuVerif);
+                }else{
+                    $dataPasien->waktuVerif = null;
                 }
+
                 if($request->waktuIKS != null){
                     $dataPasien->waktuIKS = $this->convertDate($request->waktuIKS);
+                }else{
+                    $dataPasien->waktuIKS = null;
                 }
+
                 if($request->waktuSelesai != null){
                     $dataPasien->waktuSelesai = $this->convertDate($request->waktuSelesai);
+                }else{
+                    $dataPasien->waktuSelesai = null;
                 }
+
                 if($request->waktuPasien != null){
                     $dataPasien->waktuPasien = $this->convertDate($request->waktuPasien);
+                }else{
+                    $dataPasien->waktuPasien = null;
                 }
+
                 if($request->waktuLunas != null){
                     $dataPasien->waktuLunas = $this->convertDate($request->waktuLunas);
-                }  
+                }else{
+                    $dataPasien->waktuLunas = null;
+                }
+
                 $dataPasien->petugasFO = $request->petugasFO;
                 $dataPasien->petugasPerawat = $request->petugasPerawat;    
             }
@@ -240,19 +256,34 @@ class PasienController extends Controller
         if($pasienPulang){
             if($request->waktuVerif != null){
                 $pasienPulang->waktuVerif = $this->convertDate($request->waktuVerif);
+            }else{
+                $pasienPulang->waktuVerif = null;
             }
+
             if($request->waktuIKS != null){
                 $pasienPulang->waktuIKS = $this->convertDate($request->waktuIKS);
+            }else{
+                $pasienPulang->waktuIKS = null;
             }
+
             if($request->waktuSelesai != null){
                 $pasienPulang->waktuSelesai = $this->convertDate($request->waktuSelesai);
+            }else{
+                $pasienPulang->waktuSelesai = null;
             }
+
             if($request->waktuPasien != null){
                 $pasienPulang->waktuPasien = $this->convertDate($request->waktuPasien);
+            }else{
+                $pasienPulang->waktuPasien = null;
             }
+
             if($request->waktuLunas != null){
                 $pasienPulang->waktuLunas = $this->convertDate($request->waktuLunas);
+            }else{
+                $pasienPulang->waktuLunas = null;
             }
+            
             $pasienPulang->petugasFO = $request->petugasFO;
             $pasienPulang->petugasPerawat = $request->petugasPerawat;
             $pasienPulang->isTerencana = $request->isTerencana;
@@ -378,6 +409,7 @@ class PasienController extends Controller
 
     public function autoGetPasienFromKasirNonTerencana(){
         $tanggalSekarang = \Carbon\Carbon::now()->toDateString();
+        $tanggalKemarin = \Carbon\Carbon::now()->subDays(1)->toDateString();
         $sanataKasir = \DB::connection('sqlsrv')
             ->table('SIMtrKasir')
             ->selectRaw('SIMtrKasir.NoReg as noReg, SIMtrKasir.Tanggal as tanggal, SIMtrRegistrasi.NRM as nrm, SIMtrRegistrasi.NamaPasien_Reg as namaPasien, SIMtrRegistrasi.NoKamar as kamar, SIMtrRegistrasi.NoAnggota as noKartu, SIMmJenisKerjasama.JenisKerjasama as jenisKerjasama, SIMtrRegistrasi.BPJSMurni as BPJSMurni, SIMtrRegistrasi.SilverPlus as silverPlus, SIMtrRegistrasi.NaikKelas as naikKelas, mCustomer.Nama_Customer as namaPerusahaan, mSupplier.Nama_Supplier as namaDokter, SIMtrRegistrasi.KdKelas as kodeKelas')
@@ -386,7 +418,8 @@ class PasienController extends Controller
             ->join('SIMtrRegistrasiTujuan', 'SIMtrRegistrasi.NoReg', 'SIMtrRegistrasiTujuan.NoReg')
             ->join('mSupplier', 'mSupplier.Kode_Supplier', 'SIMtrRegistrasiTujuan.DokterID')
             ->leftjoin('mCustomer', 'mCustomer.Kode_Customer', 'SIMtrRegistrasi.KodePerusahaan')
-            ->where('SIMtrKasir.Tanggal', $tanggalSekarang)
+            ->where('SIMtrKasir.Tanggal','<=', $tanggalSekarang)
+            ->where('SIMtrKasir.Tanggal','>=', $tanggalKemarin)
             ->where('SIMtrKasir.RJ', 'RI')
             ->where('SIMtrKasir.Batal', 0)
             ->get();
@@ -441,7 +474,7 @@ class PasienController extends Controller
             $pasien->idUser = 'SYSTEM';
             $pasien->isEdit = false;
             $pasien->save();
-            RecordLog::logRecord($status, $pasien->idPasien, null, $pasien, 'SYSTEM');
+            // RecordLog::logRecord($status, $pasien->idPasien, null, $pasien, 'SYSTEM');
         }
     }
 
@@ -452,7 +485,7 @@ class PasienController extends Controller
                 $pasien->tanggal = \Carbon\Carbon::parse($dataPasien->tanggal)->addDays($jumlahHari);
                 $pasien->save();
             }
-            RecordLog::logRecord('UPDATE', $pasien->idPasien, null, $pasien, 'SYSTEM');
+            // RecordLog::logRecord('UPDATE', $pasien->idPasien, null, $pasien, 'SYSTEM');
         }
     }
 
@@ -474,6 +507,8 @@ class PasienController extends Controller
                 $pasien->waktuLunas = null;
                 $pasien->petugasFO = null;
                 $pasien->petugasPerawat = null;
+                $pasien->isTerencana = false;
+                $pasien->idUser = 'SYSTEM';
             }
 
             if($dataPasien->jenisKerjasama == "UMUM"){
@@ -499,13 +534,13 @@ class PasienController extends Controller
             $pasien->kamar = $dataPasien->kamar;
             $pasien->keterangan = $dataPasien->keterangan;
             $pasien->namaDokter = $dataPasien->namaDokter;
-            $pasien->isTerencana = false;
+            
             $pasien->noKartu = $dataPasien->noKartu;
             $pasien->kodeKelas = $dataPasien->kodeKelas;
-            $pasien->idUser = 'SYSTEM';
+            
             $pasien->isEdit = false;
             $pasien->save();
-            RecordLog::logRecord($status, $pasien->idPasien, null, $pasien, 'SYSTEM');
+            // RecordLog::logRecord($status, $pasien->idPasien, null, $pasien, 'SYSTEM');
         }
     }
 
@@ -516,6 +551,7 @@ class PasienController extends Controller
             ->where('tanggal', '<=', $tglAkhir)
             ->orderBy('created_at','asc')
             ->get();
+        $dataPasien = $this->hitungWaktu($dataPasien);
         
         $dataPasienPulangFilter = Pasien::orderBy('tanggal', 'desc')->select('namaPasien','kamar', 'kodeKelas')
         ->where('tanggal', '>=', $tglAwal)
@@ -531,6 +567,37 @@ class PasienController extends Controller
         ], 200);
     }
 
+    public function hitungWaktu($dataPasien){
+        foreach($dataPasien as $pasien){
+            if($pasien->waktuVerif == null OR $pasien->waktuVerif == ''){
+                $pasien->waktuTotal =  0;
+                continue;
+            }
+            if($pasien->waktuIKS == null OR $pasien->waktuIKS == ''){
+                $pasien->waktuTotal =  0;
+                continue;
+            }
+            if($pasien->waktuSelesai == null OR $pasien->waktuSelesai == ''){
+                $pasien->waktuTotal =  0;
+                continue;
+            }
+            if($pasien->waktuPasien == null OR $pasien->waktuPasien == ''){
+                $pasien->waktuTotal =  0;
+                continue;
+            }
+            if($pasien->waktuLunas == null OR $pasien->waktuLunas == ''){
+                $pasien->waktuTotal =  0;
+                continue;
+            }
+            $waktuVerif = new DateTime($pasien->waktuVerif);
+            $waktuLunas = new DateTime($pasien->waktuLunas);
+            $hitungWaktu = $waktuLunas->diff($waktuVerif);
+            $pasien->waktuTotal = $hitungWaktu->days * 24 * 60;
+            $pasien->waktuTotal += $hitungWaktu->h * 60;
+            $pasien->waktuTotal += $hitungWaktu->i;
+        }
+        return $dataPasien;
+    }
     public function getDataPasienPulangFromKasir(){
         $dataPasien = $this->autoGetPasienFromKasirNonTerencana();
         $this->autoSaveDataPasienCheckout($dataPasien);

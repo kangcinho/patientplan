@@ -76,7 +76,7 @@
         </tr>
         </thead>
         <tbody v-if="getPasienPulang.length > 0">
-          <tr v-for="pasien in getPasienPulang" :key="pasien.idPasien">
+          <tr v-for="pasien in getPasienPulang" :key="pasien.idPasien" :style="hitungWaktu(pasien)?'background-color : hsl(348, 100%, 61%)':''">
             <td class="has-text-centered wrapWord sizeKeterangan">
               {{ pasien.tanggal | moment("DD MMM YYYY") }}
               <br/>
@@ -109,6 +109,17 @@
                   icon-pack="fas"
                   icon="clock"
                   hour-format="24">
+                  <button class="button is-primary"
+                    @click="dataPasienPulang.waktuVerif = new Date()">
+                    <b-icon pack="fas" icon="clock"></b-icon>
+                    <span>Now</span>
+                  </button>
+
+                  <button class="button is-danger"
+                      @click="dataPasienPulang.waktuVerif = null">
+                      <b-icon pack="fas" icon="times"></b-icon>
+                      <span>Clear</span>
+                  </button>
                 </b-clockpicker>
               </span>
             </td>
@@ -122,6 +133,19 @@
                   icon-pack="fas"
                   icon="clock"
                   hour-format="24">
+
+                  <button class="button is-primary"
+                    @click="dataPasienPulang.waktuIKS = new Date()">
+                    <b-icon pack="fas" icon="clock"></b-icon>
+                    <span>Now</span>
+                  </button>
+
+                  <button class="button is-danger"
+                      @click="dataPasienPulang.waktuIKS = null">
+                      <b-icon pack="fas" icon="times"></b-icon>
+                      <span>Clear</span>
+                  </button>
+
                 </b-clockpicker>
               </span>
               
@@ -136,6 +160,18 @@
                   icon-pack="fas"
                   icon="clock"
                   hour-format="24">
+
+                  <button class="button is-primary"
+                    @click="dataPasienPulang.waktuSelesai = new Date()">
+                    <b-icon pack="fas" icon="clock"></b-icon>
+                    <span>Now</span>
+                  </button>
+
+                  <button class="button is-danger"
+                      @click="dataPasienPulang.waktuSelesai = null">
+                      <b-icon pack="fas" icon="times"></b-icon>
+                      <span>Clear</span>
+                  </button>
                 </b-clockpicker>
               </span>
             </td>
@@ -149,6 +185,18 @@
                   icon-pack="fas"
                   icon="clock"
                   hour-format="24">
+
+                  <button class="button is-primary"
+                    @click="dataPasienPulang.waktuPasien = new Date()">
+                    <b-icon pack="fas" icon="clock"></b-icon>
+                    <span>Now</span>
+                  </button>
+
+                  <button class="button is-danger"
+                      @click="dataPasienPulang.waktuPasien = null">
+                      <b-icon pack="fas" icon="times"></b-icon>
+                      <span>Clear</span>
+                  </button>
                 </b-clockpicker>
               </span>             
             </td>
@@ -162,6 +210,18 @@
                   icon-pack="fas"
                   icon="clock"
                   hour-format="24">
+                  
+                  <button class="button is-primary"
+                    @click="dataPasienPulang.waktuLunas = new Date()">
+                    <b-icon pack="fas" icon="clock"></b-icon>
+                    <span>Now</span>
+                  </button>
+
+                  <button class="button is-danger"
+                      @click="dataPasienPulang.waktuLunas = null">
+                      <b-icon pack="fas" icon="times"></b-icon>
+                      <span>Clear</span>
+                  </button>
                 </b-clockpicker>
               </span>                
             </td>
@@ -431,7 +491,6 @@ export default {
   },
   created(){
     // console.log("LIST PASIEN PULANG CREATED")
-    
   },
   methods:{
     getPasienPulangFromKasir(){
@@ -617,6 +676,49 @@ export default {
           type: 'is-danger'
         })
       })
+    },
+    hitungWaktu(pasien){
+      if(pasien.waktuVerif == null || pasien.waktuVerif == ''){
+        // console.log('verif')
+        return false
+      }
+      if(pasien.waktuIKS == null || pasien.waktuIKS == ''){
+        // console.log('iks')
+        return false
+      }
+      if(pasien.waktuSelesai == null || pasien.waktuSelesai == ''){
+        // console.log('selesai')
+        return false
+      }
+      if(pasien.waktuPasien == null || pasien.waktuPasien == ''){
+        // console.log('pasien')
+        return false
+      }
+      if(pasien.waktuLunas == null || pasien.waktuLunas == ''){
+        // console.log('lunas')
+        return false
+      }
+
+      const waktuVerif = new Date(pasien.waktuVerif)
+      const waktuLunas = new Date(pasien.waktuLunas)
+      const perbedaanWaktu = (waktuLunas.getTime() - waktuVerif.getTime())/(1000 * 60)
+      if(pasien.keterangan.includes('BPJS')){
+        // console.log('BPJS__')
+        if(perbedaanWaktu > 240){
+          return true
+        }
+      }else if(pasien.keterangan.includes('IKS')){
+        // console.log('IKS')
+        if(perbedaanWaktu > 240){
+          return true
+        }
+      }else if(pasien.keterangan.includes('Umum')){
+        // console.log('UMUM')
+        if(perbedaanWaktu > 120){
+          return true
+        }
+      }
+      return false
     }
   },
   filters:{
@@ -649,6 +751,7 @@ export default {
     })
   },
   onIdle() {
+    // console.log('onIdle')
     this.isLoading = true
     let firstPage,lastPage
     firstPage = (this.pagging.current - 1) * this.pagging.perPage
