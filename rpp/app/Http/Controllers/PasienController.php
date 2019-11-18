@@ -150,7 +150,15 @@ class PasienController extends Controller
         if(stripos($dataKamar['kamar'], 'R-BAYI') !== false && $dataKamar['kodeKelas'] == 15){
             return $status;
         }
-
+        if(stripos($dataKamar['kamar'], 'NICU') !== false){
+            return $status;
+        }
+        if(stripos($dataKamar['kamar'], 'PICU') !== false){
+            return $status;
+        }
+        if(stripos($dataKamar['kamar'], 'ICU') !== false){
+            return $status;
+        }
         foreach($dataHasilFilter as $dataFilter){
             if(stripos($dataKamar['namaPasien'], $dataFilter['namaPasien']) !== false){
                 $status = false;
@@ -358,6 +366,11 @@ class PasienController extends Controller
             
             $dataPasien->push($data);
             if($sanataRegistrasi){
+                //Tambahkan jika kode kamar ICU/INTERMEDIET/TRANSISI DLL ,lsg continue
+                if($sanataRegistrasi->kodeKelas == '15' || $sanataRegistrasi->kodeKelas == '16' || $sanataRegistrasi->kodeKelas == '23' || $sanataRegistrasi->kodeKelas == '24' || $sanataRegistrasi->kodeKelas == '25' || $sanataRegistrasi->kodeKelas == '26' || $sanataRegistrasi->kodeKelas == '27'){
+                // if($sanataRegistrasi->kodeKelas == '24'){
+                    continue;
+                }
                 $sanataRegistrasi->tanggal = $data->tanggal;
                 $dataPasien->push($sanataRegistrasi);
             }
@@ -384,6 +397,14 @@ class PasienController extends Controller
     }
 
     public function autoGetPasienFromKasir($jasaID){
+        // select SIMtrRJ.RegNo as noReg, SIMtrRJ.Tanggal as tanggal, SIMtrRegistrasi.NRM as nrm, SIMtrRegistrasi.NamaPasien_Reg as namaPasien, SIMtrRegistrasi.NoKamar as kamar, SIMtrRegistrasi.NoAnggota as noKartu, SIMmJenisKerjasama.JenisKerjasama as jenisKerjasama, SIMtrRegistrasi.BPJSMurni as BPJSMurni, SIMtrRegistrasi.SilverPlus as silverPlus, SIMtrRegistrasi.NaikKelas as naikKelas, mCustomer.Nama_Customer as namaPerusahaan, mSupplier.Nama_Supplier as namaDokter, SIMtrRegistrasi.KdKelas as kodeKelas from SIMtrRJ
+        // inner join SIMtrRJTransaksi on SIMtrRJ.NoBukti = SIMtrRJTransaksi.NoBukti
+        // inner join SIMtrRegistrasi on SIMtrRJ.RegNo = SIMtrRegistrasi.NoReg
+        // inner join SIMmJenisKerjasama on SIMmJenisKerjasama.JenisKerjasamaID = SIMtrRegistrasi.JenisKerjasamaID
+        // inner join SIMtrRegistrasiTujuan on SIMtrRegistrasi.NoReg = SIMtrRegistrasiTujuan.NoReg
+        // inner join mSupplier on mSupplier.Kode_Supplier = SIMtrRegistrasiTujuan.DokterID
+        // left join mCustomer on mCustomer.Kode_Customer = SIMtrRegistrasi.KodePerusahaan
+        // where SIMtrRJ.RegNo in ( select NoReg from SIMtrKasir where Batal = 0 and RJ = 'RI' and tanggal >= '2019-11-14' and tanggal <= '2019-11-17' ) and SIMtrRJTransaksi.JasaID in ('JAS00008')
         $tanggalSekarang = \Carbon\Carbon::now()->toDateString();
         $tanggalKemarin = \Carbon\Carbon::now()->subDays(1)->toDateString();
         $sanataKasir = \DB::connection('sqlsrv')
