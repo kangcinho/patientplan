@@ -26,7 +26,7 @@
           </tr>
         </thead>
         <tbody v-if="getPasienPulang.length > 0">
-          <tr v-for="pasien in getPasienPulang" :key="pasien.idPasien">
+          <tr v-for="pasien in getPasienPulang" :key="pasien.idPasien" :style="hitungWaktu(pasien)?'background-color : hsl(348, 100%, 61%)':''">
             <td class="has-text-centered wrapWord sizeKeterangan">
               {{ pasien.tanggal | moment("DD MMM YYYY") }}
               <br/>
@@ -40,26 +40,31 @@
               </span>
             </td>
             <td class="has-text-centered wrapWord sizeKamar">
-              {{ pasien.kamar }} 
+              {{ pasien.kamar }}
               <br/>
               <span v-if="pasien.kodeKelas == '15'"><strong> Transisi </strong></span>
             </td>
             <td class="has-text-centered wrapWord sizeKeterangan">{{ pasien.namaPasien }}</td>
-            <td class="has-text-centered wrapWord sizeKeterangan">{{ pasien.keterangan }}  <br/> <strong>{{ pasien.namaDokter }}</strong> <br/> {{ pasien.noKartu }}</td>
-            <td class="has-text-centered sizeWaktu">
-              <span>{{ pasien.waktuVerif  }}</span>
+            <td class="has-text-centered wrapWord sizeKeterangan">
+              {{ pasien.keterangan }} <br/>
+              <strong>{{ pasien.namaDokter }}</strong> <br/>
+              {{ pasien.noKartu }} <br/>
+              <strong> {{ pasien.waktuTotal }} Menit </strong>
             </td>
             <td class="has-text-centered sizeWaktu">
-              <span>{{ pasien.waktuIKS  }}</span>
+              <span>{{ pasien.waktuVerif | showOnlyTime  }}</span>
             </td>
             <td class="has-text-centered sizeWaktu">
-              <span>{{ pasien.waktuSelesai }}</span>
+              <span>{{ pasien.waktuIKS | showOnlyTime  }}</span>
             </td>
             <td class="has-text-centered sizeWaktu">
-              <span>{{ pasien.waktuPasien  }}</span>           
+              <span>{{ pasien.waktuSelesai | showOnlyTime }}</span>
             </td>
             <td class="has-text-centered sizeWaktu">
-              <span>{{ pasien.waktuLunas  }}</span>         
+              <span>{{ pasien.waktuPasien | showOnlyTime  }}</span>
+            </td>
+            <td class="has-text-centered sizeWaktu">
+              <span>{{ pasien.waktuLunas | showOnlyTime  }}</span>
             </td>
             <td class="has-text-centered sizePetugas">
               <span>{{ pasien.petugasFO }}</span>
@@ -108,6 +113,52 @@ export default {
       }
       return datetime
     },
+  },
+  methods:{
+    hitungWaktu(pasien){
+      // console.log("hitung waktu")
+      if(pasien.waktuVerif == null || pasien.waktuVerif == ''){
+        // console.log('verif')
+        return false
+      }
+      if(pasien.waktuIKS == null || pasien.waktuIKS == ''){
+        // console.log('iks')
+        return false
+      }
+      if(pasien.waktuSelesai == null || pasien.waktuSelesai == ''){
+        // console.log('selesai')
+        return false
+      }
+      if(pasien.waktuPasien == null || pasien.waktuPasien == ''){
+        // console.log('pasien')
+        return false
+      }
+      if(pasien.waktuLunas == null || pasien.waktuLunas == ''){
+        // console.log('lunas')
+        return false
+      }
+      const waktuVerif = new Date(pasien.waktuVerif)
+      const waktuLunas = new Date(pasien.waktuLunas)
+      const perbedaanWaktu = (waktuLunas.getTime() - waktuVerif.getTime())/(1000 * 60)
+      // console.log(waktuVerif, waktuLunas)
+      if(pasien.keterangan.includes('BPJS')){
+        // console.log('BPJS__')
+        if(perbedaanWaktu > 240){
+          return true
+        }
+      }else if(pasien.keterangan.includes('IKS')){
+        // console.log('IKS')
+        if(perbedaanWaktu > 240){
+          return true
+        }
+      }else if(pasien.keterangan.includes('Umum')){
+        // console.log('UMUM')
+        if(perbedaanWaktu > 120){
+          return true
+        }
+      }
+      return false
+    }
   }
 }
 </script>

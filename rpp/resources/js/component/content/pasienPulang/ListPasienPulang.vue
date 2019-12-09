@@ -264,19 +264,19 @@
                 type="is-info"
                 size="is-small"
                 icon-pack="fas"
-                icon-right="edit" 
+                icon-right="edit"
                 v-if="!pasien.isEdit && getDataUser.canUpdate"
                 title="Edit Data Pasien"
                 @click="changeToEditMode(pasien, true)"/>
-              <b-button 
+              <b-button
                 type="is-info"
                 size="is-small"
                 icon-pack="fas"
-                icon-right="save" 
+                icon-right="save"
                 v-if="pasien.isEdit && getDataUser.canUpdate"
                 title="Save Data Pasien"
                 @click="updateDataPasien(pasien)"/>
-              <b-button 
+              <b-button
                 type="is-warning"
                 size="is-small"
                 icon-pack="fas"
@@ -354,15 +354,14 @@
       </b-button>
     </div>
     <div id="printDataPasien" v-show=false v-if="getExportPasienPulang.length > 0">
-      <TablePrintPasienPulang 
-        :getPasienPulang="getExportPasienPulang" 
+      <TablePrintPasienPulang
+        :getPasienPulang="getExportPasienPulang"
         :tanggalSearch="tanggalSearch"
         :totalKamarDibersihkan="totalKamarDibersihkanExport"
         :totalPasien="getExportPasienPulang.length"
         />
     </div>
     <b-loading is-full-page :active.sync="isLoading" :can-cancel="false"></b-loading>
-    
   </div>
 </template>
 
@@ -380,7 +379,7 @@ export default {
     TablePrintPasienPulang
   },
   data(){
-    return {      
+    return {
       dataPasienPulang:{
         idPasien:'',
         tanggal: null,
@@ -419,21 +418,21 @@ export default {
       const dataExportPasienPulang =  this.$store.getters.getExportPasienPulang
       dataExportPasienPulang.map( (dataPasien) => {
         dataPasien.tanggal = this.$moment(dataPasien.tanggal).format("DD MMM YYYY")
-        if(dataPasien.waktuVerif != null){
-          dataPasien.waktuVerif = this.$moment(dataPasien.waktuVerif).format("H:mm:ss")
-        }
-        if(dataPasien.waktuSelesai != null){
-          dataPasien.waktuSelesai = this.$moment(dataPasien.waktuSelesai).format("H:mm:ss")
-        }
-        if(dataPasien.waktuIKS != null){
-          dataPasien.waktuIKS = this.$moment(dataPasien.waktuIKS).format("H:mm:ss")
-        }
-        if(dataPasien.waktuPasien != null){
-          dataPasien.waktuPasien = this.$moment(dataPasien.waktuPasien).format("H:mm:ss")
-        }
-        if(dataPasien.waktuLunas != null){
-          dataPasien.waktuLunas = this.$moment(dataPasien.waktuLunas).format("H:mm:ss")
-        }
+        // if(dataPasien.waktuVerif != null){
+        //   dataPasien.waktuVerif = this.$moment(dataPasien.waktuVerif).format("H:mm:ss")
+        // }
+        // if(dataPasien.waktuSelesai != null){
+        //   dataPasien.waktuSelesai = this.$moment(dataPasien.waktuSelesai).format("H:mm:ss")
+        // }
+        // if(dataPasien.waktuIKS != null){
+        //   dataPasien.waktuIKS = this.$moment(dataPasien.waktuIKS).format("H:mm:ss")
+        // }
+        // if(dataPasien.waktuPasien != null){
+        //   dataPasien.waktuPasien = this.$moment(dataPasien.waktuPasien).format("H:mm:ss")
+        // }
+        // if(dataPasien.waktuLunas != null){
+        //   dataPasien.waktuLunas = this.$moment(dataPasien.waktuLunas).format("H:mm:ss")
+        // }
       })
       return dataExportPasienPulang
     },
@@ -475,7 +474,7 @@ export default {
   watch:{
     'pagging.current'(newVal, oldVal){
       this.disableEdit = false
-      let firstPage,lastPage      
+      let firstPage,lastPage
       firstPage = (this.pagging.current - 1) * this.pagging.perPage
       lastPage = this.pagging.perPage
       this.isLoading = true

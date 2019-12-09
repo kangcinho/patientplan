@@ -115,6 +115,7 @@ class PasienController extends Controller
             ->get()->toArray();
         }
         $dataPasienPulangFilter = count($this->cekKamar($dataPasienPulangFilter));
+        // $dataPasienPulangFilter = ($this->cekKamar($dataPasienPulangFilter));
         // dd($dataPasienPulangFilter);
         return response()->json([
             'dataPasien' => $dataPasien,
@@ -160,7 +161,7 @@ class PasienController extends Controller
             return $status;
         }
         foreach($dataHasilFilter as $dataFilter){
-            if(stripos($dataKamar['namaPasien'], $dataFilter['namaPasien']) !== false){
+            if((stripos($dataKamar['namaPasien'], $dataFilter['namaPasien']) !== false) || (stripos($dataFilter['namaPasien'], $dataKamar['namaPasien']) !== false)){
                 $status = false;
             }
         }
@@ -313,7 +314,6 @@ class PasienController extends Controller
         return date('Y-m-d H:i:s', strtotime($date));
     }
 
-
     public function autoGetPasien(){
         $jasaSC = ['JAS00011', 'JAS00012','JAS01231','JAS01232', 'JAS01484'];
         $jasaNormal = ['JAS00008'];
@@ -353,14 +353,15 @@ class PasienController extends Controller
         foreach($dataNoRegIbu as $data){
             $sanataRegistrasi = \DB::connection('sqlsrv')
             ->table('SIMtrRegistrasi')
-            ->selectRaw('SIMtrRegistrasi.NoReg as noReg, NRM as nrm, NamaPasien_Reg as namaPasien, SIMtrRegistrasi.NoAnggota as noKartu, NoKamar as kamar, SIMmJenisKerjasama.JenisKerjasama as jenisKerjasama, BPJSMurni, SilverPlus as silverPlus, NaikKelas as naikKelas, mCustomer.Nama_Customer as namaPerusahaan, mSupplier.Nama_Supplier as namaDokter, SIMtrRegistrasi.KdKelas as kodeKelas')
+            ->selectRaw('SIMtrRegistrasi.TglReg as tanggal, SIMtrRegistrasi.NoReg as noReg, NRM as nrm, NamaPasien_Reg as namaPasien, SIMtrRegistrasi.NoAnggota as noKartu, NoKamar as kamar, SIMmJenisKerjasama.JenisKerjasama as jenisKerjasama, BPJSMurni, SilverPlus as silverPlus, NaikKelas as naikKelas, mCustomer.Nama_Customer as namaPerusahaan, mSupplier.Nama_Supplier as namaDokter, SIMtrRegistrasi.KdKelas as kodeKelas')
             ->join('SIMmJenisKerjasama', 'SIMmJenisKerjasama.JenisKerjasamaID', 'SIMtrRegistrasi.JenisKerjasamaID')
             ->join('SIMtrRegistrasiTujuan', 'SIMtrRegistrasi.NoReg', 'SIMtrRegistrasiTujuan.NoReg')
             ->join('mSupplier', 'mSupplier.Kode_Supplier', 'SIMtrRegistrasiTujuan.DokterID')
             ->leftjoin('mCustomer', 'mCustomer.Kode_Customer', 'SIMtrRegistrasi.KodePerusahaan')
             ->where('RawatInap', 1)
             ->where('Batal', 0)
-            ->where('NamaPasien_Reg', 'like', "%BY $data->namaPasien%")
+            ->where('NamaPasien_Reg','like', "%BY $data->namaPasien%")
+            ->where('StatusBayar', 'Belum')
             ->orderBy('NoReg', 'desc')
             ->first();
             
@@ -371,7 +372,9 @@ class PasienController extends Controller
                 // if($sanataRegistrasi->kodeKelas == '24'){
                     continue;
                 }
-                $sanataRegistrasi->tanggal = $data->tanggal;
+                //Tanggal Awal ditentukan dari tgl lahir bayi
+                // $sanataRegistrasi->tanggal = $data->tanggal;
+                $data->tanggal = $sanataRegistrasi->tanggal;
                 $dataPasien->push($sanataRegistrasi);
             }
         }
