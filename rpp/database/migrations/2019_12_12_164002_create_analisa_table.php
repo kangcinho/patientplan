@@ -14,7 +14,11 @@ class CreateAnalisaTable extends Migration
     public function up()
     {
         Schema::create('analisa', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->string('analisaID');
+            $table->date('tanggal');
+            $table->string('jenisKerjasama');
+            $table->int('jumlahMutuValid');
+            $table->int('jumlahMutuNonValid');
             $table->timestamps();
         });
     }
