@@ -4,7 +4,7 @@
         <h3 class="is-size-5 has-text-weight-bold" v-if="tanggalSearch != null">Riwayat Pasien Pulang Tanggal {{ tanggalSearch | moment("DD MMM YYYY") }}</h3>
         <h3 class="is-size-5 has-text-weight-bold" v-else >Riwayat Pasien Pulang Tanggal {{ tgl | moment("DD MMM YYYY") }}</h3>
       </div>
-      <span class="is-size-7 has-text-weight-bold">Clean Kamar: <strong>{{ totalKamarDibersihkan }}</strong></span>
+      <span class="is-size-6 has-text-weight-bold">Total Kamar Checkout: <strong>{{ totalKamarDibersihkan }}</strong></span>
       <table class="table is-bordered is-striped is-narrow is-fullwidth" style="font-size:0.6em;">
         <thead>
           <tr>
@@ -93,7 +93,7 @@
           </tr>
         </tbody>
       </table>
-      <span class="is-size-7 has-text-weight-bold">Total Data: <strong>{{totalPasien}}</strong></span>
+      <!-- <span class="is-size-7 has-text-weight-bold">Total Data: <strong>{{totalPasien}}</strong></span> -->
     </div>
 </template>
 
@@ -121,18 +121,18 @@ export default {
         // console.log('verif')
         return false
       }
-      if(pasien.waktuIKS == null || pasien.waktuIKS == ''){
-        // console.log('iks')
-        return false
-      }
-      if(pasien.waktuSelesai == null || pasien.waktuSelesai == ''){
-        // console.log('selesai')
-        return false
-      }
-      if(pasien.waktuPasien == null || pasien.waktuPasien == ''){
-        // console.log('pasien')
-        return false
-      }
+      // if(pasien.waktuIKS == null || pasien.waktuIKS == ''){
+      //   // console.log('iks')
+      //   return false
+      // }
+      // if(pasien.waktuSelesai == null || pasien.waktuSelesai == ''){
+      //   // console.log('selesai')
+      //   return false
+      // }
+      // if(pasien.waktuPasien == null || pasien.waktuPasien == ''){
+      //   // console.log('pasien')
+      //   return false
+      // }
       if(pasien.waktuLunas == null || pasien.waktuLunas == ''){
         // console.log('lunas')
         return false

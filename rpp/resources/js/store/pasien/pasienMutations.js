@@ -31,6 +31,7 @@ const mutations = {
         dataPasien.petugasFO = payload.petugasFO
         dataPasien.petugasPerawat = payload.petugasPerawat
         dataPasien.isTerencana = payload.isTerencana
+        dataPasien.waktuTotal = payload.waktuTotal
       }
     })
   },

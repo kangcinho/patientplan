@@ -4,7 +4,7 @@
       <b-field grouped group-multiline>
         <div class="control">
           <b-taglist attached>
-            <b-tag type="is-dark">Clean Kamar</b-tag>
+            <b-tag type="is-dark">Total Kamar Checkout</b-tag>
             <b-tag type="is-info">{{ totalKamarDibersihkan }}</b-tag>
           </b-taglist>
         </div>
@@ -98,7 +98,12 @@
               <span v-if="pasien.kodeKelas == '15'"><strong> Transisi </strong></span>
             </td>
             <td class="has-text-centered wrapWord sizeKeterangan">{{ pasien.namaPasien }}</td>
-            <td class="has-text-centered wrapWord sizeKeterangan">{{ pasien.keterangan }}  <br/> <strong>{{ pasien.namaDokter }}</strong> <br/> {{ pasien.noKartu }}</td>
+            <td class="has-text-centered wrapWord sizeKeterangan">
+              {{ pasien.keterangan }} <br/>
+              <strong>{{ pasien.namaDokter }}</strong> <br/>
+              {{ pasien.noKartu }} <br/>
+              <strong v-if="pasien.waktuTotal != 0"> {{ pasien.waktuTotal }} Menit </strong>
+            </td>
             <td class="has-text-centered sizeWaktu">
               <span v-if="!pasien.isEdit">{{ pasien.waktuVerif | showOnlyTime }}</span>
               <span v-else>
@@ -121,6 +126,24 @@
                       <span>Clear</span>
                   </button>
                 </b-clockpicker>
+                <div class="buttons">
+                  <b-button class="button is-success"
+                    style="margin-top:5px"
+                    size="is-small"
+                    @click="dataPasienPulang.waktuVerif = new Date()"
+                    icon-left="clock"
+                    icon-pack="fas"
+                    title="Set Waktu Verif">
+                  </b-button>
+                  <b-button class="button is-danger"
+                    style="margin-top:5px"
+                    size="is-small"
+                    @click="dataPasienPulang.waktuVerif = null"
+                    icon-left="trash"
+                    icon-pack="fas"
+                    title="Hapus Waktu Verif">
+                  </b-button>
+                </div>
               </span>
             </td>
             <td class="has-text-centered sizeWaktu">
@@ -145,8 +168,25 @@
                       <b-icon pack="fas" icon="times"></b-icon>
                       <span>Clear</span>
                   </button>
-
                 </b-clockpicker>
+                <div class="buttons">
+                  <b-button class="button is-success"
+                    style="margin-top:5px"
+                    size="is-small"
+                    @click="dataPasienPulang.waktuIKS = new Date()"
+                    icon-left="clock"
+                    icon-pack="fas"
+                    title="Set Waktu IKS">
+                  </b-button>
+                  <b-button class="button is-danger"
+                    style="margin-top:5px"
+                    size="is-small"
+                    @click="dataPasienPulang.waktuIKS = null"
+                    icon-left="trash"
+                    icon-pack="fas"
+                    title="Hapus Waktu IKS">
+                  </b-button>
+                </div>
               </span>
               
             </td>
@@ -173,12 +213,34 @@
                       <span>Clear</span>
                   </button>
                 </b-clockpicker>
+                <div class="buttons">
+                  <b-button class="button is-success"
+                    style="margin-top:5px"
+                    size="is-small"
+                    @click="dataPasienPulang.waktuSelesai = new Date()"
+                    icon-left="clock"
+                    icon-pack="fas"
+                    title="Set Waktu Selesai">
+                  </b-button>
+                  <b-button class="button is-danger"
+                    style="margin-top:5px"
+                    size="is-small"
+                    @click="dataPasienPulang.waktuSelesai = null"
+                    icon-left="trash"
+                    icon-pack="fas"
+                    title="Hapus Waktu Selesai">
+                  </b-button>
+                </div>
               </span>
             </td>
             <td class="has-text-centered sizeWaktu">
               <span v-if="!pasien.isEdit">{{ pasien.waktuPasien | showOnlyTime }}</span>
               <span v-else>
-                <b-clockpicker
+                <b-datetimepicker
+                    placeholder="Type or select a date..."
+                    icon="calendar-today">
+                </b-datetimepicker>
+                <!-- <b-clockpicker
                   rounded
                   v-model="dataPasienPulang.waktuPasien"
                   size="is-small"
@@ -197,7 +259,26 @@
                       <b-icon pack="fas" icon="times"></b-icon>
                       <span>Clear</span>
                   </button>
-                </b-clockpicker>
+                </b-clockpicker> -->
+
+                <div class="buttons">
+                  <b-button class="button is-success"
+                    style="margin-top:5px"
+                    size="is-small"
+                    @click="dataPasienPulang.waktuPasien = new Date()"
+                    icon-left="clock"
+                    icon-pack="fas"
+                    title="Set Waktu Pasien">
+                  </b-button>
+                  <b-button class="button is-danger"
+                    style="margin-top:5px"
+                    size="is-small"
+                    @click="dataPasienPulang.waktuPasien = null"
+                    icon-left="trash"
+                    icon-pack="fas"
+                    title="Hapus Waktu Pasien">
+                  </b-button>
+                </div>
               </span>             
             </td>
             <td class="has-text-centered sizeWaktu">
@@ -223,6 +304,24 @@
                       <span>Clear</span>
                   </button>
                 </b-clockpicker>
+                <div class="buttons">
+                  <b-button class="button is-success"
+                    style="margin-top:5px"
+                    size="is-small"
+                    @click="dataPasienPulang.waktuLunas = new Date()"
+                    icon-left="clock"
+                    icon-pack="fas"
+                    title="Set Waktu Lunas">
+                  </b-button>
+                  <b-button class="button is-danger"
+                    style="margin-top:5px"
+                    size="is-small"
+                    @click="dataPasienPulang.waktuLunas = null"
+                    icon-left="trash"
+                    icon-pack="fas"
+                    title="Hapus Waktu Lunas">
+                  </b-button>
+                </div>
               </span>                
             </td>
             <td class="has-text-centered sizePetugas">
@@ -681,18 +780,18 @@ export default {
         // console.log('verif')
         return false
       }
-      if(pasien.waktuIKS == null || pasien.waktuIKS == ''){
-        // console.log('iks')
-        return false
-      }
-      if(pasien.waktuSelesai == null || pasien.waktuSelesai == ''){
-        // console.log('selesai')
-        return false
-      }
-      if(pasien.waktuPasien == null || pasien.waktuPasien == ''){
-        // console.log('pasien')
-        return false
-      }
+      // if(pasien.waktuIKS == null || pasien.waktuIKS == ''){
+      //   // console.log('iks')
+      //   return false
+      // }
+      // if(pasien.waktuSelesai == null || pasien.waktuSelesai == ''){
+      //   // console.log('selesai')
+      //   return false
+      // }
+      // if(pasien.waktuPasien == null || pasien.waktuPasien == ''){
+      //   // console.log('pasien')
+      //   return false
+      // }
       if(pasien.waktuLunas == null || pasien.waktuLunas == ''){
         // console.log('lunas')
         return false
@@ -717,6 +816,7 @@ export default {
           return true
         }
       }
+      // console.log(perbedaanWaktu);
       return false
     }
   },

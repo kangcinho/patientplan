@@ -95,6 +95,7 @@ class PasienController extends Controller
             ->where('tanggal', $tglSearch)
             ->orderBy('created_at','desc')
             ->get();
+            $dataPasien = $this->hitungWaktu($dataPasien);
             $totalDataPasien = Pasien::where('namaPasien','like',"%$request->searchNamaPasien%")
             ->where('tanggal', $tglSearch)
             ->count();
@@ -109,6 +110,7 @@ class PasienController extends Controller
             ->where('namaPasien','like',"%$request->searchNamaPasien%")
             ->orderBy('created_at','desc')
             ->get();
+            $dataPasien = $this->hitungWaktu($dataPasien);
             $totalDataPasien = Pasien::where('namaPasien','like',"%$request->searchNamaPasien%")->count();
             $dataPasienPulangFilter = Pasien::orderBy('tanggal', 'desc')->select('namaPasien','kamar','kodeKelas')
             ->where('namaPasien','like',"%$request->searchNamaPasien%")
@@ -158,6 +160,9 @@ class PasienController extends Controller
             return $status;
         }
         if(stripos($dataKamar['kamar'], 'ICU') !== false){
+            return $status;
+        }
+        if(stripos($dataKamar['kamar'], 'RESTI') !== false){
             return $status;
         }
         foreach($dataHasilFilter as $dataFilter){
@@ -250,6 +255,7 @@ class PasienController extends Controller
                 $dataPasien->petugasPerawat = $request->petugasPerawat;    
             }
             $dataPasien->save();
+            $dataPasien = $this->hitungWaktu($dataPasien);
             RecordLog::logRecord('INSERT', $dataPasien->idPasien, null, $dataPasien, Auth::user()->idUser);
             $status = "Data Pasien $dataPasien->namaPasien Berhasil Disimpan!";
             return response()->json([
@@ -297,6 +303,7 @@ class PasienController extends Controller
             $pasienPulang->petugasPerawat = $request->petugasPerawat;
             $pasienPulang->isTerencana = $request->isTerencana;
             $pasienPulang->save();
+            $pasienPulang = $this->hitungWaktuAlone($pasienPulang);
             RecordLog::logRecord('UPDATE', $pasienPulang->idPasien, $pasienDataOld, $pasienPulang, Auth::user()->idUser);
             $status = "Data Pasien $pasienPulang->namaPasien Berhasil DiUpdate!";
             return response()->json([
@@ -368,13 +375,14 @@ class PasienController extends Controller
             $dataPasien->push($data);
             if($sanataRegistrasi){
                 //Tambahkan jika kode kamar ICU/INTERMEDIET/TRANSISI DLL ,lsg continue
-                if($sanataRegistrasi->kodeKelas == '15' || $sanataRegistrasi->kodeKelas == '16' || $sanataRegistrasi->kodeKelas == '23' || $sanataRegistrasi->kodeKelas == '24' || $sanataRegistrasi->kodeKelas == '25' || $sanataRegistrasi->kodeKelas == '26' || $sanataRegistrasi->kodeKelas == '27'){
+                $data->tanggal = $sanataRegistrasi->tanggal;
+                if($sanataRegistrasi->kodeKelas == '15' || $sanataRegistrasi->kodeKelas == '16' || $sanataRegistrasi->kodeKelas == '23' || $sanataRegistrasi->kodeKelas == '24' || $sanataRegistrasi->kodeKelas == '25' || $sanataRegistrasi->kodeKelas == '26' || $sanataRegistrasi->kodeKelas == '27' || $sanataRegistrasi->kodeKelas == '92'){
                 // if($sanataRegistrasi->kodeKelas == '24'){
                     continue;
                 }
                 //Tanggal Awal ditentukan dari tgl lahir bayi
                 // $sanataRegistrasi->tanggal = $data->tanggal;
-                $data->tanggal = $sanataRegistrasi->tanggal;
+                
                 $dataPasien->push($sanataRegistrasi);
             }
         }
@@ -590,25 +598,55 @@ class PasienController extends Controller
             'dataPasienPulangFilter' => $dataPasienPulangFilter
         ], 200);
     }
-
+    public function hitungWaktuAlone($pasien){
+        // foreach($dataPasien as $pasien){
+            if($pasien->waktuVerif == null OR $pasien->waktuVerif == ''){
+                $pasien->waktuTotal =  0;
+                return $pasien;
+            }
+            // if($pasien->waktuIKS == null OR $pasien->waktuIKS == ''){
+            //     $pasien->waktuTotal =  0;
+            //     continue;
+            // }
+            // if($pasien->waktuSelesai == null OR $pasien->waktuSelesai == ''){
+            //     $pasien->waktuTotal =  0;
+            //     continue;
+            // }
+            // if($pasien->waktuPasien == null OR $pasien->waktuPasien == ''){
+            //     $pasien->waktuTotal =  0;
+            //     continue;
+            // }
+            if($pasien->waktuLunas == null OR $pasien->waktuLunas == ''){
+                $pasien->waktuTotal =  0;
+                return $pasien;
+            }
+            $waktuVerif = new DateTime($pasien->waktuVerif);
+            $waktuLunas = new DateTime($pasien->waktuLunas);
+            $hitungWaktu = $waktuLunas->diff($waktuVerif);
+            $pasien->waktuTotal = $hitungWaktu->days * 24 * 60;
+            $pasien->waktuTotal += $hitungWaktu->h * 60;
+            $pasien->waktuTotal += $hitungWaktu->i;
+        // }
+        return $pasien;
+    }
     public function hitungWaktu($dataPasien){
         foreach($dataPasien as $pasien){
             if($pasien->waktuVerif == null OR $pasien->waktuVerif == ''){
                 $pasien->waktuTotal =  0;
                 continue;
             }
-            if($pasien->waktuIKS == null OR $pasien->waktuIKS == ''){
-                $pasien->waktuTotal =  0;
-                continue;
-            }
-            if($pasien->waktuSelesai == null OR $pasien->waktuSelesai == ''){
-                $pasien->waktuTotal =  0;
-                continue;
-            }
-            if($pasien->waktuPasien == null OR $pasien->waktuPasien == ''){
-                $pasien->waktuTotal =  0;
-                continue;
-            }
+            // if($pasien->waktuIKS == null OR $pasien->waktuIKS == ''){
+            //     $pasien->waktuTotal =  0;
+            //     continue;
+            // }
+            // if($pasien->waktuSelesai == null OR $pasien->waktuSelesai == ''){
+            //     $pasien->waktuTotal =  0;
+            //     continue;
+            // }
+            // if($pasien->waktuPasien == null OR $pasien->waktuPasien == ''){
+            //     $pasien->waktuTotal =  0;
+            //     continue;
+            // }
             if($pasien->waktuLunas == null OR $pasien->waktuLunas == ''){
                 $pasien->waktuTotal =  0;
                 continue;
