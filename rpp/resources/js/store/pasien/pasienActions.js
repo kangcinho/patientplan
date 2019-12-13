@@ -49,6 +49,7 @@ const actions = {
         commit(type.SET_DATA_PASIEN_PULANG, respon.data.dataPasien)
         commit(type.SET_DATA_TOTAL_PASIEN_PULANG, respon.data.totalDataPasien)
         commit(type.SET_TOTAL_KAMAR_DIBERSIHKAN, respon.data.totalKamarPasienPulang)
+        commit(type.SET_DATA_MUTU, respon.data.mutu)
         berhasil('getDataPasienPulang berhasil')
       })
       .catch( (error) => {

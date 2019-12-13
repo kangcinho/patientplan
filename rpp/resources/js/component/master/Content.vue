@@ -16,13 +16,13 @@
             </strong>
           </div>
           <div class="panel-tab" style="margin-top:10px">
-            <AddPasienPulang></AddPasienPulang>
+            <AddPasienPulang :dataMutu="dataMutu"></AddPasienPulang>
           </div>
         </b-collapse>
       </div>
     </div>
     <div class="card-content">
-      <ListPasienPulang></ListPasienPulang>
+      <ListPasienPulang :dataMutu="dataMutu"></ListPasienPulang>
     </div>
   </div>
 </template>
@@ -50,7 +50,10 @@ export default {
   computed:{
     getDataUser(){
       return this.$store.getters.getDataUserLogin
-    }
+    },
+    dataMutu(){
+      return this.$store.getters.getMutu
+    },
   }
 }
 </script>

@@ -32,11 +32,15 @@ const mutations = {
         dataPasien.petugasPerawat = payload.petugasPerawat
         dataPasien.isTerencana = payload.isTerencana
         dataPasien.waktuTotal = payload.waktuTotal
+        dataPasien.isGone = payload.isGone
       }
     })
   },
   [type.SET_DATA_TOTAL_PASIEN_PULANG](state, payload){
     state.totalPasienPulang = payload
+  },
+  [type.SET_DATA_MUTU](state, payload){
+    state.mutu = payload
   },
   [type.DELETE_DATA_PASIEN_PULANG](state, payload){
     state.dataPasienPulang.map( (dataPasien, index) => {

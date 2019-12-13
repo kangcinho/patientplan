@@ -5,6 +5,7 @@ const state = {
   dataExportPasienPulang: [],
   totalKamarDibersihkan: 0,
   totalKamarDibersihkanExport: 0,
+  mutu: '',
 }
 
 export default state

@@ -16,9 +16,12 @@ class CreateAnalisaTable extends Migration
         Schema::create('analisa', function (Blueprint $table) {
             $table->string('analisaID');
             $table->date('tanggal');
-            $table->string('jenisKerjasama');
-            $table->int('jumlahMutuValid');
-            $table->int('jumlahMutuNonValid');
+            $table->integer('umumMutuValid');
+            $table->integer('umumMutuNonValid');
+            $table->integer('iksMutuValid');
+            $table->integer('iksMutuNonValid');
+            $table->integer('bpjsMutuValid');
+            $table->integer('bpjsMutuNonValid');
             $table->timestamps();
         });
     }

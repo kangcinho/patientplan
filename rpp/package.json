@@ -20,7 +20,7 @@
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.11.2",
         "axios": "^0.19.0",
-        "buefy": "^0.8.4",
+        "buefy": "^0.8.8",
         "idle-vue": "^2.0.5",
         "vue": "^2.6.10",
         "vue-excel-export": "^0.1.3",

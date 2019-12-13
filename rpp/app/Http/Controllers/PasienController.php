@@ -7,6 +7,7 @@ use App\Pasien;
 use App\Http\Helper\RecordLog;
 use Illuminate\Support\Facades\Auth;
 use App\User;
+use App\Mutu;
 use JWTAuth;
 use DateTime;
 class PasienController extends Controller
@@ -117,12 +118,14 @@ class PasienController extends Controller
             ->get()->toArray();
         }
         $dataPasienPulangFilter = count($this->cekKamar($dataPasienPulangFilter));
+        $mutu = Mutu::where('isAktif',1)->first();
         // $dataPasienPulangFilter = ($this->cekKamar($dataPasienPulangFilter));
         // dd($dataPasienPulangFilter);
         return response()->json([
             'dataPasien' => $dataPasien,
             'totalDataPasien' => $totalDataPasien,
-            'totalKamarPasienPulang' => $dataPasienPulangFilter
+            'totalKamarPasienPulang' => $dataPasienPulangFilter,
+            'mutu' => $mutu
         ], 200);
     }
 
@@ -219,6 +222,11 @@ class PasienController extends Controller
             $dataPasien->petugasFO = null;
             $dataPasien->petugasPerawat = null;
             $dataPasien->isEdit = false;
+            $dataPasien->isGone = false;
+            $dataPasien->isAnalisa = false;
+            $dataPasien->mutuUmum = $request->mutuUmum;
+            $dataPasien->mutuIKS = $request->mutuIKS;
+            $dataPasien->mutuBPJS = $request->mutuBPJS;
             
             if($request->isWaktu){
                 if($request->waktuVerif != null){
@@ -255,7 +263,7 @@ class PasienController extends Controller
                 $dataPasien->petugasPerawat = $request->petugasPerawat;    
             }
             $dataPasien->save();
-            $dataPasien = $this->hitungWaktu($dataPasien);
+            $dataPasien = $this->hitungWaktuAlone($dataPasien);
             RecordLog::logRecord('INSERT', $dataPasien->idPasien, null, $dataPasien, Auth::user()->idUser);
             $status = "Data Pasien $dataPasien->namaPasien Berhasil Disimpan!";
             return response()->json([
@@ -267,50 +275,59 @@ class PasienController extends Controller
     
     public function updateDataPasienPulang(Request $request){
         $pasienPulang = Pasien::where('idPasien', $request->idPasien)->first();
-        $pasienDataOld = $pasienPulang->replicate();
-        if($pasienPulang){
-            if($request->waktuVerif != null){
-                $pasienPulang->waktuVerif = $this->convertDate($request->waktuVerif);
-            }else{
-                $pasienPulang->waktuVerif = null;
-            }
+        if($pasienPulang->isGone == 0){
+            $pasienDataOld = $pasienPulang->replicate();
+            if($pasienPulang){
+                if($request->waktuVerif != null){
+                    $pasienPulang->waktuVerif = $this->convertDate($request->waktuVerif);
+                }else{
+                    $pasienPulang->waktuVerif = null;
+                }
 
-            if($request->waktuIKS != null){
-                $pasienPulang->waktuIKS = $this->convertDate($request->waktuIKS);
-            }else{
-                $pasienPulang->waktuIKS = null;
-            }
+                if($request->waktuIKS != null){
+                    $pasienPulang->waktuIKS = $this->convertDate($request->waktuIKS);
+                }else{
+                    $pasienPulang->waktuIKS = null;
+                }
 
-            if($request->waktuSelesai != null){
-                $pasienPulang->waktuSelesai = $this->convertDate($request->waktuSelesai);
-            }else{
-                $pasienPulang->waktuSelesai = null;
-            }
+                if($request->waktuSelesai != null){
+                    $pasienPulang->waktuSelesai = $this->convertDate($request->waktuSelesai);
+                }else{
+                    $pasienPulang->waktuSelesai = null;
+                }
 
-            if($request->waktuPasien != null){
-                $pasienPulang->waktuPasien = $this->convertDate($request->waktuPasien);
-            }else{
-                $pasienPulang->waktuPasien = null;
-            }
+                if($request->waktuPasien != null){
+                    $pasienPulang->waktuPasien = $this->convertDate($request->waktuPasien);
+                }else{
+                    $pasienPulang->waktuPasien = null;
+                }
 
-            if($request->waktuLunas != null){
-                $pasienPulang->waktuLunas = $this->convertDate($request->waktuLunas);
-            }else{
-                $pasienPulang->waktuLunas = null;
+                if($request->waktuLunas != null){
+                    $pasienPulang->waktuLunas = $this->convertDate($request->waktuLunas);
+                }else{
+                    $pasienPulang->waktuLunas = null;
+                }
+                
+                $pasienPulang->petugasFO = $request->petugasFO;
+                $pasienPulang->petugasPerawat = $request->petugasPerawat;
+                $pasienPulang->isTerencana = $request->isTerencana;
+                $pasienPulang->save();
+                $pasienPulang = $this->hitungWaktuAlone($pasienPulang);
+                RecordLog::logRecord('UPDATE', $pasienPulang->idPasien, $pasienDataOld, $pasienPulang, Auth::user()->idUser);
+                $status = "Data Pasien $pasienPulang->namaPasien Berhasil DiUpdate!";
+                return response()->json([
+                    'status' => $status,
+                    'dataPasien' => $pasienPulang
+                ], 200);
             }
-            
-            $pasienPulang->petugasFO = $request->petugasFO;
-            $pasienPulang->petugasPerawat = $request->petugasPerawat;
-            $pasienPulang->isTerencana = $request->isTerencana;
-            $pasienPulang->save();
-            $pasienPulang = $this->hitungWaktuAlone($pasienPulang);
-            RecordLog::logRecord('UPDATE', $pasienPulang->idPasien, $pasienDataOld, $pasienPulang, Auth::user()->idUser);
-            $status = "Data Pasien $pasienPulang->namaPasien Berhasil DiUpdate!";
+        }else{
+            $status = "Data Pasien $pasienPulang->namaPasien Tidak Terupdate!";
             return response()->json([
                 'status' => $status,
                 'dataPasien' => $pasienPulang
             ], 200);
         }
+        
         $status = "Data Pasien Gagal DiUpdate!";
         return response()->json([
             'error' => $status
@@ -458,6 +475,7 @@ class PasienController extends Controller
         return $sanataKasir;
     }
     public function autoSaveDataPasien($dataPasienCollection, $jumlahHari){
+        $dataMutu = Mutu::where('isAktif',1)->first();
         foreach($dataPasienCollection as $dataPasien){
             if($dataPasien->kamar == null || $dataPasien->kamar == '' || $dataPasien->kamar == 'null'){
                 continue;
@@ -475,6 +493,9 @@ class PasienController extends Controller
                 $pasien->waktuLunas = null;
                 $pasien->petugasFO = null;
                 $pasien->petugasPerawat = null;
+                $pasien->mutuUmum = $dataMutu->mutuUmum;
+                $pasien->mutuIKS = $dataMutu->mutuIKS;
+                $pasien->mutuBPJS = $dataMutu->mutuBPJS;
             }
 
             if($dataPasien->jenisKerjasama == "UMUM"){
@@ -522,6 +543,7 @@ class PasienController extends Controller
     }
 
     public function autoSaveDataPasienCheckout($dataPasienCollection){
+        $dataMutu = Mutu::where('isAktif',1)->first();
         foreach($dataPasienCollection as $dataPasien){
             if($dataPasien->kamar == null || $dataPasien->kamar == '' || $dataPasien->kamar == 'null'){
                 continue;
@@ -541,6 +563,9 @@ class PasienController extends Controller
                 $pasien->petugasPerawat = null;
                 $pasien->isTerencana = false;
                 $pasien->idUser = 'SYSTEM';
+                $pasien->mutuUmum = $dataMutu->mutuUmum;
+                $pasien->mutuIKS = $dataMutu->mutuIKS;
+                $pasien->mutuBPJS = $dataMutu->mutuBPJS;
             }
 
             if($dataPasien->jenisKerjasama == "UMUM"){

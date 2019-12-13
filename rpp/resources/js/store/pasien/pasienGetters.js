@@ -14,6 +14,7 @@ const getters = {
   getExportPasienPulang: (state) => state.dataExportPasienPulang,
   getTotalKamarPasienPulang: (state) => state.totalKamarDibersihkan,
   getTotalKamarDibersihkanExport: (state) => state.totalKamarDibersihkanExport,
+  getMutu: (state) => state.mutu
 }
 
 export default getters

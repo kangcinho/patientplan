@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         'App\Console\Commands\SyncDataPasien',
+        'App\Console\Commands\SetIsGone',
     ];
 
     /**
@@ -26,7 +27,8 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
-        $schedule->command('data:pasien')->everyMinute();
+        $schedule->command('data:pasien')->hourly();
+        $schedule->command('pasien:isGone')->dailyAt('04:00');
     }
 
     /**

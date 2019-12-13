@@ -107,7 +107,17 @@
             <td class="has-text-centered sizeWaktu">
               <span v-if="!pasien.isEdit">{{ pasien.waktuVerif | showOnlyTime }}</span>
               <span v-else>
-                <b-clockpicker
+                <b-datetimepicker
+                    rounded
+                    v-model="dataPasienPulang.waktuVerif"
+                    size="is-small"
+                    icon-pack="fas"
+                    icon="clock"
+                    hour-format="24"
+                    :datetime-formatter="(date) => $moment(date).format('HH:mm')"
+                    >
+                </b-datetimepicker>
+                <!-- <b-clockpicker
                   rounded
                   v-model="dataPasienPulang.waktuVerif"
                   size="is-small"
@@ -125,7 +135,7 @@
                       <b-icon pack="fas" icon="times"></b-icon>
                       <span>Clear</span>
                   </button>
-                </b-clockpicker>
+                </b-clockpicker> -->
                 <div class="buttons">
                   <b-button class="button is-success"
                     style="margin-top:5px"
@@ -149,7 +159,17 @@
             <td class="has-text-centered sizeWaktu">
               <span v-if="!pasien.isEdit">{{ pasien.waktuIKS | showOnlyTime }}</span>
               <span v-else>
-                <b-clockpicker
+                <b-datetimepicker
+                    rounded
+                    v-model="dataPasienPulang.waktuIKS"
+                    size="is-small"
+                    icon-pack="fas"
+                    icon="clock"
+                    hour-format="24"
+                    :datetime-formatter="(date) => $moment(date).format('HH:mm')"
+                    >
+                </b-datetimepicker>
+                <!-- <b-clockpicker
                   rounded
                   v-model="dataPasienPulang.waktuIKS"
                   size="is-small"
@@ -168,7 +188,7 @@
                       <b-icon pack="fas" icon="times"></b-icon>
                       <span>Clear</span>
                   </button>
-                </b-clockpicker>
+                </b-clockpicker> -->
                 <div class="buttons">
                   <b-button class="button is-success"
                     style="margin-top:5px"
@@ -193,7 +213,17 @@
             <td class="has-text-centered sizeWaktu">
               <span v-if="!pasien.isEdit">{{ pasien.waktuSelesai | showOnlyTime }}</span>
               <span v-else>
-                <b-clockpicker
+                <b-datetimepicker
+                    rounded
+                    v-model="dataPasienPulang.waktuSelesai"
+                    size="is-small"
+                    icon-pack="fas"
+                    icon="clock"
+                    hour-format="24"
+                    :datetime-formatter="(date) => $moment(date).format('HH:mm')"
+                    >
+                </b-datetimepicker>
+                <!-- <b-clockpicker
                   rounded
                   v-model="dataPasienPulang.waktuSelesai"
                   size="is-small"
@@ -212,7 +242,7 @@
                       <b-icon pack="fas" icon="times"></b-icon>
                       <span>Clear</span>
                   </button>
-                </b-clockpicker>
+                </b-clockpicker> -->
                 <div class="buttons">
                   <b-button class="button is-success"
                     style="margin-top:5px"
@@ -237,8 +267,14 @@
               <span v-if="!pasien.isEdit">{{ pasien.waktuPasien | showOnlyTime }}</span>
               <span v-else>
                 <b-datetimepicker
-                    placeholder="Type or select a date..."
-                    icon="calendar-today">
+                    rounded
+                    v-model="dataPasienPulang.waktuPasien"
+                    size="is-small"
+                    icon-pack="fas"
+                    icon="clock"
+                    hour-format="24"
+                    :datetime-formatter="(date) => $moment(date).format('HH:mm')"
+                    >
                 </b-datetimepicker>
                 <!-- <b-clockpicker
                   rounded
@@ -284,7 +320,17 @@
             <td class="has-text-centered sizeWaktu">
               <span v-if="!pasien.isEdit">{{ pasien.waktuLunas | showOnlyTime }}</span>
               <span v-else>
-                <b-clockpicker
+                <b-datetimepicker
+                    rounded
+                    v-model="dataPasienPulang.waktuLunas"
+                    size="is-small"
+                    icon-pack="fas"
+                    icon="clock"
+                    hour-format="24"
+                    :datetime-formatter="(date) => $moment(date).format('HH:mm')"
+                    >
+                </b-datetimepicker>
+                <!-- <b-clockpicker
                   rounded
                   v-model="dataPasienPulang.waktuLunas"
                   size="is-small"
@@ -303,7 +349,7 @@
                       <b-icon pack="fas" icon="times"></b-icon>
                       <span>Clear</span>
                   </button>
-                </b-clockpicker>
+                </b-clockpicker> -->
                 <div class="buttons">
                   <b-button class="button is-success"
                     style="margin-top:5px"
@@ -364,7 +410,7 @@
                 size="is-small"
                 icon-pack="fas"
                 icon-right="edit"
-                v-if="!pasien.isEdit && getDataUser.canUpdate"
+                v-if="!pasien.isEdit && getDataUser.canUpdate && pasien.isGone == 0"
                 title="Edit Data Pasien"
                 @click="changeToEditMode(pasien, true)"/>
               <b-button
@@ -372,7 +418,7 @@
                 size="is-small"
                 icon-pack="fas"
                 icon-right="save"
-                v-if="pasien.isEdit && getDataUser.canUpdate"
+                v-if="pasien.isEdit && getDataUser.canUpdate && pasien.isGone == 0"
                 title="Save Data Pasien"
                 @click="updateDataPasien(pasien)"/>
               <b-button
@@ -380,7 +426,7 @@
                 size="is-small"
                 icon-pack="fas"
                 icon-right="ban"
-                v-if="pasien.isEdit && getDataUser.canUpdate"
+                v-if="pasien.isEdit && getDataUser.canUpdate && pasien.isGone == 0"
                 title="Batal Edit Data Pasien"
                 @click="changeToEditMode(pasien, false)"/>
               <b-button
@@ -388,7 +434,7 @@
                 size="is-small"
                 icon-pack="fas"
                 icon-right="trash-alt" 
-                v-if="getDataUser.canDelete"
+                v-if="getDataUser.canDelete && pasien.isGone == 0"
                 @click="deleteDataPasienPulang(pasien)"/>
             </td>
           </tr>
@@ -472,6 +518,7 @@ import EventBus from '../../../eventBus'
 
 export default {
   name: "ListPasienPulang",
+  props:['dataMutu'],
   components:{
     ModalKonfirmasiHapusData,
     ModalEksportData,
@@ -495,6 +542,9 @@ export default {
         petugasPerawat:'',
         keterangan:'',
         isTerencana: false,
+        mutuUmum: '',
+        mutuIKS: '',
+        mutuBPJS: '',
       },
       disableEdit: false,
       classWidthRow: 'width60',
@@ -513,6 +563,7 @@ export default {
     }
   },
   computed:{
+
     getExportPasienPulang(){
       const dataExportPasienPulang =  this.$store.getters.getExportPasienPulang
       dataExportPasienPulang.map( (dataPasien) => {
@@ -646,6 +697,9 @@ export default {
       this.dataPasienPulang.noReg = dataPasien.noReg
       this.dataPasienPulang.idPasien = dataPasien.idPasien
       this.isLoading = true
+      this.dataPasienPulang.mutuUmum = this.dataMutu.mutuUmum
+      this.dataPasienPulang.mutuIKS = this.dataMutu.mutuIKS
+      this.dataPasienPulang.mutuBPJS = this.dataMutu.mutuBPJS
       this.$store.dispatch('updateDataPasienPulang', this.dataPasienPulang)
       .then( (respon) => {
         this.isLoading = false
@@ -800,19 +854,20 @@ export default {
       const waktuVerif = new Date(pasien.waktuVerif)
       const waktuLunas = new Date(pasien.waktuLunas)
       const perbedaanWaktu = (waktuLunas.getTime() - waktuVerif.getTime())/(1000 * 60)
+      
       if(pasien.keterangan.includes('BPJS')){
         // console.log('BPJS__')
-        if(perbedaanWaktu > 240){
+        if(perbedaanWaktu > pasien.mutuBPJS){
           return true
         }
       }else if(pasien.keterangan.includes('IKS')){
         // console.log('IKS')
-        if(perbedaanWaktu > 240){
+        if(perbedaanWaktu > pasien.mutuIKS){
           return true
         }
       }else if(pasien.keterangan.includes('Umum')){
         // console.log('UMUM')
-        if(perbedaanWaktu > 120){
+        if(perbedaanWaktu > pasien.mutuUmum){
           return true
         }
       }

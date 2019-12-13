@@ -34,6 +34,11 @@ class CreatePasienTable extends Migration
             $table->boolean('isEdit')->default(false);
             $table->boolean('isTerencana')->default(false);
             $table->string('idUser')->nullable();
+            $table->boolean('isGone')->default(0);
+            $table->boolean('isAnalisa')->default(0);
+            $table->integer('mutuUmum');
+            $table->integer('mutuIKS');
+            $table->integer('mutuBPJS');
             $table->primary('idPasien');
             $table->timestamps();
         });

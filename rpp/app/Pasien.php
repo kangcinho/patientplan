@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Pasien extends Model
 {
     protected $table = "pasien";
-    protected $fillable = ['idPasien','noreg', 'tanggal', 'nrm', 'namaPasien', 'kamar', 'waktuVerif', 'waktuIKS', 'waktuSelesai', 'waktuPasien', 'waktuLunas', 'petugasFO', 'petugasPerawat', 'keterangan', 'idUser' ];
+    protected $fillable = ['idPasien','noreg', 'tanggal', 'nrm', 'namaPasien', 'kamar', 'waktuVerif', 'waktuIKS', 'waktuSelesai', 'waktuPasien', 'waktuLunas', 'petugasFO', 'petugasPerawat', 'keterangan', 'idUser', 'isGone', 'isAnalisa', 'mutuUmum', 'mutuIKS', 'mutuBPJS' ];
     public $incrementing = false;
     protected $primaryKey = 'idPasien';
     protected $casts = [

@@ -205,6 +205,7 @@ import ModalSearchPasienRegistrasi from '../modal/ModalSearchPasienRegistrasi'
 import EventBus from '../../../eventBus'
 export default {
   name: "FormTambahPasienComponent",
+  props:['dataMutu'],
   components:{
     ModalSearchPasienRegistrasi
   },
@@ -228,7 +229,10 @@ export default {
         isTerencana: false,
         noKartu: null,
         namaDokter: null,
-        kodeKelas: null
+        kodeKelas: null,
+        mutuUmum: '',
+        mutuIKS: '',
+        mutuBPJS: '',
       },
       errorValidasi:{
         tanggal: null,
@@ -279,6 +283,10 @@ export default {
       this.dataPasienPulang.isTerencana = this.dataPasienPulang.isWaktu = this.isComponentModal = false
     },
     saveDataPasienPulang(){
+      this.dataPasienPulang.mutuUmum = this.dataMutu.mutuUmum
+      this.dataPasienPulang.mutuIKS = this.dataMutu.mutuIKS
+      this.dataPasienPulang.mutuBPJS = this.dataMutu.mutuBPJS
+      
       if(this.validateDataPasienPulang(this.dataPasienPulang)){
         this.$store.dispatch('saveDataPasienPulang', this.dataPasienPulang)
         .then( (respon) => {
