@@ -1958,6 +1958,27 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "AnalisaResultComponent",
   computed: {
@@ -19473,12 +19494,17 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "column is-full" }, [
-    _vm.tabelAnalisa.length != 0
-      ? _c(
+  return _vm.tabelAnalisa.length != 0
+    ? _c("div", { staticClass: "column is-11" }, [
+        _c("h1", { staticClass: "is-size-6" }, [
+          _vm._v("Kesesuaian Mutu Pelayanan Pasien Pulang")
+        ]),
+        _vm._v(" "),
+        _c(
           "table",
           {
-            staticClass: "table is-bordered is-striped is-narrow is-fullwidth"
+            staticClass: "table is-bordered is-striped is-narrow is-fullwidth",
+            staticStyle: { "font-size": "0.8em" }
           },
           [
             _vm._m(0),
@@ -19575,9 +19601,40 @@ var render = function() {
               0
             )
           ]
+        ),
+        _vm._v(" "),
+        _c("h1", { staticClass: "is-size-6" }, [
+          _vm._v("Jumlah Pasien Pulang Rawat Inap")
+        ]),
+        _vm._v(" "),
+        _c(
+          "table",
+          {
+            staticClass: "table is-bordered is-striped is-narrow is-fullwidth",
+            staticStyle: { "font-size": "0.8em" }
+          },
+          [
+            _vm._m(1),
+            _vm._v(" "),
+            _c(
+              "tbody",
+              _vm._l(_vm.tabelAnalisa, function(analisa, index) {
+                return _c("tr", { key: index }, [
+                  _c("td", [_vm._v(" " + _vm._s(analisa.tanggal) + " ")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(" " + _vm._s(analisa.umumMutu) + " ")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(" " + _vm._s(analisa.iksMutu) + " ")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(" " + _vm._s(analisa.bpjsMutu) + " ")])
+                ])
+              }),
+              0
+            )
+          ]
         )
-      : _vm._e()
-  ])
+      ])
+    : _vm._e()
 }
 var staticRenderFns = [
   function() {
@@ -19599,6 +19656,22 @@ var staticRenderFns = [
         _c("th", [_vm._v("Pasien BPJS Sesuai Mutu")]),
         _vm._v(" "),
         _c("th", [_vm._v("Pasien BPJS Tidak Sesuai Mutu")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("Waktu")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Pasien Umum")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Pasien IKS")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Pasien BPJS")])
       ])
     ])
   }

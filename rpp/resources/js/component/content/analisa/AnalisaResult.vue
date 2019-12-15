@@ -1,6 +1,7 @@
 <template>
-  <div class="column is-full">
-    <table class="table is-bordered is-striped is-narrow is-fullwidth" v-if="tabelAnalisa.length != 0">
+  <div class="column is-11" v-if="tabelAnalisa.length != 0">
+    <h1 class="is-size-6">Kesesuaian Mutu Pelayanan Pasien Pulang</h1>
+    <table class="table is-bordered is-striped is-narrow is-fullwidth" style="font-size:0.8em">
       <thead>
         <tr>
           <th>Waktu</th>
@@ -21,6 +22,26 @@
           <td> {{ Math.round(((analisa.iksMutuNonValid / analisa.iksMutu) * 100) * 100) / 100 }} % </td>
           <td> {{ Math.round(((analisa.bpjsMutuValid / analisa.bpjsMutu) * 100) * 100) / 100 }} % </td>
           <td> {{ Math.round(((analisa.bpjsMutuNonValid / analisa.bpjsMutu) * 100) * 100) / 100 }} %</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h1 class="is-size-6">Jumlah Pasien Pulang Rawat Inap</h1>
+    <table class="table is-bordered is-striped is-narrow is-fullwidth" style="font-size:0.8em">
+      <thead>
+        <tr>
+          <th>Waktu</th>
+          <th>Pasien Umum</th>
+          <th>Pasien IKS</th>
+          <th>Pasien BPJS</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(analisa,index) in tabelAnalisa" :key="index">
+          <td> {{ analisa.tanggal }} </td>
+          <td> {{ analisa.umumMutu }} </td>
+          <td> {{ analisa.iksMutu }} </td>
+          <td> {{ analisa.bpjsMutu }} </td>
         </tr>
       </tbody>
     </table>
