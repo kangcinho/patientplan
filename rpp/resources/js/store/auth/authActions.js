@@ -51,6 +51,7 @@ const actions = {
       .then( (respon) => {
         commit(type.SET_DATA_USER_LOGIN, respon.data.user)
         berhasil('User Login')
+        // router.push({'name': 'PasienPage'})
       })
       .catch( (error) => {
         gagal(error.response.data.error)

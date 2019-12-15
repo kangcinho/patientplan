@@ -28,11 +28,11 @@
 </template>
 
 <script>
-import AddPasienPulang from '../content/pasienPulang/AddPasienPulang'
-import ListPasienPulang from '../content/pasienPulang/ListPasienPulang'
-import EventBus from '../../eventBus'
+import AddPasienPulang from './AddPasienPulang'
+import ListPasienPulang from './ListPasienPulang'
+import EventBus from '../../../eventBus'
 export default {
-  name:"ContentComponent",
+  name: "PasienMasterView",
   data(){
     return {
       isOpenFormTambahRiwayatPasienPulang: false
@@ -49,6 +49,7 @@ export default {
   },
   computed:{
     getDataUser(){
+      // console.log("akses")
       return this.$store.getters.getDataUserLogin
     },
     dataMutu(){

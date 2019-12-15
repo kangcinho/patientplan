@@ -4,6 +4,7 @@ import pasien from './pasien/pasien'
 import petugas from './petugas/petugas'
 import user from './user/user'
 import auth from './auth/auth'
+import analisa from './analisa/analisa'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -11,6 +12,7 @@ export default new Vuex.Store({
     pasien,
     petugas,
     user,
-    auth
+    auth,
+    analisa
   }
 })

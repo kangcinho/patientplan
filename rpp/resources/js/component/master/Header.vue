@@ -10,6 +10,9 @@
         <b-navbar-item v-if="isAuth"  tag="router-link" :to="{ name: 'PasienPage' }" >
           Pasien
         </b-navbar-item>
+        <b-navbar-item v-if="isAuth && getDataUser.canEkspor"  tag="router-link" :to="{ name: 'AnalisaPage' }" >
+          Analisa
+        </b-navbar-item>
         <b-navbar-item v-if="!isAuth" tag="router-link" :to="{ name: 'LoginPageSecond' }">
           Login
         </b-navbar-item>

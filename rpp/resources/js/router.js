@@ -1,16 +1,18 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '../js/component/content/auth/Login'
-import Pasien from '../js/component/master/Content'
+import Pasien from '../js/component/content/pasienPulang/Pasien'
 import User from '../js/component/content/user/ListUser'
 import store from './store/store'
+import Analisa from './component/content/analisa/Analisa'
+
 Vue.use(Router)
 
 const router = new Router({
   mode: 'history',
   // base: "ongoing/pasienPulang/pasien/public",
-  // base: process.env.BASE_URL,
-  base: "rpp/public/",
+  base: process.env.BASE_URL,
+  // base: "rpp/public/",
   routes:[
     {
       path: '/',
@@ -42,6 +44,22 @@ const router = new Router({
       },
       beforeEnter(to, from, next){
         const user = store.getters.getDataUserLogin.canAdmin
+        if(user){
+          next()
+        }else{
+          next({ 'name' : 'PasienPage'})
+        }
+      }
+    },
+    {
+      path: '/analisa',
+      name: 'AnalisaPage',
+      component: Analisa,
+      meta: {
+        auth: true
+      },
+      beforeEnter(to, from, next){
+        const user = store.getters.getDataUserLogin.canEkspor
         if(user){
           next()
         }else{

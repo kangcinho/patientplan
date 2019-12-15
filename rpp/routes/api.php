@@ -32,13 +32,16 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::post('updateDataUser', 'UserController@updateDataUser')->middleware('canAdmin');
     Route::get('deleteDataUser/{idUser}', 'UserController@deleteDataUser')->middleware('canAdmin');
     
+    //Section Analisa
+    Route::post('analisa', 'AnalisaController@showAnalisa');
+
     //SYNC DATA
     Route::get('getDataPasienPulangFromKasir', 'PasienController@getDataPasienPulangFromKasir')->middleware('canInsert');
     //EXPORT DATA
     Route::post('getDataExportPasienPulang', 'PasienController@getDataExportPasienPulang')->middleware('canEkspor');
 });
 
-//Automatisasi Riwata Pasien Pulang with Cronjob
+//Automatisasi Riwayat Pasien Pulang with Cronjob
 Route::get('autoGetPasien', 'PasienController@autoGetPasien');
 Route::get('setIsGone','AnalisaController@setIsGone');
 Route::get('doAnalisa','AnalisaController@doAnalisa');
@@ -48,3 +51,4 @@ Route::post('login','UserAuthController@login');
 Route::get('logout', 'UserAuthController@logout');
 Route::get('refresh', 'UserAuthController@refresh');
 Route::get('getUserLogin', 'UserAuthController@getUserLogin');
+

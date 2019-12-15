@@ -6,9 +6,80 @@ use Illuminate\Http\Request;
 use App\Mutu;
 use App\Pasien;
 use App\Analisa;
+use App\Http\Helper\HelperTanggal;
 use DateTime;
 class AnalisaController extends Controller
 {
+    public function showAnalisa(Request $request){
+        $bulanPilih = $this->convertDate($request->bulanAnalisa);
+        $bulanNow = explode('-', $bulanPilih)[1];
+        if($bulanNow == 1 || $bulanNow == '01'){
+            $bulanBefore = 12;
+        }else{
+            $bulanBefore = $bulanNow - 1;
+        }
+        $tahunNow = explode('-', $bulanPilih)[0];
+        $tahunBefore = $tahunNow - 1;
+        
+        $analisaBulanNow = $this->getDataAnalisa($bulanNow, $tahunNow);
+        $analisaBulanBefore = $this->getDataAnalisa($bulanBefore, $tahunNow);
+        $analisaTahunBefore = $this->getDataAnalisa($bulanNow, $tahunBefore);
+
+        $tableAnalisaBulanNow = $this->tabelPerbandinganAnalisa($analisaBulanNow);
+        $tableAnalisaBulanBefore = $this->tabelPerbandinganAnalisa($analisaBulanBefore);
+        $tableAnalisaTahunBefore = $this->tabelPerbandinganAnalisa($analisaTahunBefore);
+
+        return response()->json([
+            'tabelAnalisa' => $this->mergeObject($tableAnalisaBulanNow, $tableAnalisaBulanBefore, $tableAnalisaTahunBefore),
+            'status' => "Data Analisa"
+        ]);
+    }
+    private function mergeObject($tableAnalisaBulanNow, $tableAnalisaBulanBefore, $tableAnalisaTahunBefore){
+        $tabelAnalisa = array();
+        array_push($tabelAnalisa, $tableAnalisaBulanNow);
+        array_push($tabelAnalisa, $tableAnalisaBulanBefore);
+        array_push($tabelAnalisa, $tableAnalisaTahunBefore);
+        return $tabelAnalisa;
+    }
+    private function getDataAnalisa($bulan, $tahun){
+        $analisa = \DB::table('analisa')
+        ->selectRaw("tanggal, umumMutuValid, umumMutuNonValid, (umumMutuValid + umumMutuNonValid) as umumMutu, iksMutuValid, iksMutuNonValid, (iksMutuValid + iksMutuNonValid) as iksMutu, bpjsMutuValid, bpjsMutuNonValid, (bpjsMutuValid + bpjsMutuNonValid) as bpjsMutu")
+        ->whereYear("tanggal", $tahun)
+        ->whereMonth("tanggal", $bulan)
+        ->orderBy("tanggal")
+        ->get();
+        return $analisa;
+    }
+
+    private function tabelPerbandinganAnalisa($dataAnalisa){
+        $tanggal = new HelperTanggal;
+        $analisaTable = new \stdClass;
+        $analisaTable->tanggal = null;
+        $analisaTable->umumMutuValid = 0;
+        $analisaTable->umumMutuNonValid = 0;
+        $analisaTable->umumMutu = 0;
+        $analisaTable->iksMutuValid = 0;
+        $analisaTable->iksMutuNonValid = 0;
+        $analisaTable->iksMutu = 0;
+        $analisaTable->bpjsMutuValid = 0;
+        $analisaTable->bpjsMutuNonValid = 0;
+        $analisaTable->bpjsMutu = 0;
+        
+        foreach($dataAnalisa as $analisa){
+            $analisaTable->tanggal = $tanggal->tanggalBacaBulanTahun($analisa->tanggal);
+            $analisaTable->umumMutuValid += $analisa->umumMutuValid;
+            $analisaTable->umumMutuNonValid += $analisa->umumMutuNonValid;
+            $analisaTable->umumMutu += $analisa->umumMutu;
+            $analisaTable->iksMutuValid += $analisa->iksMutuValid;
+            $analisaTable->iksMutuNonValid += $analisa->iksMutuNonValid;
+            $analisaTable->iksMutu += $analisa->iksMutu;
+            $analisaTable->bpjsMutuValid += $analisa->bpjsMutuValid;
+            $analisaTable->bpjsMutuNonValid += $analisa->bpjsMutuNonValid;
+            $analisaTable->bpjsMutu += $analisa->bpjsMutu;
+        }
+        return $analisaTable;
+    }
+
     public function setIsGone(){
         $dateToday = \Carbon\Carbon::now()->toDateString();
         \DB::statement("UPDATE pasien set isGone = 1 WHERE tanggal < '$dateToday'");
@@ -28,6 +99,9 @@ class AnalisaController extends Controller
             $umumMutuValid = 0;
             $umumMutuNonValid = 0;
             foreach($dataPasien->mutuPasien as $mutuPasien){
+                if($mutuPasien->waktuTotal == 0){
+                    continue;
+                }
                 if (strpos($mutuPasien->keterangan, 'BPJS') !== false) {
                     if($mutuPasien->waktuTotal > $dataMutu->mutuBPJS ){
                         $bpjsMutuNonValid++;
@@ -168,5 +242,9 @@ class AnalisaController extends Controller
 
         $dataPasien->mutuPasien = $mutuPasien;
         return $dataPasien;
+    }
+
+    private function convertDate($date){
+        return date('Y-m-d', strtotime($date));
     }
 }
