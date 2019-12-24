@@ -94,27 +94,30 @@ class PasienController extends Controller
             ->take($request->lastPage)
             ->where('namaPasien','like',"%$request->searchNamaPasien%")
             ->where('tanggal', $tglSearch)
-            ->orderBy('created_at','desc')
+            ->orderBy('keterangan','desc')
             ->get();
             $dataPasien = $this->hitungWaktu($dataPasien);
             $totalDataPasien = Pasien::where('namaPasien','like',"%$request->searchNamaPasien%")
             ->where('tanggal', $tglSearch)
+            ->orderBy('keterangan','desc')
             ->count();
             $dataPasienPulangFilter = Pasien::orderBy('tanggal', 'desc')->select('namaPasien','kamar', 'kodeKelas')
             ->where('namaPasien','like',"%$request->searchNamaPasien%")
             ->where('tanggal', $tglSearch)
+            ->orderBy('keterangan','desc')
             ->get()->toArray();
         }else{
             $dataPasien = Pasien::orderBy('tanggal', 'desc')
             ->skip($request->firstPage)
             ->take($request->lastPage)
             ->where('namaPasien','like',"%$request->searchNamaPasien%")
-            ->orderBy('created_at','desc')
+            ->orderBy('keterangan','desc')
             ->get();
             $dataPasien = $this->hitungWaktu($dataPasien);
             $totalDataPasien = Pasien::where('namaPasien','like',"%$request->searchNamaPasien%")->count();
             $dataPasienPulangFilter = Pasien::orderBy('tanggal', 'desc')->select('namaPasien','kamar','kodeKelas')
             ->where('namaPasien','like',"%$request->searchNamaPasien%")
+            ->orderBy('keterangan','desc')
             ->get()->toArray();
         }
         $dataPasienPulangFilter = count($this->cekKamar($dataPasienPulangFilter));
@@ -606,13 +609,14 @@ class PasienController extends Controller
         $tglAkhir = explode(' ',$this->convertDate($request->akhir))[0];
         $dataPasien = Pasien::where('tanggal', '>=', $tglAwal)
             ->where('tanggal', '<=', $tglAkhir)
-            ->orderBy('created_at','asc')
+            ->orderBy('keterangan','desc')
             ->get();
         $dataPasien = $this->hitungWaktu($dataPasien);
         
         $dataPasienPulangFilter = Pasien::orderBy('tanggal', 'desc')->select('namaPasien','kamar', 'kodeKelas')
         ->where('tanggal', '>=', $tglAwal)
         ->where('tanggal', '<=', $tglAkhir)
+        ->orderBy('keterangan','desc')
         ->get()->toArray();
         RecordLog::logRecord('REPORT', null, $tglAwal, $tglAkhir, Auth::user()->idUser);
         $dataPasienPulangFilter = count($this->cekKamar($dataPasienPulangFilter));

@@ -596,7 +596,14 @@ export default {
       return this.$store.getters.getTotalPasienPulang
     },
     getPasienPulang(){
-      return this.$store.getters.getPasienPulang
+      return this.$store.getters.getPasienPulang.sort( (a,b) => {
+        if(a.keterangan < b.keterangan){
+          return 1
+        }else if(a.keterangan > b.keterangan){
+          return -1
+        }
+        return 0
+      })
     },
     dataPetugas(){
       return this.$store.getters.getDataPetugas

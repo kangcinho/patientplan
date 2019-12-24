@@ -22,7 +22,7 @@
     </template>
     <template slot="end">
       <b-navbar-item v-if="getDataUser != null">
-        Tercinta, {{getDataUser.namaUser}}
+        Welcome, {{getDataUser.namaUser}}
       </b-navbar-item>
     </template>
   </b-navbar>
