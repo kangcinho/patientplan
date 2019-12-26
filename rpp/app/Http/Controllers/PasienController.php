@@ -586,7 +586,13 @@ class PasienController extends Controller
             }else{
                 $dataPasien->keterangan = "IKS - ".$dataPasien->namaPerusahaan;
             }
-
+            
+            if($status == "UPDATE"){
+                if($pasien->tanggal != $dataPasien->tanggal){
+                    $pasien->isTerencana = false;
+                }
+            }
+            
             $pasien->noReg = $dataPasien->noReg;
             $pasien->tanggal = $dataPasien->tanggal;
             $pasien->nrm = $dataPasien->nrm;
@@ -597,7 +603,9 @@ class PasienController extends Controller
             
             $pasien->noKartu = $dataPasien->noKartu;
             $pasien->kodeKelas = $dataPasien->kodeKelas;
-            
+
+            $pasien->isGone = false;
+            $pasien->isAnalisa = false;
             $pasien->isEdit = false;
             $pasien->save();
             // RecordLog::logRecord($status, $pasien->idPasien, null, $pasien, 'SYSTEM');
