@@ -1,0 +1,30 @@
+DELIMITER $$
+
+USE `pasien_pulang`$$
+
+DROP PROCEDURE IF EXISTS `analisaMutu`$$
+
+CREATE DEFINER=`programmerpb`@`%` PROCEDURE `analisaMutu`(IN _dateFirst DATE, IN _dateLast DATE)
+BEGIN
+	SELECT pasienFinal.tanggal, SUM(pasienFinal.umumMutuValid) AS 'umumMutuValid', SUM(pasienFinal.umumMutuNonValid) AS 'umumMutuNonValid', SUM(pasienFinal.bpjsMutuValid) AS 'bpjsMutuValid', SUM(pasienFinal.bpjsMutuNonValid) AS 'bpjsMutuNonValid', SUM(pasienFinal.iksMutuValid) AS 'iksMutuValid', SUM(pasienFinal.iksMutuNonValid) AS 'iksMutuNonValid'  FROM (
+		SELECT pasienTemp.tanggal, pasienTemp.keterangan, pasienTemp.mutuUmum, pasienTemp.mutuIKS, pasienTemp.mutuBPJS,
+			IF(LOCATE('Umum',pasienTemp.keterangan) > 0, IF(pasienTemp.waktuMutu <= mutuUmum, 1, 0), 0) AS 'umumMutuValid',
+			IF(LOCATE('Umum',pasienTemp.keterangan) > 0, IF(pasienTemp.waktuMutu > mutuUmum, 1, 0), 0) AS 'umumMutuNonValid',
+			IF(LOCATE('BPJS',pasienTemp.keterangan) > 0, IF(pasienTemp.waktuMutu <= mutuBPJS, 1, 0), 0) AS 'bpjsMutuValid',
+			IF(LOCATE('BPJS',pasienTemp.keterangan) > 0, IF(pasienTemp.waktuMutu > mutuBPJS, 1, 0), 0) AS 'bpjsMutuNonValid',
+			IF(LOCATE('IKS',pasienTemp.keterangan) > 0, IF(pasienTemp.waktuMutu <= mutuIKS, 1, 0), 0) AS 'iksMutuValid',
+			IF(LOCATE('IKS',pasienTemp.keterangan) > 0, IF(pasienTemp.waktuMutu > mutuIKS, 1, 0), 0) AS 'iksMutuNonValid'
+		FROM
+		(
+			SELECT tanggal, keterangan, waktuVerif, waktuLunas, mutuUmum, mutuIKS, mutuBPJS, TIMESTAMPDIFF(MINUTE,waktuVerif, waktuLunas) AS 'waktuMutu' FROM pasien
+			WHERE tanggal >= _dateFirst
+			AND tanggal <= _dateLast
+			AND isAnalisa = 1
+			ORDER BY tanggal ASC
+		) pasienTemp
+	)pasienFinal
+	GROUP BY pasienFinal.tanggal
+	ORDER BY pasienFinal.tanggal ASC;
+END$$
+
+DELIMITER ;

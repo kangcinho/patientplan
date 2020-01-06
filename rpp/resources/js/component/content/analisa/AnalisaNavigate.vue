@@ -1,18 +1,30 @@
 <template>
-  <div class="column is-11">
-    <b-field label="Pilih Bulan Analisa Mutu">
+<div class="column is-11">
+  <b-field grouped>
+    <b-field label="Pilih Awal Analisa Mutu" expanded>
       <b-datepicker
-        type="month"
-        placeholder="Pilih Bulan Analisa Mutu"
+        placeholder="Pilih Awal Analisa Mutu"
         icon-pack="fas"
         icon="calendar"
-        v-model="analisaMutu.bulanAnalisa"
-        @input="analisa"
-        :date-formatter="(date) => $moment(date).format('MMM YYYY')">
+        v-model="analisaMutu.awalAnalisa"
+        :date-formatter="(date) => $moment(date).format('DD MMM YYYY')">
       </b-datepicker>
     </b-field>
-    <b-loading is-full-page :active.sync="isLoading" :can-cancel="false"></b-loading>
-  </div>
+    <b-field label="Pilih Akhir Analisa Mutu" expanded>
+      <b-datepicker
+        placeholder="Pilih Akhir Analisa Mutu"
+        icon-pack="fas"
+        icon="calendar"
+        v-model="analisaMutu.akhirAnalisa"
+        @input="analisa"
+        :min-date="analisaMutu.awalAnalisa"
+        :date-formatter="(date) => $moment(date).format('DD MMM YYYY')"
+        :disabled="analisaMutu.awalAnalisa == null">
+      </b-datepicker>
+    </b-field>
+  </b-field>
+  <b-loading is-full-page :active.sync="isLoading" :can-cancel="false"></b-loading>
+</div>
 </template>
 
 <script>
@@ -21,7 +33,8 @@ export default {
   data(){
     return {
       analisaMutu:{
-        bulanAnalisa: null
+        awalAnalisa: null,
+        akhirAnalisa: null
       },
       isLoading: false
     }

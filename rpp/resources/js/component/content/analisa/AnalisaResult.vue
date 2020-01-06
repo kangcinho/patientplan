@@ -1,5 +1,5 @@
 <template>
-  <div class="column is-11" v-if="tabelAnalisa.length != 0">
+  <div class="column is-11" v-if="tabelAnalisa.length > 0" >
     <h1 class="is-size-6">Kesesuaian Mutu Pelayanan Pasien Pulang</h1>
     <table class="table is-bordered is-striped is-narrow is-fullwidth" style="font-size:0.8em">
       <thead>
@@ -56,7 +56,7 @@ export default {
         return analisa.tanggal != null
       })
     }
-  }
+  },
 }
 </script>
 

@@ -13,6 +13,9 @@ export default {
   components:{
     AnalisaNavigate,
     AnalisaResult
+  },
+  created(){
+    this.$store.dispatch('clearAnalisa')
   }
 }
 </script>

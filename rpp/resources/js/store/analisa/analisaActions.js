@@ -14,6 +14,9 @@ const actions = {
       })
     })
   },
+  clearAnalisa({commit}){
+    commit(type.SET_DATA_ANALISA, [])
+  }
 }
 
 export default actions

@@ -8,27 +8,24 @@ use App\Pasien;
 use App\Analisa;
 use App\Http\Helper\HelperTanggal;
 use DateTime;
+use Carbon\Carbon;
 class AnalisaController extends Controller
 {
     public function showAnalisa(Request $request){
-        $bulanPilih = $this->convertDate($request->bulanAnalisa);
-        $bulanNow = explode('-', $bulanPilih)[1];
-        if($bulanNow == 1 || $bulanNow == '01'){
-            $bulanBefore = 12;
-        }else{
-            $bulanBefore = $bulanNow - 1;
-        }
-        $tahunNow = explode('-', $bulanPilih)[0];
-        $tahunBefore = $tahunNow - 1;
-        
-        $analisaBulanNow = $this->getDataAnalisa($bulanNow, $tahunNow);
-        $analisaBulanBefore = $this->getDataAnalisa($bulanBefore, $tahunNow);
-        $analisaTahunBefore = $this->getDataAnalisa($bulanNow, $tahunBefore);
+        $awalAnalisaPilih = $this->convertDate($request->awalAnalisa);
+        $akhirAnalisaPilih = $this->convertDate($request->akhirAnalisa);
+        $awalAnalisaBulanBefore = Carbon::createFromFormat('Y-m-d', $awalAnalisaPilih)->subMonth()->format('Y-m-d');
+        $akhirAnalisaBulanBefore = Carbon::createFromFormat('Y-m-d', $akhirAnalisaPilih)->subMonth()->format('Y-m-d');
+        $awalAnalisaTahunBefore = Carbon::createFromFormat('Y-m-d', $awalAnalisaPilih)->subYear()->format('Y-m-d');
+        $akhirAnalisaTahunBefore = Carbon::createFromFormat('Y-m-d', $akhirAnalisaPilih)->subYear()->format('Y-m-d');
+
+        $analisaBulanNow = $this->getDataAnalisa($awalAnalisaPilih, $akhirAnalisaPilih);
+        $analisaBulanBefore = $this->getDataAnalisa($awalAnalisaBulanBefore, $akhirAnalisaBulanBefore);
+        $analisaTahunBefore = $this->getDataAnalisa($awalAnalisaTahunBefore, $akhirAnalisaTahunBefore);
 
         $tableAnalisaBulanNow = $this->tabelPerbandinganAnalisa($analisaBulanNow);
         $tableAnalisaBulanBefore = $this->tabelPerbandinganAnalisa($analisaBulanBefore);
         $tableAnalisaTahunBefore = $this->tabelPerbandinganAnalisa($analisaTahunBefore);
-
         return response()->json([
             'tabelAnalisa' => $this->mergeObject($tableAnalisaBulanNow, $tableAnalisaBulanBefore, $tableAnalisaTahunBefore),
             'status' => "Data Analisa"
@@ -41,14 +38,8 @@ class AnalisaController extends Controller
         array_push($tabelAnalisa, $tableAnalisaTahunBefore);
         return $tabelAnalisa;
     }
-    private function getDataAnalisa($bulan, $tahun){
-        $analisa = \DB::table('analisa')
-        ->selectRaw("tanggal, umumMutuValid, umumMutuNonValid, (umumMutuValid + umumMutuNonValid) as umumMutu, iksMutuValid, iksMutuNonValid, (iksMutuValid + iksMutuNonValid) as iksMutu, bpjsMutuValid, bpjsMutuNonValid, (bpjsMutuValid + bpjsMutuNonValid) as bpjsMutu")
-        ->whereYear("tanggal", $tahun)
-        ->whereMonth("tanggal", $bulan)
-        ->orderBy("tanggal")
-        ->get();
-        return $analisa;
+    private function getDataAnalisa($awalAnalisa, $akhirAnalisa){
+        return \DB::select("CALL analisaMutu('$awalAnalisa', '$akhirAnalisa')");
     }
 
     private function tabelPerbandinganAnalisa($dataAnalisa){
@@ -69,13 +60,13 @@ class AnalisaController extends Controller
             $analisaTable->tanggal = $tanggal->tanggalBacaBulanTahun($analisa->tanggal);
             $analisaTable->umumMutuValid += $analisa->umumMutuValid;
             $analisaTable->umumMutuNonValid += $analisa->umumMutuNonValid;
-            $analisaTable->umumMutu += $analisa->umumMutu;
+            $analisaTable->umumMutu += $analisa->umumMutuValid + $analisa->umumMutuNonValid;
             $analisaTable->iksMutuValid += $analisa->iksMutuValid;
             $analisaTable->iksMutuNonValid += $analisa->iksMutuNonValid;
-            $analisaTable->iksMutu += $analisa->iksMutu;
+            $analisaTable->iksMutu += $analisa->iksMutuValid + $analisa->iksMutuNonValid;
             $analisaTable->bpjsMutuValid += $analisa->bpjsMutuValid;
             $analisaTable->bpjsMutuNonValid += $analisa->bpjsMutuNonValid;
-            $analisaTable->bpjsMutu += $analisa->bpjsMutu;
+            $analisaTable->bpjsMutu += $analisa->bpjsMutuValid + $analisa->bpjsMutuNonValid;
         }
         return $analisaTable;
     }
