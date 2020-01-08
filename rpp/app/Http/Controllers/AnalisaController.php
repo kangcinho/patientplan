@@ -11,6 +11,7 @@ use DateTime;
 use Carbon\Carbon;
 class AnalisaController extends Controller
 {
+    
     public function showAnalisa(Request $request){
         $awalAnalisaPilih = $this->convertDate($request->awalAnalisa);
         $akhirAnalisaPilih = $this->convertDate($request->akhirAnalisa);
@@ -42,6 +43,7 @@ class AnalisaController extends Controller
         return \DB::select("CALL analisaMutu('$awalAnalisa', '$akhirAnalisa')");
     }
 
+    //Grouping Data Perbulan. 1 Bulan terdapat beberapa hari, nanti keluarnya dalam format bulan.
     private function tabelPerbandinganAnalisa($dataAnalisa){
         $tanggal = new HelperTanggal;
         $analisaTable = new \stdClass;
@@ -70,15 +72,20 @@ class AnalisaController extends Controller
         }
         return $analisaTable;
     }
-
+    //Melakukan kunci data pasien yang sudah lewat hari.
     public function setIsGone(){
         $dateToday = \Carbon\Carbon::now()->toDateString();
         \DB::statement("UPDATE pasien set isGone = 1 WHERE tanggal < '$dateToday'");
     }
+
+    //Melakukan kalkulasi data dan disimpan pada tabel analisa.
     public function doAnalisa(){
         $dataMutu = Mutu::where('isAktif', 1)->first();
         $dataPasiens = Pasien::where('isAnalisa', 0)->where('isGone', 1)->get();
+        //melakukan kalkulasi Waktu Lunas - Waktu Verif
         $dataPasiens = $this->hitungWaktu($dataPasiens);
+
+        //Melakukan kalkulasi Grouping Harian Pasien umum, iks, bpjs
         $dataPasiens = $this->groupingData($dataPasiens);
         $recordData = array();
         
@@ -183,7 +190,7 @@ class AnalisaController extends Controller
         }
         return $dataPasien;
     }
-
+    //Grouping data pasien harian. 1 hari terdapat banyak pasien. nanti keluarannya adalah grouping pasien harian.
     private function groupingData($dataPasien){
         $dataGroupPasien = [];
         foreach($dataPasien as $pasien){
@@ -198,7 +205,6 @@ class AnalisaController extends Controller
     }
 
     private function ifDateExist($dataGroupPasien, $pasien){
-
         foreach($dataGroupPasien as $dataGroup){
             if($dataGroup->tanggal === $pasien->tanggal){
                 return true;

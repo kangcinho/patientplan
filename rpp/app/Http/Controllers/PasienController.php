@@ -16,6 +16,7 @@ class PasienController extends Controller
         $tanggalSekarang = \Carbon\Carbon::now()->toDateString();
         $tanggalKemarin = \Carbon\Carbon::now()->subDays(1)->toDateString();
         
+        //Get List Pasien Rawat Inap yang sedang dirawat
         $sanataRegistrasi = \DB::connection('sqlsrv')
             ->table('SIMtrRegistrasi')
             ->selectRaw('SIMtrRegistrasi.NoReg as noReg, NRM as nrm, NamaPasien_Reg as namaPasien, SIMtrRegistrasi.NoAnggota as noKartu, NoKamar as kamar, SIMmJenisKerjasama.JenisKerjasama as jenisKerjasama, BPJSMurni, SilverPlus as silverPlus, NaikKelas as naikKelas, mCustomer.Nama_Customer as namaPerusahaan, mSupplier.Nama_Supplier as namaDokter, SIMtrRegistrasi.KdKelas as kodeKelas')
@@ -29,6 +30,7 @@ class PasienController extends Controller
             ->orderBy('NoReg', 'asc')
             ->get();
 
+        // Get Semua Pasien Rawat Inap yang sudah pulang Perhari ini dan kemarin
         $sanataKasir = \DB::connection('sqlsrv')
                     ->table('SIMtrKasir')
                     ->selectRaw('SIMtrRegistrasi.NoReg as noReg, SIMtrRegistrasi.NRM as nrm, SIMtrRegistrasi.NamaPasien_Reg as namaPasien, SIMtrRegistrasi.NoKamar as kamar, SIMtrRegistrasi.NoAnggota as noKartu, SIMmJenisKerjasama.JenisKerjasama as jenisKerjasama, SIMtrRegistrasi.BPJSMurni as BPJSMurni, SIMtrRegistrasi.SilverPlus as silverPlus, SIMtrRegistrasi.NaikKelas as naikKelas, mCustomer.Nama_Customer as namaPerusahaan, mSupplier.Nama_Supplier as namaDokter, SIMtrRegistrasi.KdKelas as kodeKelas')
@@ -46,6 +48,8 @@ class PasienController extends Controller
         
         $dataPasiens = collect();
         $dataPasiens = $dataPasiens->concat($sanataRegistrasi)->concat($sanataKasir);
+        
+        //Konversi Field Jenis Kerjasama menjadi "Jenis Kerjasama - Keterangan" 
         foreach($dataPasiens as $dataPasien){
             if($dataPasien->jenisKerjasama == "UMUM"){
                 $dataPasien->keterangan = "Umum";
@@ -64,6 +68,8 @@ class PasienController extends Controller
             }
 
             $cekPasien = Pasien::where('noReg', $dataPasien->noReg)->first();
+
+            //Menambahkan Penanda Pasien Sudah diinput atau belum, jika Sudah, pasien tidak akan bisa diinput lagi
             if($cekPasien){
                 $dataPasien->isDone = true;
             }else{
@@ -83,6 +89,7 @@ class PasienController extends Controller
         return response()->json($dataPetugasSanata);
     }
 
+    //Get Semua Pasien Pulang Untuk Pagging
     public function getDataPasienPulang(Request $request){
         $dataPasien = null;
         $totalDataPasien = null;
@@ -122,8 +129,6 @@ class PasienController extends Controller
         }
         $dataPasienPulangFilter = count($this->cekKamar($dataPasienPulangFilter));
         $mutu = Mutu::where('isAktif',1)->first();
-        // $dataPasienPulangFilter = ($this->cekKamar($dataPasienPulangFilter));
-        // dd($dataPasienPulangFilter);
         return response()->json([
             'dataPasien' => $dataPasien,
             'totalDataPasien' => $totalDataPasien,
@@ -132,6 +137,7 @@ class PasienController extends Controller
         ], 200);
     }
 
+    //Melakukan Grouping Kamar bertujuan untuk perhitungan "Total Kamar Checkout"
     public function cekKamar($arrayKamars){
         $dataHasilFilter = [];
         foreach($arrayKamars as $dataKamar) {
@@ -150,12 +156,14 @@ class PasienController extends Controller
         return $dataHasilFilter;
     }
 
+
     public function cekKamarExist($dataHasilFilter, $dataKamar){
         $status = true;
         if(count($dataHasilFilter) == 0){
             return $status;
         }
         
+        // Melakukan Blacklist pasien dengan Kamar dibawah ini.
         if(stripos($dataKamar['kamar'], 'R-BAYI') !== false && $dataKamar['kodeKelas'] == 15){
             return $status;
         }
@@ -171,6 +179,9 @@ class PasienController extends Controller
         if(stripos($dataKamar['kamar'], 'RESTI') !== false){
             return $status;
         }
+        //
+
+
         foreach($dataHasilFilter as $dataFilter){
             if((stripos($dataKamar['namaPasien'], $dataFilter['namaPasien']) !== false) || (stripos($dataFilter['namaPasien'], $dataKamar['namaPasien']) !== false)){
                 $status = false;
@@ -341,10 +352,16 @@ class PasienController extends Controller
         return date('Y-m-d H:i:s', strtotime($date));
     }
 
+    //Cron Job untuk mendapatkan Pasien Berdasarkan Jenis tindakan yang dilakukan
+    //Persalinan Normal = Tanggal ditindak + 1 hari
+    // SC = Tanggal ditindak + 2 hari
+    //Jasa Tambahan = Tanggal ditindak + 3 hari
+
     public function autoGetPasien(){
         $jasaSC = ['JAS00011', 'JAS00012','JAS01231','JAS01232', 'JAS01484'];
         $jasaNormal = ['JAS00008'];
         $jasaSCTambahan = ['JAS01371', 'JAS01373'];
+
 
         $listRegistrasiTambahanSCFromKasir = $this->autoGetPasienFromKasir($jasaSCTambahan);
         $listRegistrasiTambahanSCFromRegistrasi = $this->autoGetPasienFromRegistrasi($jasaSCTambahan);
@@ -355,6 +372,7 @@ class PasienController extends Controller
         $listRegistrasiSCFromKasir = $this->autoGetPasienFromKasir($jasaSC);
         $listRegistrasiNormalSCFromKasir = $this->autoGetPasienFromKasir($jasaNormal);
         
+        //Mendapatkan pasien Rawat Inap yang tidak melakukan persalinan normal ataupun SC
         $listPasienCheckOut = $this->autoGetPasienFromKasirNonTerencana();
 
         $dataNoRegPasienSCs = collect();
@@ -375,6 +393,8 @@ class PasienController extends Controller
         $this->autoSaveDataPasienCheckout($listPasienCheckOut);
     }
     
+    //Mendapatkan nama Bayi dari nama Ibunya yang melakukan tindakan SC atau Persalinan Normal.
+    //Jika Nama Bayi didapatkan, dan Bayi berada dikamar Blacklist, maka Bayi tersebut tidak masuk kedalam List
     public function autoGetPasienBayiFromNoRegIbu($dataNoRegIbu){
         $dataPasien = collect();
         foreach($dataNoRegIbu as $data){
@@ -396,6 +416,7 @@ class PasienController extends Controller
             if($sanataRegistrasi){
                 //Tambahkan jika kode kamar ICU/INTERMEDIET/TRANSISI DLL ,lsg continue
                 $data->tanggal = $sanataRegistrasi->tanggal;
+                //List Kamar yang diblacklist
                 if($sanataRegistrasi->kodeKelas == '15' || $sanataRegistrasi->kodeKelas == '16' || $sanataRegistrasi->kodeKelas == '23' || $sanataRegistrasi->kodeKelas == '24' || $sanataRegistrasi->kodeKelas == '25' || $sanataRegistrasi->kodeKelas == '26' || $sanataRegistrasi->kodeKelas == '27' || $sanataRegistrasi->kodeKelas == '92'){
                 // if($sanataRegistrasi->kodeKelas == '24'){
                     continue;
@@ -409,6 +430,7 @@ class PasienController extends Controller
         return $dataPasien;
     }
 
+    //Mendapatkan Semua Pasien Ibu yang melakukan Persalinan Normal atau SC 
     public function autoGetPasienFromRegistrasi($jasaID){
         $sanataRegistrasi = \DB::connection('sqlsrv')
             ->table('SIMtrRJ')
@@ -427,6 +449,7 @@ class PasienController extends Controller
         return $sanataRegistrasi;
     }
 
+    //Mendapatkan Semua Pasien Ibu yang melakukan Persalinan Normal atau SC
     public function autoGetPasienFromKasir($jasaID){
         // select SIMtrRJ.RegNo as noReg, SIMtrRJ.Tanggal as tanggal, SIMtrRegistrasi.NRM as nrm, SIMtrRegistrasi.NamaPasien_Reg as namaPasien, SIMtrRegistrasi.NoKamar as kamar, SIMtrRegistrasi.NoAnggota as noKartu, SIMmJenisKerjasama.JenisKerjasama as jenisKerjasama, SIMtrRegistrasi.BPJSMurni as BPJSMurni, SIMtrRegistrasi.SilverPlus as silverPlus, SIMtrRegistrasi.NaikKelas as naikKelas, mCustomer.Nama_Customer as namaPerusahaan, mSupplier.Nama_Supplier as namaDokter, SIMtrRegistrasi.KdKelas as kodeKelas from SIMtrRJ
         // inner join SIMtrRJTransaksi on SIMtrRJ.NoBukti = SIMtrRJTransaksi.NoBukti
@@ -458,7 +481,7 @@ class PasienController extends Controller
             ->get();
         return $sanataKasir;
     }
-
+    //Mendapatkan Semua Pasien Ibu yang tidak melakukan Persalinan Normal atau SC 
     public function autoGetPasienFromKasirNonTerencana(){
         $tanggalSekarang = \Carbon\Carbon::now()->toDateString();
         $tanggalKemarin = \Carbon\Carbon::now()->subDays(1)->toDateString();
@@ -477,6 +500,7 @@ class PasienController extends Controller
             ->get();
         return $sanataKasir;
     }
+
     public function autoSaveDataPasien($dataPasienCollection, $jumlahHari){
         $dataMutu = Mutu::where('isAktif',1)->first();
         foreach($dataPasienCollection as $dataPasien){
@@ -533,7 +557,10 @@ class PasienController extends Controller
             // RecordLog::logRecord($status, $pasien->idPasien, null, $pasien, 'SYSTEM');
         }
     }
-
+    //Fungsi untuk Menentukan Tanggal Pulang Pasien
+    //Persalinan Normal = Tanggal ditindak + 1 hari
+    // SC = Tanggal ditindak + 2 hari
+    //Jasa Tambahan = Tanggal ditindak + 3 hari
     public function autoUpdateDataPasien($dataPasienCollection, $jumlahHari){
         foreach($dataPasienCollection as $dataPasien){
             $pasien = Pasien::where('noReg', $dataPasien->noReg)->first();
@@ -635,6 +662,9 @@ class PasienController extends Controller
             'dataPasienPulangFilter' => $dataPasienPulangFilter
         ], 200);
     }
+
+    //Fungsi untuk melakukan perhitungan Waktu Lunas - Waktu Verif, bertujuan untuk menentukan mutu.
+    //Fungsi ini untuk satu pasien saja.
     public function hitungWaktuAlone($pasien){
         // foreach($dataPasien as $pasien){
             if($pasien->waktuVerif == null OR $pasien->waktuVerif == ''){
@@ -666,6 +696,9 @@ class PasienController extends Controller
         // }
         return $pasien;
     }
+
+    //Fungsi untuk melakukan perhitungan Waktu Lunas - Waktu Verif, bertujuan untuk menentukan mutu.
+    //Fungsi ini untuk Segudang pasien saja.
     public function hitungWaktu($dataPasien){
         foreach($dataPasien as $pasien){
             if($pasien->waktuVerif == null OR $pasien->waktuVerif == ''){
@@ -697,6 +730,7 @@ class PasienController extends Controller
         }
         return $dataPasien;
     }
+
     public function getDataPasienPulangFromKasir(){
         $dataPasien = $this->autoGetPasienFromKasirNonTerencana();
         $this->autoSaveDataPasienCheckout($dataPasien);
